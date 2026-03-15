@@ -1,0 +1,29 @@
+# Data files — store in Google Drive / Kaggle Datasets instead
+scrapers/data/**/*.csv
+scrapers/data/**/*.xlsx
+scrapers/data/**/*.json
+scrapers/data/**/*.zip
+
+# Keep model (small, <5MB)
+!scrapers/data/model/panel_model.pkl
+!scrapers/data/model/panel_cv_metrics.txt
+!scrapers/data/model/panel_feature_importance.csv
+
+# Keep reports
+!scrapers/data/reports/*.md
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+venv/
+.venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
