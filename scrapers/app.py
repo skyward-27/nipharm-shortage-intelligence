@@ -358,7 +358,6 @@ if page == "📊 Top Risk Alerts":
             branchvalues="remainder",
             marker=dict(
                 colors=colours,
-                cornerradius=4,
                 line=dict(width=1.5, color="white"),
             ),
             text=customtext,
