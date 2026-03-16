@@ -32,12 +32,23 @@ DATA_DIR  = "data"
 MODEL_DIR = "data/model"
 
 # ── Colour constants ────────────────────────────────────────────────────────────
+# Softer, more professional palette — no harsh dark red
 TIER_COLOUR = {
-    "CONFIRMED": "#d62728",
-    "HIGH":      "#ff7f0e",
-    "MEDIUM":    "#ffbb00",
-    "LOW":       "#bcbd22",
-    "WATCH":     "#2ca02c",
+    "CONFIRMED": "#e63950",   # coral-red (not blood red)
+    "HIGH":      "#f4845f",   # warm salmon-orange
+    "MEDIUM":    "#f9c74f",   # golden yellow
+    "LOW":       "#90be6d",   # sage green
+    "WATCH":     "#43aa8b",   # teal
+}
+
+ACTION_COLOUR = {
+    "🔴 BUY NOW":       "#e63950",
+    "🟠 BUY MORE":      "#f4845f",
+    "🟠 BUY AHEAD":     "#f8961e",
+    "🟡 MANAGE STOCK":  "#f9c74f",
+    "🟡 WATCH":         "#90be6d",
+    "⚪ NORMAL":         "#90a0b0",
+    "✅ NO ACTION":      "#43aa8b",
 }
 
 def risk_tier(p):
@@ -272,32 +283,119 @@ if page == "📊 Top Risk Alerts":
 
     st.markdown("---")
 
-    # ── Chart: horizontal bar ───────────────────────────────────────────────────
-    chart_df = df.head(30).copy()
-    chart_df["label"] = chart_df["drug_name"].str[:45]
-    chart_df["prob_pct"] = (chart_df["shortage_probability"] * 100).round(1)
-    chart_df["colour"] = chart_df["risk_tier"].map(TIER_COLOUR)
+    # ── Chart tabs ──────────────────────────────────────────────────────────────
+    tab1, tab2 = st.tabs(["🎯 Risk Radar", "📊 Ranked Bar"])
 
-    fig = px.bar(
-        chart_df.sort_values("shortage_probability"),
-        x="prob_pct",
-        y="label",
-        orientation="h",
-        color="risk_tier",
-        color_discrete_map=TIER_COLOUR,
-        labels={"prob_pct": "Shortage Probability (%)", "label": ""},
-        title=f"Top {min(30, len(chart_df))} Drugs by Shortage Probability",
-        text="prob_pct",
-    )
-    fig.update_traces(texttemplate="%{text:.1f}%", textposition="outside")
-    fig.update_layout(
-        height=max(400, min(30, len(chart_df)) * 28),
-        showlegend=True,
-        legend_title_text="Risk Tier",
-        xaxis_range=[0, 115],
-        margin=dict(l=10, r=30, t=40, b=10),
-    )
-    st.plotly_chart(fig, use_container_width=True)
+    with tab1:
+        st.caption(
+            "**Risk Radar** — each bubble is a drug. "
+            "X = how close to the price floor (lower = more danger). "
+            "Y = ML shortage probability. "
+            "Bubble size = months on concession streak. "
+            "Top-left corner = most critical."
+        )
+
+        radar_df = df[df["floor_proximity"].notna() & df["shortage_probability"].notna()].copy()
+        radar_df["prob_pct"]   = (radar_df["shortage_probability"] * 100).round(1)
+        radar_df["streak_sz"]  = (radar_df["concession_streak"].fillna(0) + 1) * 6
+        radar_df["drug_short"] = radar_df["drug_name"].str[:40]
+        radar_df["hover_text"] = (
+            "<b>" + radar_df["drug_name"] + "</b><br>"
+            + "Risk: " + radar_df["prob_pct"].astype(str) + "%<br>"
+            + "Action: " + radar_df["buy_action"] + "<br>"
+            + "Floor proximity: " + radar_df["floor_proximity"].round(3).astype(str) + "<br>"
+            + "Streak: " + radar_df["concession_streak"].fillna(0).astype(int).astype(str) + " months"
+        )
+
+        fig_radar = go.Figure()
+
+        for action, colour in ACTION_COLOUR.items():
+            sub = radar_df[radar_df["buy_action"] == action]
+            if len(sub) == 0:
+                continue
+            fig_radar.add_trace(go.Scatter(
+                x=sub["floor_proximity"],
+                y=sub["prob_pct"],
+                mode="markers",
+                name=action,
+                marker=dict(
+                    size=sub["streak_sz"].clip(8, 50),
+                    color=colour,
+                    opacity=0.82,
+                    line=dict(width=1, color="white"),
+                ),
+                text=sub["hover_text"],
+                hovertemplate="%{text}<extra></extra>",
+                customdata=sub["drug_short"],
+            ))
+
+        # Danger zone lines
+        fig_radar.add_vline(x=1.15, line_dash="dot", line_color="#f4845f", line_width=1.5,
+                            annotation_text="Danger zone", annotation_position="top right",
+                            annotation_font_color="#f4845f")
+        fig_radar.add_hline(y=70, line_dash="dot", line_color="#f4845f", line_width=1.5,
+                            annotation_text="High risk threshold (70%)",
+                            annotation_position="right",
+                            annotation_font_color="#f4845f")
+
+        # Shaded critical quadrant (top-left)
+        fig_radar.add_shape(
+            type="rect", x0=0, y0=70, x1=1.15, y1=101,
+            fillcolor="rgba(230,57,80,0.07)", line_width=0,
+        )
+        fig_radar.add_annotation(
+            x=0.57, y=97, text="⚠ CRITICAL ZONE",
+            showarrow=False, font=dict(color="#e63950", size=12, family="Arial Black"),
+        )
+
+        fig_radar.update_layout(
+            height=520,
+            xaxis_title="Floor Proximity (lower = closer to unviable price)",
+            yaxis_title="Shortage Probability (%)",
+            hovermode="closest",
+            legend=dict(
+                orientation="h", yanchor="bottom", y=1.02,
+                xanchor="right", x=1, font=dict(size=11),
+            ),
+            xaxis=dict(range=[0.5, max(radar_df["floor_proximity"].max() * 1.05, 2.5)]),
+            yaxis=dict(range=[0, 103]),
+            margin=dict(l=10, r=10, t=40, b=10),
+            plot_bgcolor="#fafafa",
+        )
+        st.plotly_chart(fig_radar, use_container_width=True)
+        st.caption("Bubble size = concession streak length. Hover any bubble for full details.")
+
+    with tab2:
+        chart_df = df.head(30).copy()
+        chart_df["label"]    = chart_df["drug_name"].str[:48]
+        chart_df["prob_pct"] = (chart_df["shortage_probability"] * 100).round(1)
+
+        fig_bar = px.bar(
+            chart_df.sort_values("shortage_probability"),
+            x="prob_pct",
+            y="label",
+            orientation="h",
+            color="buy_action",
+            color_discrete_map=ACTION_COLOUR,
+            labels={"prob_pct": "Shortage Probability (%)", "label": ""},
+            title=f"Top {min(30, len(chart_df))} Drugs — Ranked by Risk",
+            text="prob_pct",
+            custom_data=["buy_action", "concession_streak"],
+        )
+        fig_bar.update_traces(
+            texttemplate="%{text:.1f}%",
+            textposition="outside",
+            hovertemplate="<b>%{y}</b><br>Risk: %{x:.1f}%<br>Action: %{customdata[0]}<br>Streak: %{customdata[1]} months<extra></extra>",
+        )
+        fig_bar.update_layout(
+            height=max(420, min(30, len(chart_df)) * 26),
+            showlegend=True,
+            legend_title_text="Buy Action",
+            xaxis_range=[0, 118],
+            margin=dict(l=10, r=30, t=40, b=10),
+            plot_bgcolor="#fafafa",
+        )
+        st.plotly_chart(fig_bar, use_container_width=True)
 
     # ── Table ───────────────────────────────────────────────────────────────────
     st.subheader(f"Alert Table — {len(df)} drugs")
