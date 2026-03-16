@@ -54,6 +54,23 @@ def tier_badge(tier):
     }
     return f"{colours.get(tier, '')} {tier}"
 
+def buy_action(prob, on_concession):
+    """Translate risk probability + concession status into a buying recommendation."""
+    on_conc = int(on_concession) if pd.notna(on_concession) else 0
+    if prob >= 0.90 and not on_conc:
+        return "🔴 BUY NOW"        # imminent — not yet priced in
+    if prob >= 0.90 and on_conc:
+        return "🟠 BUY MORE"       # already conceded, likely to continue
+    if prob >= 0.70 and not on_conc:
+        return "🟠 BUY AHEAD"      # high risk, accumulate before announcement
+    if prob >= 0.70 and on_conc:
+        return "🟡 MANAGE STOCK"   # ongoing concession, watch stock levels
+    if prob >= 0.50:
+        return "🟡 WATCH"          # elevated — monitor weekly
+    if prob >= 0.30:
+        return "⚪ NORMAL"          # low risk, standard ordering
+    return "✅ NO ACTION"           # no signal
+
 
 # ════════════════════════════════════════════════════════════════════════════════
 # DATA LOADERS (cached)
@@ -66,6 +83,9 @@ def load_predictions():
         return None
     df = pd.read_csv(path)
     df["risk_tier"] = df["shortage_probability"].apply(risk_tier)
+    df["buy_action"] = df.apply(
+        lambda r: buy_action(r["shortage_probability"], r.get("on_concession", 0)), axis=1
+    )
     df = df.sort_values("shortage_probability", ascending=False).reset_index(drop=True)
     df["rank"] = df.index + 1
     return df
@@ -209,29 +229,46 @@ if page == "📊 Top Risk Alerts":
                 default=["CONFIRMED", "HIGH", "MEDIUM"],
             )
         with fcol4:
-            only_new = st.checkbox("New risk only (hide already on concession)", False)
+            action_filter = st.multiselect(
+                "Buy action",
+                ["🔴 BUY NOW", "🟠 BUY MORE", "🟠 BUY AHEAD",
+                 "🟡 MANAGE STOCK", "🟡 WATCH", "⚪ NORMAL", "✅ NO ACTION"],
+                default=[],
+                placeholder="All actions",
+            )
+
+    only_new = st.checkbox("New risk only (hide already on concession)", False)
 
     df = predictions[predictions["shortage_probability"] >= min_prob].copy()
     if tier_filter:
         df = df[df["risk_tier"].isin(tier_filter)]
+    if action_filter:
+        df = df[df["buy_action"].isin(action_filter)]
     if only_new and "on_concession" in df.columns:
         df = df[df["on_concession"] == 0]
     df = df.head(n_show)
 
     # ── KPI metrics ────────────────────────────────────────────────────────────
-    m1, m2, m3, m4, m5 = st.columns(5)
-    m1.metric("🔴 CONFIRMED (≥90%)",
-              int((predictions["shortage_probability"] >= 0.90).sum()))
-    m2.metric("🟠 HIGH (≥70%)",
-              int(((predictions["shortage_probability"] >= 0.70) &
-                   (predictions["shortage_probability"] < 0.90)).sum()))
-    m3.metric("🟡 MEDIUM (≥50%)",
-              int(((predictions["shortage_probability"] >= 0.50) &
-                   (predictions["shortage_probability"] < 0.70)).sum()))
-    m4.metric("⚠️  On concession now",
+    m1, m2, m3, m4, m5, m6 = st.columns(6)
+    m1.metric("🔴 BUY NOW",
+              int((predictions["buy_action"] == "🔴 BUY NOW").sum())
+              if "buy_action" in predictions.columns else "—",
+              help="≥90% risk, NOT on concession — most urgent")
+    m2.metric("🟠 BUY AHEAD",
+              int((predictions["buy_action"] == "🟠 BUY AHEAD").sum())
+              if "buy_action" in predictions.columns else "—",
+              help="≥70% risk, NOT on concession — accumulate now")
+    m3.metric("🟠 BUY MORE",
+              int((predictions["buy_action"] == "🟠 BUY MORE").sum())
+              if "buy_action" in predictions.columns else "—",
+              help="≥90% risk, already on concession")
+    m4.metric("🟡 WATCH",
+              int(predictions["buy_action"].isin(["🟡 WATCH", "🟡 MANAGE STOCK"]).sum())
+              if "buy_action" in predictions.columns else "—")
+    m5.metric("⚠️  On concession now",
               int(predictions["on_concession"].sum())
               if "on_concession" in predictions.columns else "—")
-    m5.metric("📦 Total drugs scored", len(predictions))
+    m6.metric("📦 Total drugs scored", len(predictions))
 
     st.markdown("---")
 
@@ -265,8 +302,22 @@ if page == "📊 Top Risk Alerts":
     # ── Table ───────────────────────────────────────────────────────────────────
     st.subheader(f"Alert Table — {len(df)} drugs")
 
+    # ── Buying guide legend ─────────────────────────────────────────────────────
+    with st.expander("📖 Buying Action Guide", expanded=False):
+        st.markdown("""
+| Action | Condition | What to do |
+|---|---|---|
+| 🔴 **BUY NOW** | ≥90% risk · NOT on concession | Imminent shortage — stock up immediately before announcement |
+| 🟠 **BUY MORE** | ≥90% risk · On concession | Already conceded, likely to continue — increase holding |
+| 🟠 **BUY AHEAD** | ≥70% risk · NOT on concession | High risk — accumulate stock before competitors react |
+| 🟡 **MANAGE STOCK** | ≥70% risk · On concession | Ongoing — track stock weekly, avoid over-exposure |
+| 🟡 **WATCH** | ≥50% risk | Elevated signal — monitor monthly |
+| ⚪ **NORMAL** | ≥30% risk | Standard purchasing, no special action |
+| ✅ **NO ACTION** | <30% risk | No shortage signal — avoid overstocking |
+        """)
+
     display_cols = [
-        "rank", "drug_name", "shortage_probability", "risk_tier",
+        "rank", "drug_name", "buy_action", "shortage_probability", "risk_tier",
         "floor_proximity", "on_concession", "concession_streak",
         "conc_last_6mo", "mhra_mention_count", "demand_spike",
         "pharmacy_over_tariff",
@@ -280,6 +331,7 @@ if page == "📊 Top Risk Alerts":
     display = display.rename(columns={
         "rank": "#",
         "drug_name": "Drug",
+        "buy_action": "Buy Action",
         "shortage_probability": "Risk %",
         "risk_tier": "Tier",
         "floor_proximity": "Floor Prox.",
