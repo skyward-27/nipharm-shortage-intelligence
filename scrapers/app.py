@@ -298,27 +298,27 @@ if page == "📊 Top Risk Alerts":
             "✅ NO ACTION":      "#43aa8b",
         }
 
-        cards_df = df.reset_index(drop=True)
+        cards_df = df.head(12).reset_index(drop=True)
         n_cards  = len(cards_df)
-        cols_per_row = 3
+        cols_per_row = 4
 
         # inject card CSS once
         st.markdown("""
         <style>
         .drug-card {
             background: #161b27;
-            border-radius: 10px;
-            padding: 16px 18px 14px;
+            border-radius: 8px;
+            padding: 11px 13px 10px;
             margin-bottom: 2px;
             height: 100%;
             box-sizing: border-box;
         }
-        .dc-rank   { color:#6b7a99;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px }
-        .dc-name   { color:#e8ecf4;font-size:13px;font-weight:700;line-height:1.35;min-height:38px;margin-bottom:10px }
-        .dc-prob   { font-size:30px;font-weight:900;font-family:"Arial Black",Arial;line-height:1;margin-bottom:8px }
-        .dc-badge  { display:inline-block;padding:4px 9px;border-radius:5px;font-size:10px;font-weight:700;margin-bottom:10px }
-        .dc-dots   { font-size:11px;letter-spacing:2px;margin-bottom:8px }
-        .dc-meta   { display:flex;justify-content:space-between;font-size:10px;color:#6b7a99 }
+        .dc-rank   { color:#6b7a99;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px }
+        .dc-name   { color:#e8ecf4;font-size:11px;font-weight:700;line-height:1.3;min-height:30px;margin-bottom:7px }
+        .dc-prob   { font-size:24px;font-weight:900;font-family:"Arial Black",Arial;line-height:1;margin-bottom:6px }
+        .dc-badge  { display:inline-block;padding:3px 7px;border-radius:4px;font-size:9px;font-weight:700;margin-bottom:7px }
+        .dc-dots   { font-size:10px;letter-spacing:2px;margin-bottom:6px }
+        .dc-meta   { display:flex;justify-content:space-between;font-size:9px;color:#6b7a99 }
         .dc-meta b { color:#c8d0e0 }
         .dc-conc   { color:#e63950;font-weight:700 }
         </style>
@@ -354,7 +354,7 @@ if page == "📊 Top Risk Alerts":
                 card_html = f"""
                 <div class="drug-card" style="border-left:4px solid {colour}">
                     <div class="dc-rank">#{int(drug['rank'])}</div>
-                    <div class="dc-name">{drug['drug_name'][:55]}</div>
+                    <div class="dc-name">{drug['drug_name'][:42]}</div>
                     <div class="dc-prob" style="color:{colour}">{prob_pct}%</div>
                     <div class="dc-badge" style="background:{colour}22;color:{colour};border:1px solid {colour}55">{drug['buy_action']}</div>
                     <div class="dc-dots">{dots}</div>
