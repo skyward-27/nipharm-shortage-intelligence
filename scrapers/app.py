@@ -284,147 +284,88 @@ if page == "📊 Top Risk Alerts":
     st.markdown("---")
 
     # ── Chart tabs ──────────────────────────────────────────────────────────────
-    tab1, tab2 = st.tabs(["📈 Risk Heatmap", "📊 Ranked Bar"])
+    tab1, tab2 = st.tabs(["🃏 Drug Cards", "📊 Ranked Bar"])
 
     with tab1:
-        st.caption(
-            "**Risk Heatmap** — each cell = one drug. "
-            "Colour = buy action tier. Big number = shortage probability. "
-            "Hover any cell for full details."
-        )
-
-        hm_df = df.copy()
-        hm_df["prob_pct"]    = (hm_df["shortage_probability"] * 100).round(0)
-        hm_df["action_group"] = hm_df["buy_action"].map({
-            "🔴 BUY NOW":      "BUY NOW",
-            "🟠 BUY MORE":     "BUY MORE",
-            "🟠 BUY AHEAD":    "BUY AHEAD",
-            "🟡 MANAGE STOCK": "MANAGE STOCK",
-            "🟡 WATCH":        "WATCH",
-            "⚪ NORMAL":        "NORMAL",
-            "✅ NO ACTION":     "NO ACTION",
-        })
-        action_colour_clean = {
-            "BUY NOW":      "#e63950",
-            "BUY MORE":     "#f4845f",
-            "BUY AHEAD":    "#f8961e",
-            "MANAGE STOCK": "#f9c74f",
-            "WATCH":        "#90be6d",
-            "NORMAL":       "#90a0b0",
-            "NO ACTION":    "#43aa8b",
+        # ── Drug Cards — rich watchlist-style cards, 3 per row ──────────────────
+        action_colour_map = {
+            "🔴 BUY NOW":       "#e63950",
+            "🟠 BUY MORE":      "#f4845f",
+            "🟠 BUY AHEAD":     "#f8961e",
+            "🟡 MANAGE STOCK":  "#f9c74f",
+            "🟡 WATCH":         "#90be6d",
+            "⚪ NORMAL":         "#90a0b0",
+            "✅ NO ACTION":      "#43aa8b",
         }
-        hm_df = hm_df.reset_index(drop=True)
 
-        n_cols   = 5
-        cell_w   = 1.0
-        cell_h   = 1.0
-        gap_x    = 0.05
-        gap_y    = 0.05
+        cards_df = df.reset_index(drop=True)
+        n_cards  = len(cards_df)
+        cols_per_row = 3
 
-        shapes, annotations = [], []
-        hover_x, hover_y, hover_texts = [], [], []
+        # inject card CSS once
+        st.markdown("""
+        <style>
+        .drug-card {
+            background: #161b27;
+            border-radius: 10px;
+            padding: 16px 18px 14px;
+            margin-bottom: 2px;
+            height: 100%;
+            box-sizing: border-box;
+        }
+        .dc-rank   { color:#6b7a99;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px }
+        .dc-name   { color:#e8ecf4;font-size:13px;font-weight:700;line-height:1.35;min-height:38px;margin-bottom:10px }
+        .dc-prob   { font-size:30px;font-weight:900;font-family:"Arial Black",Arial;line-height:1;margin-bottom:8px }
+        .dc-badge  { display:inline-block;padding:4px 9px;border-radius:5px;font-size:10px;font-weight:700;margin-bottom:10px }
+        .dc-dots   { font-size:11px;letter-spacing:2px;margin-bottom:8px }
+        .dc-meta   { display:flex;justify-content:space-between;font-size:10px;color:#6b7a99 }
+        .dc-meta b { color:#c8d0e0 }
+        .dc-conc   { color:#e63950;font-weight:700 }
+        </style>
+        """, unsafe_allow_html=True)
 
-        for idx in range(len(hm_df)):
-            row      = hm_df.iloc[idx]
-            col_idx  = idx % n_cols
-            row_idx  = idx // n_cols
-            x0 = col_idx * (cell_w + gap_x)
-            x1 = x0 + cell_w
-            y1 = -(row_idx * (cell_h + gap_y))
-            y0 = y1 - cell_h
-            cx = (x0 + x1) / 2
-            cy = (y0 + y1) / 2
+        for row_start in range(0, n_cards, cols_per_row):
+            chunk = cards_df.iloc[row_start : row_start + cols_per_row]
+            cols  = st.columns(cols_per_row)
+            for col, (_, drug) in zip(cols, chunk.iterrows()):
+                colour  = action_colour_map.get(drug["buy_action"], "#90a0b0")
+                prob_pct = int(drug["shortage_probability"] * 100)
+                streak   = int(drug.get("concession_streak", 0) or 0)
+                fp       = float(drug.get("floor_proximity", 1.0) or 1.0)
+                on_conc  = int(drug.get("on_concession", 0) or 0)
+                last6    = int(drug.get("conc_last_6mo", 0) or 0)
 
-            colour = action_colour_clean.get(row["action_group"], "#555555")
+                # 6-dot concession history (filled = on concession that month)
+                dots = (
+                    "".join(
+                        f'<span style="color:{colour}">●</span>' if i < last6 else '<span style="color:#2e3650">●</span>'
+                        for i in range(6)
+                    )
+                )
 
-            # Cell background
-            shapes.append(dict(
-                type="rect", x0=x0, y0=y0, x1=x1, y1=y1,
-                fillcolor=colour,
-                line_width=3, line_color="#0d1117",
-            ))
+                # floor proximity colour
+                fp_col = "#e63950" if fp < 1.05 else ("#f8961e" if fp < 1.15 else "#90be6d")
 
-            # Drug name — split into 2 lines
-            parts = row["drug_name"].split()
-            mid   = max(1, len(parts) // 2)
-            line1 = " ".join(parts[:mid])[:22]
-            line2 = " ".join(parts[mid:])[:22] if len(parts) > mid else ""
+                conc_badge = (
+                    '<span class="dc-conc">● On concession</span>' if on_conc
+                    else '<span style="color:#2e3650">○ Not on concession</span>'
+                )
 
-            annotations.append(dict(
-                x=cx, y=cy + 0.30, text=f"<b>{line1}</b>",
-                showarrow=False, xanchor="center", yanchor="middle",
-                font=dict(color="white", size=8, family="Arial"),
-            ))
-            if line2:
-                annotations.append(dict(
-                    x=cx, y=cy + 0.13, text=f"<b>{line2}</b>",
-                    showarrow=False, xanchor="center", yanchor="middle",
-                    font=dict(color="white", size=8, family="Arial"),
-                ))
-
-            # Big probability number — the headline
-            annotations.append(dict(
-                x=cx, y=cy - 0.12,
-                text=f"<b>{int(row['prob_pct'])}%</b>",
-                showarrow=False, xanchor="center", yanchor="middle",
-                font=dict(color="white", size=18, family="Arial Black"),
-            ))
-
-            # Buy action label bottom
-            annotations.append(dict(
-                x=cx, y=cy - 0.37,
-                text=row["buy_action"],
-                showarrow=False, xanchor="center", yanchor="middle",
-                font=dict(color="rgba(255,255,255,0.80)", size=7),
-            ))
-
-            streak = int(row.get("concession_streak", 0) or 0)
-            fp     = float(row.get("floor_proximity", 0) or 0)
-            hover_x.append(cx)
-            hover_y.append(cy)
-            hover_texts.append(
-                f"<b>{row['drug_name']}</b><br>"
-                f"Risk: {int(row['prob_pct'])}%<br>"
-                f"Action: {row['buy_action']}<br>"
-                f"Streak: {streak} months<br>"
-                f"Floor proximity: {fp:.3f}<br>"
-                f"On concession: {int(row.get('on_concession', 0) or 0)}"
-            )
-
-        n_rows_grid = int(np.ceil(len(hm_df) / n_cols))
-        total_w     = n_cols * (cell_w + gap_x) - gap_x
-        total_h     = n_rows_grid * (cell_h + gap_y) - gap_y
-
-        fig_hm = go.Figure()
-        fig_hm.add_trace(go.Scatter(
-            x=hover_x, y=hover_y,
-            mode="markers",
-            marker=dict(size=72, opacity=0, symbol="square"),
-            hovertext=hover_texts,
-            hovertemplate="%{hovertext}<extra></extra>",
-            showlegend=False,
-        ))
-        fig_hm.update_layout(
-            shapes=shapes,
-            annotations=annotations,
-            height=max(280, n_rows_grid * 150),
-            xaxis=dict(visible=False, range=[-0.05, total_w + 0.05], fixedrange=True),
-            yaxis=dict(visible=False, range=[-(total_h + 0.05), 0.55], fixedrange=True),
-            plot_bgcolor="#0d1117",
-            paper_bgcolor="#0d1117",
-            margin=dict(l=5, r=5, t=5, b=5),
-            hovermode="closest",
-        )
-        st.plotly_chart(fig_hm, width="stretch")
-
-        # Colour legend
-        present = hm_df["action_group"].dropna().unique()
-        legend_html = "&nbsp;&nbsp;".join(
-            f'<span style="background:{c};color:white;padding:3px 12px;'
-            f'border-radius:4px;font-size:11px;font-weight:600">{k}</span>'
-            for k, c in action_colour_clean.items() if k in present
-        )
-        st.markdown(legend_html, unsafe_allow_html=True)
+                card_html = f"""
+                <div class="drug-card" style="border-left:4px solid {colour}">
+                    <div class="dc-rank">#{int(drug['rank'])}</div>
+                    <div class="dc-name">{drug['drug_name'][:55]}</div>
+                    <div class="dc-prob" style="color:{colour}">{prob_pct}%</div>
+                    <div class="dc-badge" style="background:{colour}22;color:{colour};border:1px solid {colour}55">{drug['buy_action']}</div>
+                    <div class="dc-dots">{dots}</div>
+                    <div class="dc-meta">
+                        <span>Floor prox: <b style="color:{fp_col}">{fp:.3f}</b></span>
+                        <span>Streak: <b>{streak}mo</b></span>
+                        {conc_badge}
+                    </div>
+                </div>
+                """
+                col.markdown(card_html, unsafe_allow_html=True)
 
     with tab2:
         chart_df = df.head(30).copy()
@@ -454,9 +395,13 @@ if page == "📊 Top Risk Alerts":
             legend_title_text="Buy Action",
             xaxis_range=[0, 118],
             margin=dict(l=10, r=30, t=40, b=10),
-            plot_bgcolor="#fafafa",
+            plot_bgcolor="#161b27",
+            paper_bgcolor="#161b27",
+            font=dict(color="#c8d0e0"),
+            xaxis=dict(gridcolor="#2e3650", tickcolor="#6b7a99"),
+            yaxis=dict(gridcolor="#2e3650", tickcolor="#6b7a99"),
         )
-        st.plotly_chart(fig_bar, width="stretch")
+        st.plotly_chart(fig_bar, use_container_width=True)
 
     # ── Table ───────────────────────────────────────────────────────────────────
     st.subheader(f"Alert Table — {len(df)} drugs")
@@ -502,7 +447,7 @@ if page == "📊 Top Risk Alerts":
         "pharmacy_over_tariff": "Over Tariff",
     })
 
-    st.dataframe(display, width="stretch", height=520)
+    st.dataframe(display, use_container_width=True, height=520)
 
     # ── Downloads ───────────────────────────────────────────────────────────────
     dcol1, dcol2 = st.columns(2)
@@ -669,7 +614,7 @@ elif page == "🔍 Drug Lookup":
     )
     fig.update_yaxes(title_text="Price (£)", secondary_y=False)
     fig.update_yaxes(title_text="Floor Proximity", secondary_y=True)
-    st.plotly_chart(fig, width="stretch")
+    st.plotly_chart(fig, use_container_width=True)
 
     if conc_months:
         st.caption(
@@ -703,7 +648,7 @@ elif page == "🔍 Drug Lookup":
                 margin=dict(l=10, r=10, t=10, b=10),
                 showlegend=False,
             )
-            st.plotly_chart(fig2, width="stretch")
+            st.plotly_chart(fig2, use_container_width=True)
             st.caption("🔴 Red bars = demand spike month (>1.5× rolling average). "
                        "Aggregated across all formulations.")
 
@@ -711,7 +656,7 @@ elif page == "🔍 Drug Lookup":
     st.subheader(f"Concession History")
     if conc_months:
         conc_df = pd.DataFrame({"Month": [m.strftime("%b %Y") for m in conc_months]})
-        st.dataframe(conc_df.T, width="stretch", hide_index=True)
+        st.dataframe(conc_df.T, use_container_width=True, hide_index=True)
     else:
         st.success("No historical concessions found for this drug.")
 
@@ -725,7 +670,7 @@ elif page == "🔍 Drug Lookup":
         ] if c in drug_data.columns]
         dd = drug_data[show_cols].copy()
         dd["month"] = dd["month"].dt.strftime("%b %Y")
-        st.dataframe(dd, width="stretch")
+        st.dataframe(dd, use_container_width=True)
 
 
 # ════════════════════════════════════════════════════════════════════════════════
@@ -800,7 +745,7 @@ elif page == "📈 Concession Trends":
             legend=dict(orientation="h", yanchor="bottom", y=1.02),
             margin=dict(l=10, r=10, t=10, b=10),
         )
-        st.plotly_chart(fig, width="stretch")
+        st.plotly_chart(fig, use_container_width=True)
 
     # ── YoY comparison ──────────────────────────────────────────────────────────
     st.subheader("Year-over-Year Comparison")
@@ -824,7 +769,7 @@ elif page == "📈 Concession Trends":
                                          "Jul","Aug","Sep","Oct","Nov","Dec"]},
     )
     fig2.update_layout(height=350, margin=dict(l=10, r=10, t=40, b=10))
-    st.plotly_chart(fig2, width="stretch")
+    st.plotly_chart(fig2, use_container_width=True)
 
     # ── Top chronic drugs ────────────────────────────────────────────────────────
     st.subheader("Most Frequently Conceded Drugs")
@@ -851,10 +796,10 @@ elif page == "📈 Concession Trends":
         coloraxis_showscale=False,
         margin=dict(l=10, r=10, t=10, b=10),
     )
-    st.plotly_chart(fig3, width="stretch")
+    st.plotly_chart(fig3, use_container_width=True)
 
     with st.expander("📄 Raw CPE archive (first 500 rows)"):
-        st.dataframe(h.head(500), width="stretch")
+        st.dataframe(h.head(500), use_container_width=True)
 
 
 # ════════════════════════════════════════════════════════════════════════════════
@@ -908,7 +853,7 @@ elif page == "📡 Market Signals":
             ))
         fig.update_layout(height=300, margin=dict(l=10, r=10, t=10, b=10),
                           hovermode="x unified")
-        st.plotly_chart(fig, width="stretch")
+        st.plotly_chart(fig, use_container_width=True)
         st.caption("60% of UK generic APIs sourced from Indian manufacturers — "
                    "high Brent = elevated transport + energy cost.")
     else:
@@ -947,7 +892,7 @@ elif page == "📡 Market Signals":
                 legend=dict(orientation="h", yanchor="bottom", y=1.02),
                 margin=dict(l=10, r=10, t=10, b=10),
             )
-            st.plotly_chart(fig2, width="stretch")
+            st.plotly_chart(fig2, use_container_width=True)
         st.caption("GBP weakening vs INR = Indian API manufacturers receive less per unit sold to UK "
                    "→ margin squeeze → supply reduction signal.")
     else:
@@ -973,7 +918,7 @@ elif page == "📡 Market Signals":
                 name="BoE Rate",
             ))
             fig3.update_layout(height=260, margin=dict(l=10, r=10, t=10, b=10))
-            st.plotly_chart(fig3, width="stretch")
+            st.plotly_chart(fig3, use_container_width=True)
             st.caption("Higher rates → higher supply chain financing costs → manufacturer cash flow pressure.")
         else:
             st.warning("BoE rate column not detected.")
@@ -1032,7 +977,7 @@ elif page == "🤖 Model Info":
             margin=dict(l=10, r=40, t=10, b=10),
             showlegend=False,
         )
-        st.plotly_chart(fig, width="stretch")
+        st.plotly_chart(fig, use_container_width=True)
 
         st.markdown("""
         | Feature group | Key signals | Why it matters |
