@@ -313,27 +313,59 @@ if page == "📊 Top Risk Alerts":
         action_colour_clean = {action_label_map[k]: v for k, v in ACTION_COLOUR.items()}
         tm_df["action_group"] = tm_df["buy_action"].map(action_label_map)
 
-        fig_tm = px.treemap(
-            tm_df,
-            path=["action_group", "drug_label"],
-            values="tm_value",
-            color="action_group",
-            color_discrete_map=action_colour_clean,
-            custom_data=["drug_name", "prob_pct", "buy_action",
-                         "concession_streak", "floor_proximity", "on_concession"],
-        )
-        fig_tm.update_traces(
-            hovertemplate=(
-                "<b>%{customdata[0]}</b><br>"
-                "Risk: %{customdata[1]:.1f}%<br>"
-                "Action: %{customdata[2]}<br>"
-                "Streak: %{customdata[3]:.0f} months<br>"
-                "Floor proximity: %{customdata[4]:.3f}<br>"
-                "On concession: %{customdata[5]}<extra></extra>"
+        # Build go.Treemap manually — avoids px.treemap's df.append() call
+        # which breaks on pandas ≥2.0
+        labels, parents, values, colours, customtext = [], [], [], [], []
+
+        # Root node (invisible)
+        labels.append("All Drugs")
+        parents.append("")
+        values.append(0)
+        colours.append("rgba(0,0,0,0)")
+        customtext.append("")
+
+        # Group nodes (one per buy action tier present in data)
+        for grp in tm_df["action_group"].dropna().unique():
+            grp_total = tm_df.loc[tm_df["action_group"] == grp, "tm_value"].sum()
+            labels.append(grp)
+            parents.append("All Drugs")
+            values.append(0)          # branchvalues="remainder" fills from children
+            colours.append(action_colour_clean.get(grp, "#aaaaaa"))
+            customtext.append(f"<b>{grp}</b>")
+
+        # Leaf nodes (one per drug)
+        for _, row in tm_df.iterrows():
+            streak = int(row.get("concession_streak", 0) or 0)
+            fp     = row.get("floor_proximity", 0) or 0
+            on_c   = int(row.get("on_concession", 0) or 0)
+            labels.append(row["drug_label"])
+            parents.append(row["action_group"])
+            values.append(row["tm_value"])
+            colours.append(action_colour_clean.get(row["action_group"], "#aaaaaa"))
+            customtext.append(
+                f"<b>{row['drug_name']}</b><br>"
+                f"Risk: {row['prob_pct']:.1f}%<br>"
+                f"Action: {row['buy_action']}<br>"
+                f"Streak: {streak} months<br>"
+                f"Floor proximity: {fp:.3f}<br>"
+                f"On concession: {on_c}"
+            )
+
+        fig_tm = go.Figure(go.Treemap(
+            labels=labels,
+            parents=parents,
+            values=values,
+            branchvalues="remainder",
+            marker=dict(
+                colors=colours,
+                cornerradius=4,
+                line=dict(width=1.5, color="white"),
             ),
-            textfont_size=12,
-            marker=dict(cornerradius=4),
-        )
+            text=customtext,
+            hovertemplate="%{text}<extra></extra>",
+            textfont=dict(size=12),
+            pathbar=dict(visible=True),
+        ))
         fig_tm.update_layout(
             height=500,
             margin=dict(l=5, r=5, t=30, b=5),
