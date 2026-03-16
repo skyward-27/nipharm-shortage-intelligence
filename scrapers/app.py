@@ -362,7 +362,7 @@ if page == "📊 Top Risk Alerts":
             margin=dict(l=10, r=10, t=40, b=10),
             plot_bgcolor="#fafafa",
         )
-        st.plotly_chart(fig_radar, use_container_width=True)
+        st.plotly_chart(fig_radar, width="stretch")
         st.caption("Bubble size = concession streak length. Hover any bubble for full details.")
 
     with tab2:
@@ -395,7 +395,7 @@ if page == "📊 Top Risk Alerts":
             margin=dict(l=10, r=30, t=40, b=10),
             plot_bgcolor="#fafafa",
         )
-        st.plotly_chart(fig_bar, use_container_width=True)
+        st.plotly_chart(fig_bar, width="stretch")
 
     # ── Table ───────────────────────────────────────────────────────────────────
     st.subheader(f"Alert Table — {len(df)} drugs")
@@ -441,7 +441,7 @@ if page == "📊 Top Risk Alerts":
         "pharmacy_over_tariff": "Over Tariff",
     })
 
-    st.dataframe(display, use_container_width=True, height=520)
+    st.dataframe(display, width="stretch", height=520)
 
     # ── Downloads ───────────────────────────────────────────────────────────────
     dcol1, dcol2 = st.columns(2)
@@ -608,7 +608,7 @@ elif page == "🔍 Drug Lookup":
     )
     fig.update_yaxes(title_text="Price (£)", secondary_y=False)
     fig.update_yaxes(title_text="Floor Proximity", secondary_y=True)
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     if conc_months:
         st.caption(
@@ -642,7 +642,7 @@ elif page == "🔍 Drug Lookup":
                 margin=dict(l=10, r=10, t=10, b=10),
                 showlegend=False,
             )
-            st.plotly_chart(fig2, use_container_width=True)
+            st.plotly_chart(fig2, width="stretch")
             st.caption("🔴 Red bars = demand spike month (>1.5× rolling average). "
                        "Aggregated across all formulations.")
 
@@ -650,7 +650,7 @@ elif page == "🔍 Drug Lookup":
     st.subheader(f"Concession History")
     if conc_months:
         conc_df = pd.DataFrame({"Month": [m.strftime("%b %Y") for m in conc_months]})
-        st.dataframe(conc_df.T, use_container_width=True, hide_index=True)
+        st.dataframe(conc_df.T, width="stretch", hide_index=True)
     else:
         st.success("No historical concessions found for this drug.")
 
@@ -664,7 +664,7 @@ elif page == "🔍 Drug Lookup":
         ] if c in drug_data.columns]
         dd = drug_data[show_cols].copy()
         dd["month"] = dd["month"].dt.strftime("%b %Y")
-        st.dataframe(dd, use_container_width=True)
+        st.dataframe(dd, width="stretch")
 
 
 # ════════════════════════════════════════════════════════════════════════════════
@@ -739,7 +739,7 @@ elif page == "📈 Concession Trends":
             legend=dict(orientation="h", yanchor="bottom", y=1.02),
             margin=dict(l=10, r=10, t=10, b=10),
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     # ── YoY comparison ──────────────────────────────────────────────────────────
     st.subheader("Year-over-Year Comparison")
@@ -763,7 +763,7 @@ elif page == "📈 Concession Trends":
                                          "Jul","Aug","Sep","Oct","Nov","Dec"]},
     )
     fig2.update_layout(height=350, margin=dict(l=10, r=10, t=40, b=10))
-    st.plotly_chart(fig2, use_container_width=True)
+    st.plotly_chart(fig2, width="stretch")
 
     # ── Top chronic drugs ────────────────────────────────────────────────────────
     st.subheader("Most Frequently Conceded Drugs")
@@ -790,10 +790,10 @@ elif page == "📈 Concession Trends":
         coloraxis_showscale=False,
         margin=dict(l=10, r=10, t=10, b=10),
     )
-    st.plotly_chart(fig3, use_container_width=True)
+    st.plotly_chart(fig3, width="stretch")
 
     with st.expander("📄 Raw CPE archive (first 500 rows)"):
-        st.dataframe(h.head(500), use_container_width=True)
+        st.dataframe(h.head(500), width="stretch")
 
 
 # ════════════════════════════════════════════════════════════════════════════════
@@ -847,7 +847,7 @@ elif page == "📡 Market Signals":
             ))
         fig.update_layout(height=300, margin=dict(l=10, r=10, t=10, b=10),
                           hovermode="x unified")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
         st.caption("60% of UK generic APIs sourced from Indian manufacturers — "
                    "high Brent = elevated transport + energy cost.")
     else:
@@ -886,7 +886,7 @@ elif page == "📡 Market Signals":
                 legend=dict(orientation="h", yanchor="bottom", y=1.02),
                 margin=dict(l=10, r=10, t=10, b=10),
             )
-            st.plotly_chart(fig2, use_container_width=True)
+            st.plotly_chart(fig2, width="stretch")
         st.caption("GBP weakening vs INR = Indian API manufacturers receive less per unit sold to UK "
                    "→ margin squeeze → supply reduction signal.")
     else:
@@ -912,7 +912,7 @@ elif page == "📡 Market Signals":
                 name="BoE Rate",
             ))
             fig3.update_layout(height=260, margin=dict(l=10, r=10, t=10, b=10))
-            st.plotly_chart(fig3, use_container_width=True)
+            st.plotly_chart(fig3, width="stretch")
             st.caption("Higher rates → higher supply chain financing costs → manufacturer cash flow pressure.")
         else:
             st.warning("BoE rate column not detected.")
@@ -971,7 +971,7 @@ elif page == "🤖 Model Info":
             margin=dict(l=10, r=40, t=10, b=10),
             showlegend=False,
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
         st.markdown("""
         | Feature group | Key signals | Why it matters |
