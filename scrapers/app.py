@@ -230,7 +230,7 @@ if page == "📊 Top Risk Alerts":
     with st.expander("⚙️ Filters", expanded=True):
         fcol1, fcol2, fcol3, fcol4 = st.columns(4)
         with fcol1:
-            n_show = st.select_slider("Show top N drugs", options=[10, 20, 30, 50, 100], value=20)
+            n_show = st.select_slider("Show top N drugs", options=[10, 20, 30, 50], value=20)
         with fcol2:
             min_prob = st.slider("Min probability", 0.0, 1.0, 0.30, 0.05)
         with fcol3:
