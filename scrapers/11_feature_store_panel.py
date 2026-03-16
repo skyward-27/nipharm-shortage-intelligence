@@ -55,8 +55,51 @@ def load_concessions() -> pd.DataFrame:
 # ─────────────────────────────────────────────
 
 def load_tariff() -> pd.DataFrame:
-    path = "data/drug_tariff/drug_tariff_202603.csv"
-    df = pd.read_csv(path)
+    # Prefer extended history (script 17) if available, else fall back to 24-month file
+    extended_path = "data/drug_tariff/catm_history_all.csv"
+    legacy_path   = "data/drug_tariff/drug_tariff_202603.csv"
+
+    if os.path.exists(extended_path):
+        print(f"Using extended tariff: {extended_path}")
+        df = pd.read_csv(extended_path, dtype=str)
+        df["vmpp_code"] = pd.to_numeric(df["vmpp_code"], errors="coerce")
+        df = df.dropna(subset=["vmpp_code"])
+        df["vmpp_code"] = df["vmpp_code"].astype(np.int64).astype(str)
+        df["price_gbp"] = pd.to_numeric(df["price_gbp"], errors="coerce")
+        df = df.dropna(subset=["price_gbp"])
+        df["tariff_month"] = df["tariff_month_str"].apply(
+            lambda s: pd.Period(s, freq="M") if isinstance(s, str) else None
+        )
+        df = df.dropna(subset=["tariff_month"])
+        df = df.rename(columns={"source_label": "source_file"})
+        if "unit" not in df.columns:
+            df["unit"] = ""
+
+        # Expand quarterly snapshots → monthly by forward-filling per VMPP
+        # (Cat M price is valid for the whole quarter until next update)
+        all_months = pd.period_range(df["tariff_month"].min(), df["tariff_month"].max(), freq="M")
+        expanded = []
+        for vmpp, grp in df.groupby("vmpp_code"):
+            grp = grp.set_index("tariff_month").sort_index()
+            # Reindex to every month, forward-fill price and metadata
+            grp = grp.reindex(all_months)
+            grp["vmpp_code"] = vmpp
+            for col in ["drug_name", "pack_size", "unit", "source_file"]:
+                if col in grp.columns:
+                    grp[col] = grp[col].ffill().bfill()
+            grp["price_gbp"] = grp["price_gbp"].ffill()
+            grp = grp.dropna(subset=["price_gbp"])
+            grp.index.name = "tariff_month"
+            grp = grp.reset_index()
+            expanded.append(grp)
+
+        df = pd.concat(expanded, ignore_index=True)
+        print(f"Tariff loaded (monthly expanded): {len(df):,} rows, {df.tariff_month.nunique()} months, {df.vmpp_code.nunique()} VMPPs")
+        return df
+
+    # Legacy path
+    print(f"Using legacy tariff: {legacy_path}")
+    df = pd.read_csv(legacy_path)
     df.columns = [c.strip().lower().replace(" ", "_") for c in df.columns]
     df = df.rename(columns={
         "vmpp_snomed_code": "vmpp_code",
@@ -71,7 +114,6 @@ def load_tariff() -> pd.DataFrame:
     df["price_gbp"] = pd.to_numeric(df["price_pence"], errors="coerce") / 100
     df = df.dropna(subset=["vmpp_code", "price_gbp"])
 
-    # Parse month from source_file string e.g. "Category M Prices - Quarter 4 January 2026"
     def parse_month(s):
         months = ["January","February","March","April","May","June",
                   "July","August","September","October","November","December"]
@@ -267,7 +309,7 @@ def build_panel(price_features: pd.DataFrame,
         panel = panel.merge(macro, on="month", how="left")
         for col in ["gbp_inr", "fx_stress_score", "boe_bank_rate"]:
             if col in panel.columns:
-                panel[col] = panel[col].fillna(method="ffill").fillna(panel[col].median())
+                panel[col] = panel[col].ffill().fillna(panel[col].median())
 
     # ── MHRA mention count (static per drug)
     panel["mhra_mention_count"] = panel["drug_name"].apply(
@@ -297,6 +339,49 @@ def build_panel(price_features: pd.DataFrame,
         return grp
     panel = panel.groupby("vmpp_code", group_keys=False).apply(rolling_concession_count)
 
+    # ── Pharmacy invoice signals (pharmacy_training_features.csv)
+    ph_path = "data/pharmacy_invoices/pharmacy_training_features.csv"
+    if os.path.exists(ph_path):
+        ph = pd.read_csv(ph_path)
+        ph["date"] = pd.to_datetime(ph["date"], errors="coerce")
+        ph["month"] = ph["date"].dt.to_period("M")
+        ph["drug_first"] = ph["description"].str.lower().str.split().str[0]
+        ph = ph[ph["drug_first"].str.len() >= 4]
+
+        # Static: ever flagged as over-tariff per drug
+        over_tariff_drugs = set(
+            ph[ph["over_tariff_flag"] == 1]["drug_first"].dropna().unique()
+        )
+        panel["drug_first"] = panel["drug_name"].str.lower().str.split().str[0]
+        panel["pharmacy_over_tariff"] = panel["drug_first"].apply(
+            lambda x: int(x in over_tariff_drugs) if isinstance(x, str) else 0
+        )
+
+        # Time-varying: pharmacy unit price per drug per month (4 snapshots)
+        ph_price = ph.groupby(["drug_first", "month"]).agg(
+            pharmacy_unit_price=("unit_price_gbp", "mean"),
+            pharmacy_qty_ordered=("qty_ordered", "sum"),
+        ).reset_index()
+        panel = panel.merge(ph_price, on=["drug_first", "month"], how="left")
+        # Forward-fill pharmacy price within each drug (quarterly snapshots → monthly)
+        panel = panel.sort_values(["vmpp_code", "month"])
+        panel["pharmacy_unit_price"] = (
+            panel.groupby("vmpp_code")["pharmacy_unit_price"]
+            .transform(lambda x: x.ffill())
+        )
+        panel["pharmacy_qty_ordered"] = panel["pharmacy_qty_ordered"].fillna(0)
+        panel = panel.drop(columns=["drug_first"])
+
+        flagged = panel["pharmacy_over_tariff"].sum()
+        priced  = panel["pharmacy_unit_price"].notna().sum()
+        print(f"  Pharmacy over-tariff flags : {flagged:,} drug-month rows")
+        print(f"  Pharmacy unit price joined : {priced:,} drug-month rows")
+    else:
+        panel["pharmacy_over_tariff"] = 0
+        panel["pharmacy_unit_price"]  = np.nan
+        panel["pharmacy_qty_ordered"] = 0
+        print("  Pharmacy invoice data not found — signals set to 0")
+
     print(f"\nPanel built: {len(panel):,} drug-month rows")
     print(f"  Positive labels (next month): {panel['label_next_month'].sum():,} / {len(panel):,} ({panel['label_next_month'].mean():.1%})")
     print(f"  Current month on concession:  {panel['on_concession'].sum():,}")
@@ -325,6 +410,30 @@ def run():
     print(f"\nUS shortage first-words loaded: {len(us_names)}")
 
     panel = build_panel(price_features, concessions, macro, mhra_text, us_names)
+
+    # ── Join PCA demand features (script 13 output) if available
+    pca_path = "data/openprescribing/pca_demand_features.csv"
+    if os.path.exists(pca_path):
+        print("\nJoining PCA demand features...")
+        pca = pd.read_csv(pca_path)
+        pca["month"] = pca["month"].apply(lambda s: pd.Period(s, freq="M") if isinstance(s, str) else None)
+        pca = pca.rename(columns={"bnf_code": "bnf_code_pca"})
+        # Match on drug name first word (BNF ≠ VMPP code — name join only)
+        pca["drug_first"] = pca["bnf_name"].str.lower().str.split().str[0]
+        panel["drug_first"] = panel["drug_name"].str.lower().str.split().str[0]
+        pca_agg = pca.groupby(["drug_first", "month"]).agg(
+            items_mom_pct   =("items_mom_pct",   "mean"),
+            demand_spike    =("demand_spike",     "max"),
+            demand_trend_6mo=("demand_trend_6mo", "mean"),
+            avg_items_3mo   =("avg_items_3mo",    "mean"),
+        ).reset_index()
+        panel = panel.merge(pca_agg, on=["drug_first", "month"], how="left")
+        for col in ["items_mom_pct", "demand_spike", "demand_trend_6mo", "avg_items_3mo"]:
+            panel[col] = panel[col].fillna(0)
+        panel = panel.drop(columns=["drug_first"])
+        print(f"  PCA joined: {(panel['demand_spike'] > 0).sum():,} demand spike flags across panel")
+    else:
+        print("\nPCA demand features not found — run script 13 to add demand signal")
 
     # Save full panel
     panel_path = f"{OUT_DIR}/panel_feature_store.csv"

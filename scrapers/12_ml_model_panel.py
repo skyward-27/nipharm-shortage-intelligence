@@ -39,6 +39,16 @@ FEATURES = [
     "ssp_flag",                  # drug has ever had an SSP (severe shortage)
     "fx_stress_score",           # GBP/INR stress score
     "boe_bank_rate",             # UK base rate
+    "brent_stress",              # Brent crude z-score (packaging/logistics cost pressure)
+    "sunpharma_stress",          # Sun Pharma stock z-score (India API supply proxy)
+    "brent_mom_pct",             # Brent crude 1-month % change
+    # PCA demand signal (script 13) — zero-filled if not available
+    "items_mom_pct",             # prescription volume MoM change %
+    "demand_spike",              # binary: Rx volume surge >20%
+    "demand_trend_6mo",          # 6-month linear trend in Rx volumes
+    # Pharmacy invoice signals (pharmacy_training_features.csv)
+    "pharmacy_over_tariff",      # 1 if pharmacy ever paid over NHS tariff for this drug
+    "pharmacy_unit_price",       # actual price pharmacy paid (vs NHS tariff)
 ]
 
 TARGET = "label_next_month"
@@ -102,6 +112,9 @@ def save_outputs(clf, cv_results, df, X):
 
     # Predictions on latest month
     latest = df[df["month"] == df["month"].max()].copy()
+    for col in FEATURES:
+        if col not in latest.columns:
+            latest[col] = 0
     X_latest = latest[FEATURES].fillna(0).values
     latest["shortage_probability"] = clf.predict_proba(X_latest)[:, 1].round(4)
     latest["predicted_shortage"] = clf.predict(X_latest)

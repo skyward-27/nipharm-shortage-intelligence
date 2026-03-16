@@ -87,7 +87,7 @@ def download_and_aggregate(resource: dict) -> pd.DataFrame:
         ).agg(items=("ITEMS", "sum"), nic_gbp=("NIC", "sum"))
 
         agg["year_month"] = resource["year_month"]
-        agg["month"] = pd.to_datetime(resource["year_month"], format="%Y%m").dt.to_period("M").astype(str)
+        agg["month"] = str(pd.Period(resource["year_month"], freq="M"))
 
         return agg
 
@@ -143,15 +143,30 @@ def run():
 
     resources = get_resource_list()
 
-    # Download all available months (52 months, ~14MB each uncompressed)
-    # Each file is ~1-3MB compressed — doable in one session
-    all_months = []
+    # Resume support: load already-downloaded months and skip them
+    monthly_path = f"{OUT_DIR}/pca_demand_monthly.csv"
+    already_done = set()
+    existing = []
+    if os.path.exists(monthly_path):
+        prev = pd.read_csv(monthly_path)
+        already_done = set(prev["year_month"].astype(str).unique())
+        existing.append(prev)
+        print(f"Resuming — {len(already_done)} months already downloaded: "
+              f"{min(already_done)} → {max(already_done)}")
+
+    all_months = list(existing)
     for i, res in enumerate(resources):
+        if res["year_month"] in already_done:
+            print(f"  [{i+1:02d}/{len(resources)}] {res['name']}... already done, skipping")
+            continue
         print(f"  [{i+1:02d}/{len(resources)}] {res['name']}...", end=" ", flush=True)
         df = download_and_aggregate(res)
         if len(df):
             all_months.append(df)
             print(f"{len(df):,} BNF codes")
+            # Save incrementally so progress survives Ctrl-C
+            partial = pd.concat(all_months, ignore_index=True)
+            partial.to_csv(monthly_path, index=False)
         else:
             print("skipped")
         time.sleep(0.3)
@@ -161,6 +176,10 @@ def run():
         return
 
     raw = pd.concat(all_months, ignore_index=True)
+    raw = raw.drop_duplicates(subset=["GENERIC_BNF_EQUIVALENT_CODE", "year_month"]
+                              if "GENERIC_BNF_EQUIVALENT_CODE" in raw.columns
+                              else ["bnf_code", "year_month"] if "bnf_code" in raw.columns
+                              else raw.columns[:2])
     raw.to_csv(f"{OUT_DIR}/pca_demand_monthly.csv", index=False)
     print(f"\nRaw monthly aggregates: {len(raw):,} rows → {OUT_DIR}/pca_demand_monthly.csv")
 
