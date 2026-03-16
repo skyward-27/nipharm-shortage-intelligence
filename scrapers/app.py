@@ -230,7 +230,7 @@ if page == "📊 Top Risk Alerts":
     with st.expander("⚙️ Filters", expanded=True):
         fcol1, fcol2, fcol3, fcol4 = st.columns(4)
         with fcol1:
-            n_show = st.slider("Show top N drugs", 10, 150, 50)
+            n_show = st.select_slider("Show top N drugs", options=[10, 20, 30, 50, 100], value=20)
         with fcol2:
             min_prob = st.slider("Min probability", 0.0, 1.0, 0.30, 0.05)
         with fcol3:
@@ -288,82 +288,61 @@ if page == "📊 Top Risk Alerts":
 
     with tab1:
         st.caption(
-            "**Risk Radar** — each bubble is a drug. "
-            "X = how close to the price floor (lower = more danger). "
-            "Y = ML shortage probability. "
-            "Bubble size = months on concession streak. "
-            "Top-left corner = most critical."
+            "**Shortage Treemap** — each rectangle is a drug. "
+            "Size = shortage probability. Colour = buying action. "
+            "Grouped by tier. Hover for full details."
         )
 
-        radar_df = df[df["floor_proximity"].notna() & df["shortage_probability"].notna()].copy()
-        radar_df["prob_pct"]   = (radar_df["shortage_probability"] * 100).round(1)
-        radar_df["streak_sz"]  = (radar_df["concession_streak"].fillna(0) + 1) * 6
-        radar_df["drug_short"] = radar_df["drug_name"].str[:40]
-        radar_df["hover_text"] = (
-            "<b>" + radar_df["drug_name"] + "</b><br>"
-            + "Risk: " + radar_df["prob_pct"].astype(str) + "%<br>"
-            + "Action: " + radar_df["buy_action"] + "<br>"
-            + "Floor proximity: " + radar_df["floor_proximity"].round(3).astype(str) + "<br>"
-            + "Streak: " + radar_df["concession_streak"].fillna(0).astype(int).astype(str) + " months"
+        tm_df = df.copy()
+        tm_df["prob_pct"]    = (tm_df["shortage_probability"] * 100).round(1)
+        tm_df["drug_label"]  = tm_df["drug_name"].str[:35]
+        tm_df["streak_disp"] = tm_df["concession_streak"].fillna(0).astype(int).astype(str) + "mo"
+        # Treemap needs a positive value — use prob_pct, minimum 1 so tiny risks still show
+        tm_df["tm_value"]    = tm_df["prob_pct"].clip(lower=1)
+
+        # Map buy_action → clean group label (strip emoji for path grouping)
+        action_label_map = {
+            "🔴 BUY NOW":      "BUY NOW",
+            "🟠 BUY MORE":     "BUY MORE",
+            "🟠 BUY AHEAD":    "BUY AHEAD",
+            "🟡 MANAGE STOCK": "MANAGE STOCK",
+            "🟡 WATCH":        "WATCH",
+            "⚪ NORMAL":        "NORMAL",
+            "✅ NO ACTION":     "NO ACTION",
+        }
+        action_colour_clean = {action_label_map[k]: v for k, v in ACTION_COLOUR.items()}
+        tm_df["action_group"] = tm_df["buy_action"].map(action_label_map)
+
+        fig_tm = px.treemap(
+            tm_df,
+            path=["action_group", "drug_label"],
+            values="tm_value",
+            color="action_group",
+            color_discrete_map=action_colour_clean,
+            custom_data=["drug_name", "prob_pct", "buy_action",
+                         "concession_streak", "floor_proximity", "on_concession"],
         )
-
-        fig_radar = go.Figure()
-
-        for action, colour in ACTION_COLOUR.items():
-            sub = radar_df[radar_df["buy_action"] == action]
-            if len(sub) == 0:
-                continue
-            fig_radar.add_trace(go.Scatter(
-                x=sub["floor_proximity"],
-                y=sub["prob_pct"],
-                mode="markers",
-                name=action,
-                marker=dict(
-                    size=sub["streak_sz"].clip(8, 50),
-                    color=colour,
-                    opacity=0.82,
-                    line=dict(width=1, color="white"),
-                ),
-                text=sub["hover_text"],
-                hovertemplate="%{text}<extra></extra>",
-                customdata=sub["drug_short"],
-            ))
-
-        # Danger zone lines
-        fig_radar.add_vline(x=1.15, line_dash="dot", line_color="#f4845f", line_width=1.5,
-                            annotation_text="Danger zone", annotation_position="top right",
-                            annotation_font_color="#f4845f")
-        fig_radar.add_hline(y=70, line_dash="dot", line_color="#f4845f", line_width=1.5,
-                            annotation_text="High risk threshold (70%)",
-                            annotation_position="right",
-                            annotation_font_color="#f4845f")
-
-        # Shaded critical quadrant (top-left)
-        fig_radar.add_shape(
-            type="rect", x0=0, y0=70, x1=1.15, y1=101,
-            fillcolor="rgba(230,57,80,0.07)", line_width=0,
-        )
-        fig_radar.add_annotation(
-            x=0.57, y=97, text="⚠ CRITICAL ZONE",
-            showarrow=False, font=dict(color="#e63950", size=12, family="Arial Black"),
-        )
-
-        fig_radar.update_layout(
-            height=520,
-            xaxis_title="Floor Proximity (lower = closer to unviable price)",
-            yaxis_title="Shortage Probability (%)",
-            hovermode="closest",
-            legend=dict(
-                orientation="h", yanchor="bottom", y=1.02,
-                xanchor="right", x=1, font=dict(size=11),
+        fig_tm.update_traces(
+            hovertemplate=(
+                "<b>%{customdata[0]}</b><br>"
+                "Risk: %{customdata[1]:.1f}%<br>"
+                "Action: %{customdata[2]}<br>"
+                "Streak: %{customdata[3]:.0f} months<br>"
+                "Floor proximity: %{customdata[4]:.3f}<br>"
+                "On concession: %{customdata[5]}<extra></extra>"
             ),
-            xaxis=dict(range=[0.5, max(radar_df["floor_proximity"].max() * 1.05, 2.5)]),
-            yaxis=dict(range=[0, 103]),
-            margin=dict(l=10, r=10, t=40, b=10),
-            plot_bgcolor="#fafafa",
+            textfont_size=12,
+            marker=dict(cornerradius=4),
         )
-        st.plotly_chart(fig_radar, width="stretch")
-        st.caption("Bubble size = concession streak length. Hover any bubble for full details.")
+        fig_tm.update_layout(
+            height=500,
+            margin=dict(l=5, r=5, t=30, b=5),
+        )
+        st.plotly_chart(fig_tm, width="stretch")
+        st.caption(
+            "Bigger rectangle = higher shortage probability. "
+            "Click a tier group to zoom in. Click the title bar to zoom back out."
+        )
 
     with tab2:
         chart_df = df.head(30).copy()
