@@ -28,8 +28,10 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-DATA_DIR  = "data"
-MODEL_DIR = "data/model"
+import pathlib
+_HERE     = pathlib.Path(__file__).parent
+DATA_DIR  = str(_HERE / "data")
+MODEL_DIR = str(_HERE / "data" / "model")
 
 # ── Colour constants ────────────────────────────────────────────────────────────
 # Softer, more professional palette — no harsh dark red
