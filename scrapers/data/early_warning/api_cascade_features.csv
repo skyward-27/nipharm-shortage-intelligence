@@ -1,0 +1,798 @@
+drug_name,api_name,api_cascade_count,api_cascade_on_concession,api_concentration_risk,api_manufacturer_count,api_india_china_pct,api_india_dependency,api_us_shortage_active
+Pramipexole 88microgram tablets,pramipexole,2,0,HIGH,2,90,1,0
+Esomeprazole 20mg gastro-resistant capsules,esomeprazole,4,2,HIGH,4,75,1,0
+Mefenamic acid 500mg tablets,mefenamic acid,0,0,HIGH,3,80,1,0
+Lactulose 3.1-3.7g/5ml oral solution,lactulose,0,0,HIGH,2,10,0,0
+Olanzapine 15mg tablets,olanzapine,5,5,HIGH,3,85,1,0
+Olanzapine 5mg tablets,olanzapine,5,5,HIGH,3,85,1,0
+Olanzapine 20mg tablets,olanzapine,5,5,HIGH,3,85,1,0
+Olanzapine 10mg tablets,olanzapine,5,5,HIGH,3,85,1,0
+Olanzapine 7.5mg tablets,olanzapine,5,5,HIGH,3,85,1,0
+Indapamide 2.5mg tablets,indapamide,0,0,HIGH,3,75,1,0
+Olanzapine 2.5mg tablets,olanzapine,5,5,HIGH,3,85,1,0
+Esomeprazole 40mg gastro-resistant capsules,esomeprazole,4,2,HIGH,4,75,1,0
+Propranolol 40mg tablets,propranolol,3,2,HIGH,3,80,1,0
+Propranolol 80mg tablets,propranolol,3,2,HIGH,3,80,1,0
+Co-codamol 30mg/500mg tablets,paracetamol,20,1,LOW,12,30,0,0
+Co-codamol 30mg/500mg tablets,paracetamol,20,1,LOW,12,30,0,0
+Hydroxocobalamin 1mg/1ml solution for injection ampoules,hydroxocobalamin,0,0,HIGH,2,20,0,0
+Paracetamol 500mg effervescent tablets,paracetamol,21,2,LOW,12,30,0,0
+Ibandronic acid 150mg tablets,ibandronic acid,1,1,HIGH,3,85,1,0
+Oxybutynin 5mg tablets,oxybutynin,3,1,UNKNOWN,-1,-1,-1,0
+Oxybutynin 2.5mg tablets,oxybutynin,3,1,UNKNOWN,-1,-1,-1,0
+Trihexyphenidyl 2mg tablets,trihexyphenidyl,0,0,UNKNOWN,-1,-1,-1,0
+Trimethoprim 100mg tablets,trimethoprim,3,1,UNKNOWN,-1,-1,-1,0
+Alfuzosin 2.5mg tablets,alfuzosin,0,0,UNKNOWN,-1,-1,-1,0
+Bumetanide 1mg tablets,bumetanide,0,0,UNKNOWN,-1,-1,-1,0
+Nizatidine 150mg capsules,nizatidine,0,0,UNKNOWN,-1,-1,-1,0
+Clarithromycin 250mg/5ml oral suspension,clarithromycin,3,1,UNKNOWN,-1,-1,-1,0
+Trimethoprim 50mg/5ml oral suspension sugar free,trimethoprim,3,1,UNKNOWN,-1,-1,-1,0
+Febuxostat 80mg tablets,febuxostat,0,0,UNKNOWN,-1,-1,-1,0
+Clarithromycin 125mg/5ml oral suspension,clarithromycin,3,1,UNKNOWN,-1,-1,-1,0
+Naftidrofuryl 100mg capsules,naftidrofuryl,0,0,UNKNOWN,-1,-1,-1,0
+Sodium bicarbonate 500mg capsules,sodium,21,1,UNKNOWN,-1,-1,-1,0
+Amiodarone 200mg tablets,amiodarone,0,0,UNKNOWN,-1,-1,-1,0
+Lofepramine 70mg tablets,lofepramine,0,0,UNKNOWN,-1,-1,-1,0
+Dutasteride 500microgram capsules,dutasteride,1,0,UNKNOWN,-1,-1,-1,0
+Nefopam 30mg tablets,nefopam,0,0,UNKNOWN,-1,-1,-1,0
+Bimatoprost 300micrograms/ml / Timolol 5mg/ml eye drops 0.4ml unit dose preservative free,bimatoprost,3,0,UNKNOWN,-1,-1,-1,0
+Ibandronic acid 50mg tablets,ibandronic acid,1,1,HIGH,3,85,1,0
+Ciprofloxacin 500mg tablets,ciprofloxacin,1,0,UNKNOWN,-1,-1,-1,0
+Progesterone micronised 100mg capsules,progesterone,0,0,UNKNOWN,-1,-1,-1,0
+Oxytetracycline 250mg tablets,oxytetracycline,0,0,UNKNOWN,-1,-1,-1,0
+Mometasone 0.1% cream,mometasone,3,0,UNKNOWN,-1,-1,-1,0
+Mometasone 0.1% cream,mometasone,3,0,UNKNOWN,-1,-1,-1,0
+Latanoprost 50micrograms/ml eye drops,latanoprost,1,0,UNKNOWN,-1,-1,-1,0
+Valaciclovir 500mg tablets,valaciclovir,0,0,UNKNOWN,-1,-1,-1,0
+Betamethasone 500microgram soluble tablets sugar free,betamethasone,6,0,UNKNOWN,-1,-1,-1,0
+Oxycodone 5mg/5ml oral solution sugar free,oxycodone,1,0,UNKNOWN,-1,-1,-1,0
+Itraconazole 100mg capsules,itraconazole,0,0,UNKNOWN,-1,-1,-1,0
+Terbinafine 250mg tablets,terbinafine,2,0,UNKNOWN,-1,-1,-1,0
+Procyclidine 5mg tablets,procyclidine,0,0,UNKNOWN,-1,-1,-1,0
+Irbesartan 150mg tablets,irbesartan,3,0,UNKNOWN,-1,-1,-1,0
+Lansoprazole 30mg orodispersible tablets,lansoprazole,3,0,UNKNOWN,-1,-1,-1,0
+Risperidone 500microgram tablets,risperidone,5,0,UNKNOWN,-1,-1,-1,0
+Tolterodine 1mg tablets,tolterodine,1,1,UNKNOWN,-1,-1,-1,0
+Sulpiride 200mg tablets,sulpiride,0,0,UNKNOWN,-1,-1,-1,0
+Clotrimazole 500mg pessaries,clotrimazole,2,2,UNKNOWN,-1,-1,-1,0
+Pyridostigmine bromide 60mg tablets,pyridostigmine,0,0,UNKNOWN,-1,-1,-1,0
+Sulfasalazine 500mg tablets,sulfasalazine,1,0,UNKNOWN,-1,-1,-1,0
+Phenoxymethylpenicillin 250mg tablets,phenoxymethylpenicillin,4,0,UNKNOWN,-1,-1,-1,0
+Tolterodine 2mg tablets,tolterodine,1,1,UNKNOWN,-1,-1,-1,0
+Zolmitriptan 2.5mg orodispersible tablets sugar free,zolmitriptan,2,0,UNKNOWN,-1,-1,-1,0
+Cyclizine 50mg/1ml solution for injection ampoules,cyclizine,1,0,UNKNOWN,-1,-1,-1,0
+Ivabradine 2.5mg tablets,ivabradine,3,1,UNKNOWN,-1,-1,-1,0
+Midazolam 10mg/2ml solution for injection ampoules,midazolam,0,0,UNKNOWN,-1,-1,-1,0
+Diclofenac sodium 50mg gastro-resistant tablets,diclofenac,1,0,UNKNOWN,-1,-1,-1,0
+Methenamine hippurate 1g tablets,methenamine,0,0,UNKNOWN,-1,-1,-1,0
+Fexofenadine 180mg tablets,fexofenadine,1,0,UNKNOWN,-1,-1,-1,0
+Co-careldopa 25mg/100mg tablets,co-careldopa,1,1,UNKNOWN,-1,-1,-1,0
+Co-careldopa 12.5mg/50mg tablets,co-careldopa,1,1,UNKNOWN,-1,-1,-1,0
+Dexamethasone 500microgram tablets,dexamethasone,1,0,UNKNOWN,-1,-1,-1,0
+Timolol 0.5% eye drops,timolol,11,2,UNKNOWN,-1,-1,-1,0
+Promethazine hydrochloride 25mg tablets,promethazine,1,0,UNKNOWN,-1,-1,-1,0
+Estradiol 10microgram pessaries,estradiol,0,0,UNKNOWN,-1,-1,-1,0
+Carbocisteine 250mg/5ml oral solution,carbocisteine,1,1,UNKNOWN,-1,-1,-1,0
+Carbocisteine 375mg capsules,carbocisteine,1,1,UNKNOWN,-1,-1,-1,0
+Fenofibrate micronised 267mg capsules,fenofibrate,2,0,UNKNOWN,-1,-1,-1,0
+Mercaptopurine 50mg tablets,mercaptopurine,0,0,UNKNOWN,-1,-1,-1,0
+Sitagliptin 100mg tablets,sitagliptin,3,0,UNKNOWN,-1,-1,-1,0
+Sitagliptin 50mg tablets,sitagliptin,3,0,UNKNOWN,-1,-1,-1,0
+Imipramine 10mg tablets,imipramine,1,0,UNKNOWN,-1,-1,-1,0
+Prucalopride 2mg tablets,prucalopride,0,0,UNKNOWN,-1,-1,-1,0
+Duloxetine 30mg gastro-resistant capsules,duloxetine,5,0,UNKNOWN,-1,-1,-1,0
+Permethrin 5% cream,permethrin,0,0,UNKNOWN,-1,-1,-1,0
+Nitrazepam 5mg tablets,nitrazepam,0,0,UNKNOWN,-1,-1,-1,0
+Piroxicam 0.5% gel,piroxicam,0,0,UNKNOWN,-1,-1,-1,0
+Fluoxetine 40mg capsules,fluoxetine,5,0,UNKNOWN,-1,-1,-1,0
+Mycophenolate mofetil 500mg tablets,mycophenolate,0,0,UNKNOWN,-1,-1,-1,0
+Piroxicam 0.5% gel,piroxicam,0,0,UNKNOWN,-1,-1,-1,0
+Buprenorphine 8mg sublingual tablets sugar free,buprenorphine,1,0,UNKNOWN,-1,-1,-1,0
+Propylthiouracil 50mg tablets,propylthiouracil,0,0,UNKNOWN,-1,-1,-1,0
+Co-amoxiclav 250mg/62mg/5ml oral suspension sugar free,clavulanic acid,3,0,UNKNOWN,-1,-1,-1,0
+Montelukast 5mg chewable tablets sugar free,montelukast,3,0,UNKNOWN,-1,-1,-1,0
+Fenofibrate micronised 160mg tablets,fenofibrate,2,1,UNKNOWN,-1,-1,-1,0
+Duloxetine 60mg gastro-resistant capsules,duloxetine,4,0,UNKNOWN,-1,-1,-1,0
+Venlafaxine 225mg modified-release capsules,venlafaxine,5,0,UNKNOWN,-1,-1,-1,0
+Ropinirole 1mg tablets,ropinirole,4,0,UNKNOWN,-1,-1,-1,0
+Folic acid 5mg tablets,folic acid,0,0,UNKNOWN,-1,-1,-1,0
+Levothyroxine sodium 12.5microgram tablets,levothyroxine,4,0,UNKNOWN,-1,-1,-1,0
+Pregabalin 300mg capsules,pregabalin,7,0,MEDIUM,5,75,1,0
+Modafinil 100mg tablets,modafinil,1,0,UNKNOWN,-1,-1,-1,0
+Sitagliptin 25mg tablets,sitagliptin,3,0,UNKNOWN,-1,-1,-1,0
+Erythromycin 250mg gastro-resistant tablets,erythromycin,0,0,UNKNOWN,-1,-1,-1,0
+Mometasone 0.1% ointment,mometasone,3,2,UNKNOWN,-1,-1,-1,0
+Mometasone 0.1% ointment,mometasone,3,2,UNKNOWN,-1,-1,-1,0
+Co-codamol 30mg/500mg effervescent tablets,paracetamol,19,3,LOW,12,30,0,0
+Co-codamol 30mg/500mg effervescent tablets,paracetamol,19,3,LOW,12,30,0,0
+Memantine 10mg/ml oral solution sugar free,memantine,3,0,UNKNOWN,-1,-1,-1,0
+Duloxetine 20mg gastro-resistant capsules,duloxetine,4,0,UNKNOWN,-1,-1,-1,0
+Pregabalin 50mg capsules,pregabalin,7,0,MEDIUM,5,75,1,0
+Desogestrel 75microgram tablets,desogestrel,0,0,UNKNOWN,-1,-1,-1,0
+Amiloride 5mg tablets,amiloride,0,0,UNKNOWN,-1,-1,-1,0
+Tacrolimus 0.1% ointment,tacrolimus,0,0,UNKNOWN,-1,-1,-1,0
+Tacrolimus 0.1% ointment,tacrolimus,0,0,UNKNOWN,-1,-1,-1,0
+Aqueous cream,aqueous,0,0,UNKNOWN,-1,-1,-1,0
+Temazepam 10mg tablets,temazepam,1,0,UNKNOWN,-1,-1,-1,0
+Isosorbide mononitrate 40mg tablets,isosorbide,2,0,UNKNOWN,-1,-1,-1,0
+Vardenafil 20mg tablets,vardenafil,0,0,UNKNOWN,-1,-1,-1,0
+Methylphenidate 10mg tablets,methylphenidate,0,0,UNKNOWN,-1,-1,-1,0
+Isosorbide mononitrate 20mg tablets,isosorbide,2,0,UNKNOWN,-1,-1,-1,0
+Nortriptyline 10mg tablets,nortriptyline,1,0,UNKNOWN,-1,-1,-1,0
+Buprenorphine 2mg sublingual tablets sugar free,buprenorphine,1,0,UNKNOWN,-1,-1,-1,0
+Trospium chloride 20mg tablets,trospium,0,0,UNKNOWN,-1,-1,-1,0
+Haloperidol 5mg tablets,haloperidol,1,0,UNKNOWN,-1,-1,-1,0
+Rizatriptan 10mg orodispersible tablets sugar free,rizatriptan,1,0,UNKNOWN,-1,-1,-1,0
+Rizatriptan 10mg tablets,rizatriptan,2,0,UNKNOWN,-1,-1,-1,0
+Gabapentin 600mg tablets,gabapentin,3,0,MEDIUM,5,75,1,0
+Fusidic acid 1% modified-release eye drops,fusidic,2,0,UNKNOWN,-1,-1,-1,0
+Letrozole 2.5mg tablets,letrozole,0,0,UNKNOWN,-1,-1,-1,0
+Nortriptyline 25mg tablets,nortriptyline,1,0,UNKNOWN,-1,-1,-1,0
+Imipramine 25mg tablets,imipramine,1,0,UNKNOWN,-1,-1,-1,0
+Clotrimazole 1% cream,clotrimazole,1,1,UNKNOWN,-1,-1,-1,0
+Morphine sulfate 10mg/1ml solution for injection ampoules,morphine,2,0,UNKNOWN,-1,-1,-1,0
+Pioglitazone 45mg tablets,pioglitazone,2,1,UNKNOWN,-1,-1,-1,0
+Isosorbide mononitrate 10mg tablets,isosorbide,2,0,UNKNOWN,-1,-1,-1,0
+Ferrous gluconate 300mg tablets,ferrous,1,0,UNKNOWN,-1,-1,-1,0
+Trimethoprim 200mg tablets,trimethoprim,2,2,UNKNOWN,-1,-1,-1,0
+Trimethoprim 200mg tablets,trimethoprim,2,2,UNKNOWN,-1,-1,-1,0
+Cefalexin 500mg tablets,cefalexin,3,0,UNKNOWN,-1,-1,-1,0
+Exemestane 25mg tablets,exemestane,0,0,UNKNOWN,-1,-1,-1,0
+Acetazolamide 250mg tablets,acetazolamide,0,0,UNKNOWN,-1,-1,-1,0
+Pioglitazone 30mg tablets,pioglitazone,2,0,UNKNOWN,-1,-1,-1,0
+Tadalafil 5mg tablets,tadalafil,2,0,UNKNOWN,-1,-1,-1,0
+Ivabradine 7.5mg tablets,ivabradine,3,1,UNKNOWN,-1,-1,-1,0
+Alendronic acid 70mg tablets,alendronic acid,1,0,UNKNOWN,-1,-1,-1,0
+Cimetidine 400mg tablets,cimetidine,0,0,UNKNOWN,-1,-1,-1,0
+Pioglitazone 15mg tablets,pioglitazone,2,1,UNKNOWN,-1,-1,-1,0
+Metronidazole 400mg tablets,metronidazole,0,0,UNKNOWN,-1,-1,-1,0
+Prochlorperazine 3mg buccal tablets,prochlorperazine,1,0,UNKNOWN,-1,-1,-1,0
+Telmisartan 40mg tablets,telmisartan,2,0,UNKNOWN,-1,-1,-1,0
+Oxazepam 15mg tablets,oxazepam,1,1,UNKNOWN,-1,-1,-1,0
+Tibolone 2.5mg tablets,tibolone,0,0,UNKNOWN,-1,-1,-1,0
+Senna 7.5mg tablets,senna,0,0,UNKNOWN,-1,-1,-1,0
+Temazepam 20mg tablets,temazepam,1,0,UNKNOWN,-1,-1,-1,0
+Citalopram 20mg tablets,citalopram,6,1,UNKNOWN,-1,-1,-1,0
+Flucloxacillin 250mg/5ml oral solution sugar free,flucloxacillin,5,0,UNKNOWN,-1,-1,-1,0
+Famotidine 20mg tablets,famotidine,1,0,UNKNOWN,-1,-1,-1,0
+Dorzolamide 20mg/ml / Timolol 5mg/ml eye drops,dorzolamide,3,0,UNKNOWN,-1,-1,-1,0
+Oxazepam 10mg tablets,oxazepam,1,1,UNKNOWN,-1,-1,-1,0
+Carbimazole 5mg tablets,carbimazole,1,0,UNKNOWN,-1,-1,-1,0
+Nicorandil 20mg tablets,nicorandil,1,0,UNKNOWN,-1,-1,-1,0
+Naproxen 250mg gastro-resistant tablets,naproxen,3,0,UNKNOWN,-1,-1,-1,0
+Sotalol 40mg tablets,sotalol,1,1,UNKNOWN,-1,-1,-1,0
+Cinacalcet 30mg tablets,cinacalcet,0,0,UNKNOWN,-1,-1,-1,0
+Naproxen 500mg gastro-resistant tablets,naproxen,3,0,UNKNOWN,-1,-1,-1,0
+Amoxicillin 250mg/5ml oral suspension,amoxicillin,12,0,HIGH,4,85,1,0
+Aqueous cream,aqueous,0,0,UNKNOWN,-1,-1,-1,0
+Sotalol 80mg tablets,sotalol,1,1,UNKNOWN,-1,-1,-1,0
+Domperidone 10mg tablets,domperidone,0,0,UNKNOWN,-1,-1,-1,0
+Haloperidol 1.5mg tablets,haloperidol,1,0,UNKNOWN,-1,-1,-1,0
+Telmisartan 80mg tablets,telmisartan,2,0,UNKNOWN,-1,-1,-1,0
+Ipratropium bromide 500micrograms/2ml nebuliser liquid unit dose vials,ipratropium,0,0,UNKNOWN,-1,-1,-1,0
+Quetiapine 100mg tablets,quetiapine,4,0,MEDIUM,5,75,1,0
+Quetiapine 150mg tablets,quetiapine,4,0,MEDIUM,5,75,1,0
+Propranolol 160mg modified-release capsules,propranolol,3,2,HIGH,3,80,1,0
+Losartan 100mg / Hydrochlorothiazide 25mg tablets,losartan,5,0,UNKNOWN,-1,-1,-1,0
+Domperidone 10mg tablets,domperidone,0,0,UNKNOWN,-1,-1,-1,0
+Losartan 50mg / Hydrochlorothiazide 12.5mg tablets,losartan,5,0,UNKNOWN,-1,-1,-1,0
+Isotretinoin 20mg capsules,isotretinoin,0,0,UNKNOWN,-1,-1,-1,0
+Lamotrigine 200mg tablets,lamotrigine,6,0,UNKNOWN,-1,-1,-1,0
+Frovatriptan 2.5mg tablets,frovatriptan,0,0,UNKNOWN,-1,-1,-1,0
+Warfarin 3mg tablets,warfarin,3,0,UNKNOWN,-1,-1,-1,0
+Desloratadine 5mg tablets,loratadine,2,0,UNKNOWN,-1,-1,-1,0
+Paracetamol 250mg/5ml oral suspension sugar free,paracetamol,21,3,LOW,12,30,0,0
+Anastrozole 1mg tablets,anastrozole,0,0,UNKNOWN,-1,-1,-1,0
+Benzoyl peroxide 5% / Clindamycin 1% gel,benzoyl,0,0,UNKNOWN,-1,-1,-1,0
+Nicorandil 10mg tablets,nicorandil,1,0,UNKNOWN,-1,-1,-1,0
+Warfarin 1mg tablets,warfarin,3,0,UNKNOWN,-1,-1,-1,0
+Norethisterone 5mg tablets,norethisterone,0,0,UNKNOWN,-1,-1,-1,0
+Bimatoprost 300micrograms/ml / Timolol 5mg/ml eye drops,bimatoprost,3,1,UNKNOWN,-1,-1,-1,0
+Warfarin 5mg tablets,warfarin,3,0,UNKNOWN,-1,-1,-1,0
+"Colecalciferol 1,000unit capsules",colecalciferol,0,0,UNKNOWN,-1,-1,-1,0
+Loperamide 2mg tablets,loperamide,1,0,UNKNOWN,-1,-1,-1,0
+Fenofibrate micronised 200mg capsules,fenofibrate,2,1,UNKNOWN,-1,-1,-1,0
+Timolol 0.25% eye drops,timolol,11,2,UNKNOWN,-1,-1,-1,0
+Phenoxymethylpenicillin 125mg/5ml oral solution,phenoxymethylpenicillin,4,1,UNKNOWN,-1,-1,-1,0
+Amantadine 100mg capsules,amantadine,0,0,UNKNOWN,-1,-1,-1,0
+Prednisolone 5mg soluble tablets,prednisolone,5,0,UNKNOWN,-1,-1,-1,0
+Benzoyl peroxide 5% / Clindamycin 1% gel,benzoyl,0,0,UNKNOWN,-1,-1,-1,0
+Flucloxacillin 125mg/5ml oral solution,flucloxacillin,6,0,UNKNOWN,-1,-1,-1,0
+Lamotrigine 5mg dispersible tablets sugar free,lamotrigine,6,0,UNKNOWN,-1,-1,-1,0
+Amorolfine 5% medicated nail lacquer,amorolfine,0,0,UNKNOWN,-1,-1,-1,0
+Bimatoprost 100micrograms/ml eye drops,bimatoprost,3,1,UNKNOWN,-1,-1,-1,0
+Oxycodone 10mg/1ml solution for injection ampoules,oxycodone,1,1,UNKNOWN,-1,-1,-1,0
+Lorazepam 1mg tablets,lorazepam,2,0,UNKNOWN,-1,-1,-1,0
+Telmisartan 20mg tablets,telmisartan,2,0,UNKNOWN,-1,-1,-1,0
+Sodium valproate 200mg/5ml oral solution sugar free,sodium,21,2,UNKNOWN,-1,-1,-1,0
+Modafinil 200mg tablets,modafinil,1,0,UNKNOWN,-1,-1,-1,0
+Glimepiride 4mg tablets,glimepiride,3,0,UNKNOWN,-1,-1,-1,0
+Quetiapine 200mg tablets,quetiapine,4,0,MEDIUM,5,75,1,0
+Dipyridamole 100mg tablets,dipyridamole,0,0,UNKNOWN,-1,-1,-1,0
+Mebeverine 200mg modified-release capsules,mebeverine,1,0,UNKNOWN,-1,-1,-1,0
+Sodium chloride 0.9% nebuliser liquid 2.5ml unit dose ampoules,sodium,21,2,UNKNOWN,-1,-1,-1,0
+Clomipramine 50mg capsules,clomipramine,2,0,UNKNOWN,-1,-1,-1,0
+Carvedilol 6.25mg tablets,carvedilol,3,0,UNKNOWN,-1,-1,-1,0
+Chloramphenicol 1% eye ointment,chloramphenicol,1,0,UNKNOWN,-1,-1,-1,0
+Mometasone 50micrograms/dose nasal spray,mometasone,4,2,UNKNOWN,-1,-1,-1,0
+Calcipotriol 0.005% / Betamethasone dipropionate 0.05% ointment,calcipotriol,1,0,UNKNOWN,-1,-1,-1,0
+Labetalol 200mg tablets,labetalol,1,0,UNKNOWN,-1,-1,-1,0
+Tamsulosin 400microgram / Dutasteride 500microgram capsules,tamsulosin,1,0,UNKNOWN,-1,-1,-1,0
+Latanoprost 50micrograms/ml / Timolol 5mg/ml eye drops,latanoprost,1,1,UNKNOWN,-1,-1,-1,0
+Irbesartan 300mg tablets,irbesartan,3,1,UNKNOWN,-1,-1,-1,0
+Clomipramine 25mg capsules,clomipramine,2,0,UNKNOWN,-1,-1,-1,0
+Lercanidipine 20mg tablets,lercanidipine,1,0,UNKNOWN,-1,-1,-1,0
+Glimepiride 2mg tablets,glimepiride,3,0,UNKNOWN,-1,-1,-1,0
+Azithromycin 250mg capsules,azithromycin,3,0,HIGH,4,80,1,0
+Clarithromycin 500mg tablets,clarithromycin,3,2,UNKNOWN,-1,-1,-1,0
+Baclofen 5mg/5ml oral solution sugar free,baclofen,1,0,UNKNOWN,-1,-1,-1,0
+Paracetamol 250mg/5ml oral suspension,paracetamol,21,3,LOW,12,30,0,0
+Escitalopram 5mg tablets,citalopram,6,2,UNKNOWN,-1,-1,-1,0
+Cefradine 500mg capsules,cefradine,1,0,UNKNOWN,-1,-1,-1,0
+Fluoxetine 20mg/5ml oral solution,fluoxetine,5,0,UNKNOWN,-1,-1,-1,0
+Glimepiride 1mg tablets,glimepiride,3,0,UNKNOWN,-1,-1,-1,0
+Quinine sulfate 200mg tablets,quinine,2,0,UNKNOWN,-1,-1,-1,0
+Valsartan 80mg capsules,valsartan,3,0,UNKNOWN,-1,-1,-1,0
+Co-amilozide 5mg/50mg tablets,co-amilozide,0,0,UNKNOWN,-1,-1,-1,0
+Paracetamol 500mg soluble tablets,paracetamol,20,3,LOW,12,30,0,0
+Paracetamol 500mg soluble tablets,paracetamol,20,3,LOW,12,30,0,0
+Chlorpromazine 25mg tablets,chlorpromazine,2,0,UNKNOWN,-1,-1,-1,0
+Betahistine 8mg tablets,betahistine,1,0,UNKNOWN,-1,-1,-1,0
+Tetracycline 250mg tablets,tetracycline,1,1,UNKNOWN,-1,-1,-1,0
+Cilostazol 100mg tablets,cilostazol,0,0,UNKNOWN,-1,-1,-1,0
+Valsartan 160mg capsules,valsartan,3,0,UNKNOWN,-1,-1,-1,0
+Calcium and Ergocalciferol tablets,calcium,0,0,UNKNOWN,-1,-1,-1,0
+Chlorpromazine 50mg tablets,chlorpromazine,2,0,UNKNOWN,-1,-1,-1,0
+Clomipramine 10mg capsules,clomipramine,2,0,UNKNOWN,-1,-1,-1,0
+Metoprolol 50mg tablets,metoprolol,1,0,UNKNOWN,-1,-1,-1,0
+Co-fluampicil 250mg/250mg capsules,co-fluampicil,0,0,UNKNOWN,-1,-1,-1,0
+Fluticasone propionate 50micrograms/dose nasal spray,fluticasone,1,0,UNKNOWN,-1,-1,-1,0
+Montelukast 4mg granules sachets sugar free,montelukast,3,0,UNKNOWN,-1,-1,-1,0
+Clarithromycin 250mg tablets,clarithromycin,3,2,UNKNOWN,-1,-1,-1,0
+Clonidine 25microgram tablets,clonidine,0,0,UNKNOWN,-1,-1,-1,0
+Cefradine 250mg capsules,cefradine,1,0,UNKNOWN,-1,-1,-1,0
+Ondansetron 4mg tablets,ondansetron,1,0,UNKNOWN,-1,-1,-1,0
+Dorzolamide 20mg/ml / Timolol 5mg/ml eye drops 0.2ml unit dose preservative free,dorzolamide,2,0,UNKNOWN,-1,-1,-1,0
+Pramipexole 180microgram tablets,pramipexole,2,1,HIGH,2,90,1,0
+Ropinirole 2mg tablets,ropinirole,4,0,UNKNOWN,-1,-1,-1,0
+Hydrocortisone 0.5% cream,hydrocortisone,6,0,UNKNOWN,-1,-1,-1,0
+Indometacin 50mg capsules,indometacin,1,0,UNKNOWN,-1,-1,-1,0
+Celiprolol 200mg tablets,celiprolol,1,0,UNKNOWN,-1,-1,-1,0
+Celiprolol 400mg tablets,celiprolol,1,0,UNKNOWN,-1,-1,-1,0
+Clindamycin 150mg capsules,clindamycin,3,0,UNKNOWN,-1,-1,-1,0
+Dosulepin 25mg capsules,dosulepin,1,0,UNKNOWN,-1,-1,-1,0
+Glyceryl trinitrate 500microgram sublingual tablets,glyceryl,4,0,UNKNOWN,-1,-1,-1,0
+Chlorpromazine 100mg tablets,chlorpromazine,2,0,UNKNOWN,-1,-1,-1,0
+Pravastatin 10mg tablets,pravastatin,2,0,UNKNOWN,-1,-1,-1,0
+Nebivolol 2.5mg tablets,nebivolol,1,0,UNKNOWN,-1,-1,-1,0
+Fosinopril 20mg tablets,fosinopril,1,0,UNKNOWN,-1,-1,-1,0
+Terbinafine 1% cream,terbinafine,1,1,UNKNOWN,-1,-1,-1,0
+Amisulpride 50mg tablets,amisulpride,2,0,UNKNOWN,-1,-1,-1,0
+Terbinafine 1% cream,terbinafine,1,1,UNKNOWN,-1,-1,-1,0
+Dorzolamide 20mg/ml eye drops,dorzolamide,3,0,UNKNOWN,-1,-1,-1,0
+Amisulpride 200mg tablets,amisulpride,2,0,UNKNOWN,-1,-1,-1,0
+Amisulpride 100mg tablets,amisulpride,2,0,UNKNOWN,-1,-1,-1,0
+Memantine 20mg tablets,memantine,3,0,UNKNOWN,-1,-1,-1,0
+Levetiracetam 500mg tablets,levetiracetam,4,0,UNKNOWN,-1,-1,-1,0
+Zolmitriptan 2.5mg tablets,zolmitriptan,1,1,UNKNOWN,-1,-1,-1,0
+Zolmitriptan 2.5mg tablets,zolmitriptan,1,1,UNKNOWN,-1,-1,-1,0
+Aspirin 75mg dispersible tablets,aspirin,4,0,UNKNOWN,-1,-1,-1,0
+Ropinirole 250microgram tablets,ropinirole,4,0,UNKNOWN,-1,-1,-1,0
+Ropinirole 500microgram tablets,ropinirole,3,0,UNKNOWN,-1,-1,-1,0
+Dihydrocodeine 30mg tablets,codeine phosphate,17,2,HIGH,4,70,1,0
+Dihydrocodeine 30mg tablets,codeine phosphate,17,2,HIGH,4,70,1,0
+Memantine 10mg tablets,memantine,4,0,UNKNOWN,-1,-1,-1,0
+Co-codamol 15mg/500mg tablets,paracetamol,21,3,LOW,12,30,0,0
+Tramadol 37.5mg / Paracetamol 325mg tablets,paracetamol,21,3,LOW,12,30,0,0
+Aspirin 75mg dispersible tablets,aspirin,4,0,UNKNOWN,-1,-1,-1,0
+Aspirin 300mg dispersible tablets,aspirin,4,2,UNKNOWN,-1,-1,-1,0
+Verapamil 120mg tablets,verapamil,2,0,UNKNOWN,-1,-1,-1,0
+Glimepiride 3mg tablets,glimepiride,3,0,UNKNOWN,-1,-1,-1,0
+Co-codamol 30mg/500mg capsules,paracetamol,21,3,LOW,12,30,0,0
+Buspirone 10mg tablets,buspirone,1,0,UNKNOWN,-1,-1,-1,0
+Celecoxib 200mg capsules,celecoxib,1,0,UNKNOWN,-1,-1,-1,0
+Perindopril erbumine 2mg tablets,perindopril,2,0,UNKNOWN,-1,-1,-1,0
+Celecoxib 100mg capsules,celecoxib,1,0,UNKNOWN,-1,-1,-1,0
+Sodium valproate 200mg gastro-resistant tablets,sodium,19,2,UNKNOWN,-1,-1,-1,0
+Bendroflumethiazide 2.5mg tablets,bendroflumethiazide,1,0,UNKNOWN,-1,-1,-1,0
+Brinzolamide 10mg/ml / Timolol 5mg/ml eye drops,brinzolamide,1,0,UNKNOWN,-1,-1,-1,0
+Quetiapine 300mg tablets,quetiapine,4,0,MEDIUM,5,75,1,0
+Dexamethasone 2mg tablets,dexamethasone,1,1,UNKNOWN,-1,-1,-1,0
+Phenoxymethylpenicillin 250mg/5ml oral solution,phenoxymethylpenicillin,4,1,UNKNOWN,-1,-1,-1,0
+Phenytoin sodium 100mg capsules,phenytoin,1,0,UNKNOWN,-1,-1,-1,0
+Brinzolamide 10mg/ml eye drops,brinzolamide,2,0,UNKNOWN,-1,-1,-1,0
+Sodium fluoride 0.619% dental paste sugar free,sodium,21,2,UNKNOWN,-1,-1,-1,0
+Verapamil 40mg tablets,verapamil,2,0,UNKNOWN,-1,-1,-1,0
+Citalopram 10mg tablets,citalopram,6,1,UNKNOWN,-1,-1,-1,0
+Venlafaxine 75mg tablets,venlafaxine,5,0,UNKNOWN,-1,-1,-1,0
+Famotidine 40mg tablets,famotidine,1,1,UNKNOWN,-1,-1,-1,0
+Bendroflumethiazide 5mg tablets,bendroflumethiazide,1,0,UNKNOWN,-1,-1,-1,0
+Perindopril erbumine 4mg tablets,perindopril,2,0,UNKNOWN,-1,-1,-1,0
+Sodium fluoride 1.1% dental paste sugar free,sodium,21,2,UNKNOWN,-1,-1,-1,0
+Pramipexole 700microgram tablets,pramipexole,2,1,HIGH,2,90,1,0
+Furosemide 40mg tablets,furosemide,1,0,UNKNOWN,-1,-1,-1,0
+Risperidone 1mg/ml oral solution sugar free,risperidone,5,1,UNKNOWN,-1,-1,-1,0
+Sodium valproate 500mg gastro-resistant tablets,sodium,19,2,UNKNOWN,-1,-1,-1,0
+Sodium valproate 200mg gastro-resistant tablets,sodium,19,2,UNKNOWN,-1,-1,-1,0
+Sodium valproate 500mg gastro-resistant tablets,sodium,19,2,UNKNOWN,-1,-1,-1,0
+Sodium valproate 500mg gastro-resistant tablets,sodium,19,2,UNKNOWN,-1,-1,-1,0
+Sodium valproate 200mg gastro-resistant tablets,sodium,19,2,UNKNOWN,-1,-1,-1,0
+Aripiprazole 10mg tablets,aripiprazole,3,0,UNKNOWN,-1,-1,-1,0
+Aripiprazole 5mg tablets,aripiprazole,2,0,UNKNOWN,-1,-1,-1,0
+Amoxicillin 125mg/5ml oral suspension,amoxicillin,12,1,HIGH,4,85,1,0
+Sodium cromoglicate 2% eye drops,sodium,21,2,UNKNOWN,-1,-1,-1,0
+Alendronic acid 10mg tablets,alendronic acid,1,0,UNKNOWN,-1,-1,-1,0
+Pyridoxine 50mg tablets,pyridoxine,0,0,UNKNOWN,-1,-1,-1,0
+Etoricoxib 60mg tablets,etoricoxib,3,0,UNKNOWN,-1,-1,-1,0
+Fluvastatin 40mg capsules,fluvastatin,1,0,UNKNOWN,-1,-1,-1,0
+Codeine 15mg tablets,codeine phosphate,17,2,HIGH,4,70,1,0
+Etoricoxib 90mg tablets,etoricoxib,3,0,UNKNOWN,-1,-1,-1,0
+Metformin 500mg/5ml oral solution sugar free,metformin,5,0,MEDIUM,8,70,1,0
+Glycerol 4g suppositories,glycerol,0,0,UNKNOWN,-1,-1,-1,0
+Benzoyl peroxide 5% / Clindamycin 1% gel,benzoyl,0,0,UNKNOWN,-1,-1,-1,0
+Quetiapine 25mg tablets,quetiapine,4,0,MEDIUM,5,75,1,0
+Thiamine 100mg tablets,thiamine,1,0,UNKNOWN,-1,-1,-1,0
+Macrogol compound oral powder sachets NPF sugar free,macrogol,0,0,UNKNOWN,-1,-1,-1,0
+Desmopressin 10micrograms/dose nasal spray,desmopressin,1,0,UNKNOWN,-1,-1,-1,0
+Verapamil 80mg tablets,verapamil,2,0,UNKNOWN,-1,-1,-1,0
+Lacidipine 2mg tablets,lacidipine,1,0,UNKNOWN,-1,-1,-1,0
+Chlorhexidine gluconate 0.2% mouthwash,chlorhexidine,0,0,UNKNOWN,-1,-1,-1,0
+Lorazepam 500microgram tablets,lorazepam,2,0,UNKNOWN,-1,-1,-1,0
+Codeine 15mg tablets,codeine phosphate,17,2,HIGH,4,70,1,0
+Quinine sulfate 300mg tablets,quinine,2,0,UNKNOWN,-1,-1,-1,0
+Irbesartan 75mg tablets,irbesartan,3,1,UNKNOWN,-1,-1,-1,0
+Morphine sulfate 10mg/5ml oral solution,morphine,2,0,UNKNOWN,-1,-1,-1,0
+Fluvastatin 20mg capsules,fluvastatin,1,0,UNKNOWN,-1,-1,-1,0
+Dapagliflozin 5mg tablets,dapagliflozin,1,0,UNKNOWN,-1,-1,-1,0
+Dapagliflozin 10mg tablets,dapagliflozin,1,0,UNKNOWN,-1,-1,-1,0
+Riluzole 50mg tablets,riluzole,0,0,UNKNOWN,-1,-1,-1,0
+Hydrocortisone 2.5% cream,hydrocortisone,6,0,UNKNOWN,-1,-1,-1,0
+Hydrocortisone 1% cream,hydrocortisone,4,0,UNKNOWN,-1,-1,-1,0
+Hydrocortisone 1% cream,hydrocortisone,4,0,UNKNOWN,-1,-1,-1,0
+Hydrocortisone 1% cream,hydrocortisone,4,0,UNKNOWN,-1,-1,-1,0
+Leflunomide 20mg tablets,leflunomide,1,0,UNKNOWN,-1,-1,-1,0
+Co-tenidone 50mg/12.5mg tablets,co-tenidone,1,0,UNKNOWN,-1,-1,-1,0
+Fusidic acid 2% cream,fusidic,1,0,UNKNOWN,-1,-1,-1,0
+Glipizide 5mg tablets,glipizide,0,0,UNKNOWN,-1,-1,-1,0
+Fusidic acid 2% cream,fusidic,1,0,UNKNOWN,-1,-1,-1,0
+Nitrofurantoin 50mg tablets,nitrofurantoin,2,0,UNKNOWN,-1,-1,-1,0
+Betamethasone valerate 0.1% cream,betamethasone,5,1,UNKNOWN,-1,-1,-1,0
+Oxcarbazepine 300mg tablets,oxcarbazepine,0,0,UNKNOWN,-1,-1,-1,0
+Betamethasone valerate 0.1% cream,betamethasone,5,1,UNKNOWN,-1,-1,-1,0
+Thiamine 50mg tablets,thiamine,1,0,UNKNOWN,-1,-1,-1,0
+Paracetamol 500mg capsules,paracetamol,20,3,LOW,12,30,0,0
+Paracetamol 500mg capsules,paracetamol,20,3,LOW,12,30,0,0
+Nitrofurantoin 100mg tablets,nitrofurantoin,2,0,UNKNOWN,-1,-1,-1,0
+Furosemide 20mg tablets,furosemide,1,0,UNKNOWN,-1,-1,-1,0
+Cefalexin 500mg capsules,cefalexin,3,1,UNKNOWN,-1,-1,-1,0
+Codeine 30mg tablets,codeine phosphate,17,2,HIGH,4,70,1,0
+Codeine 30mg tablets,codeine phosphate,17,2,HIGH,4,70,1,0
+Prochlorperazine 5mg tablets,prochlorperazine,1,0,UNKNOWN,-1,-1,-1,0
+Flucloxacillin 250mg/5ml oral solution sugar free,flucloxacillin,5,0,UNKNOWN,-1,-1,-1,0
+Flucloxacillin 125mg/5ml oral solution sugar free,flucloxacillin,6,0,UNKNOWN,-1,-1,-1,0
+Hydrocortisone 20mg tablets,hydrocortisone,6,0,UNKNOWN,-1,-1,-1,0
+Clobazam 10mg tablets,clobazam,0,0,UNKNOWN,-1,-1,-1,0
+Esomeprazole 40mg gastro-resistant capsules,esomeprazole,4,2,HIGH,4,75,1,0
+Esomeprazole 20mg gastro-resistant capsules,esomeprazole,4,2,HIGH,4,75,1,0
+Tadalafil 10mg tablets,tadalafil,2,0,UNKNOWN,-1,-1,-1,0
+Hydroxyzine 25mg tablets,hydroxyzine,0,0,UNKNOWN,-1,-1,-1,0
+Clonazepam 500microgram tablets,clonazepam,1,0,UNKNOWN,-1,-1,-1,0
+Clonazepam 2mg tablets,clonazepam,1,0,UNKNOWN,-1,-1,-1,0
+Valsartan 160mg / Hydrochlorothiazide 12.5mg tablets,valsartan,3,0,UNKNOWN,-1,-1,-1,0
+Digoxin 250microgram tablets,digoxin,2,0,UNKNOWN,-1,-1,-1,0
+Promethazine hydrochloride 10mg tablets,promethazine,1,1,UNKNOWN,-1,-1,-1,0
+Bisoprolol 1.25mg tablets,bisoprolol,5,0,UNKNOWN,-1,-1,-1,0
+Cyanocobalamin 50microgram tablets,cyanocobalamin,0,0,UNKNOWN,-1,-1,-1,0
+Brinzolamide 10mg/ml / Timolol 5mg/ml eye drops,brinzolamide,1,0,UNKNOWN,-1,-1,-1,0
+Colesevelam 625mg tablets,colesevelam,0,0,UNKNOWN,-1,-1,-1,0
+Flucloxacillin 250mg capsules,flucloxacillin,6,0,UNKNOWN,-1,-1,-1,0
+Etoricoxib 30mg tablets,etoricoxib,2,0,UNKNOWN,-1,-1,-1,0
+Primidone 250mg tablets,primidone,0,0,UNKNOWN,-1,-1,-1,0
+Liothyronine 20microgram tablets,liothyronine,0,0,UNKNOWN,-1,-1,-1,0
+Etoricoxib 30mg tablets,etoricoxib,2,0,UNKNOWN,-1,-1,-1,0
+Lorazepam 2.5mg tablets,lorazepam,2,0,UNKNOWN,-1,-1,-1,0
+Venlafaxine 75mg modified-release capsules,venlafaxine,5,0,UNKNOWN,-1,-1,-1,0
+Paracetamol 500mg tablets,paracetamol,20,3,LOW,12,30,0,0
+Paracetamol 500mg tablets,paracetamol,20,3,LOW,12,30,0,0
+Dosulepin 75mg tablets,dosulepin,1,0,UNKNOWN,-1,-1,-1,0
+Buspirone 5mg tablets,buspirone,1,0,UNKNOWN,-1,-1,-1,0
+Co-amoxiclav 125mg/31mg/5ml oral suspension sugar free,clavulanic acid,3,0,UNKNOWN,-1,-1,-1,0
+Indometacin 25mg capsules,indometacin,1,0,UNKNOWN,-1,-1,-1,0
+Labetalol 100mg tablets,labetalol,1,0,UNKNOWN,-1,-1,-1,0
+Betahistine 16mg tablets,betahistine,1,0,UNKNOWN,-1,-1,-1,0
+Zolpidem 5mg tablets,zolpidem,1,0,UNKNOWN,-1,-1,-1,0
+Olopatadine 1mg/ml eye drops,olopatadine,0,0,UNKNOWN,-1,-1,-1,0
+Lamotrigine 25mg dispersible tablets sugar free,lamotrigine,6,0,UNKNOWN,-1,-1,-1,0
+Moxonidine 400microgram tablets,moxonidine,2,0,UNKNOWN,-1,-1,-1,0
+Venlafaxine 37.5mg modified-release capsules,venlafaxine,5,0,UNKNOWN,-1,-1,-1,0
+Venlafaxine 150mg modified-release tablets,venlafaxine,5,0,UNKNOWN,-1,-1,-1,0
+Desmopressin 200microgram tablets,desmopressin,1,0,UNKNOWN,-1,-1,-1,0
+Alfacalcidol 1microgram capsules,alfacalcidol,0,0,UNKNOWN,-1,-1,-1,0
+Febuxostat 80mg tablets,febuxostat,0,0,UNKNOWN,-1,-1,-1,0
+Simvastatin 80mg tablets,simvastatin,3,0,UNKNOWN,-1,-1,-1,0
+Ranitidine 75mg/5ml oral solution sugar free,ranitidine,0,0,UNKNOWN,-1,-1,-1,0
+Aspirin 75mg gastro-resistant tablets,aspirin,5,2,UNKNOWN,-1,-1,-1,0
+Mirtazapine 45mg orodispersible tablets,mirtazapine,6,0,UNKNOWN,-1,-1,-1,0
+Beclometasone 50micrograms/dose nasal spray,beclometasone,0,0,UNKNOWN,-1,-1,-1,0
+Raloxifene 60mg tablets,raloxifene,0,0,UNKNOWN,-1,-1,-1,0
+Citalopram 40mg tablets,citalopram,6,2,UNKNOWN,-1,-1,-1,0
+Ramipril 1.25mg tablets,ramipril,7,0,UNKNOWN,-1,-1,-1,0
+Isotretinoin 20mg capsules,isotretinoin,0,0,UNKNOWN,-1,-1,-1,0
+Eplerenone 50mg tablets,eplerenone,1,0,UNKNOWN,-1,-1,-1,0
+Alverine 120mg capsules,alverine,1,0,UNKNOWN,-1,-1,-1,0
+Alverine 60mg capsules,alverine,1,0,UNKNOWN,-1,-1,-1,0
+Pizotifen 1.5mg tablets,pizotifen,1,0,UNKNOWN,-1,-1,-1,0
+Pravastatin 20mg tablets,pravastatin,2,0,UNKNOWN,-1,-1,-1,0
+Dapsone 50mg tablets,dapsone,0,0,UNKNOWN,-1,-1,-1,0
+Propranolol 10mg tablets,propranolol,3,3,HIGH,3,80,1,0
+Co-amilofruse 2.5mg/20mg tablets,co-amilofruse,1,0,UNKNOWN,-1,-1,-1,0
+Perindopril erbumine 8mg tablets,perindopril,2,0,UNKNOWN,-1,-1,-1,0
+Paroxetine 10mg tablets,paroxetine,2,0,UNKNOWN,-1,-1,-1,0
+Spironolactone 100mg tablets,spironolactone,2,0,UNKNOWN,-1,-1,-1,0
+Quinine bisulfate 300mg tablets,quinine,2,0,UNKNOWN,-1,-1,-1,0
+Travoprost 40micrograms/ml / Timolol 5mg/ml eye drops,travoprost,1,0,UNKNOWN,-1,-1,-1,0
+Co-tenidone 100mg/25mg tablets,co-tenidone,1,0,UNKNOWN,-1,-1,-1,0
+Citalopram 40mg/ml oral drops sugar free,citalopram,6,2,UNKNOWN,-1,-1,-1,0
+Simvastatin 40mg tablets,simvastatin,3,0,UNKNOWN,-1,-1,-1,0
+Fluoxetine 60mg capsules,fluoxetine,5,0,UNKNOWN,-1,-1,-1,0
+Levothyroxine sodium 75microgram tablets,levothyroxine,4,0,UNKNOWN,-1,-1,-1,0
+Cefalexin 250mg tablets,cefalexin,3,1,UNKNOWN,-1,-1,-1,0
+Hydrocortisone 10mg tablets,hydrocortisone,6,0,UNKNOWN,-1,-1,-1,0
+Hydroxychloroquine 200mg tablets,hydroxychloroquine,0,0,UNKNOWN,-1,-1,-1,0
+Fluoxetine 20mg capsules,fluoxetine,5,0,UNKNOWN,-1,-1,-1,0
+Ivabradine 5mg tablets,ivabradine,2,2,UNKNOWN,-1,-1,-1,0
+Methocarbamol 750mg tablets,methocarbamol,0,0,UNKNOWN,-1,-1,-1,0
+Lacidipine 4mg tablets,lacidipine,1,0,UNKNOWN,-1,-1,-1,0
+Gliclazide 30mg modified-release tablets,gliclazide,3,0,UNKNOWN,-1,-1,-1,0
+Methotrexate 2.5mg tablets,methotrexate,0,0,UNKNOWN,-1,-1,-1,0
+Brimonidine 0.2% eye drops,brimonidine,0,0,UNKNOWN,-1,-1,-1,0
+Pravastatin 40mg tablets,pravastatin,2,0,UNKNOWN,-1,-1,-1,0
+Flecainide 100mg tablets,flecainide,1,0,UNKNOWN,-1,-1,-1,0
+Gliclazide 40mg tablets,gliclazide,2,0,UNKNOWN,-1,-1,-1,0
+Rasagiline 1mg tablets,rasagiline,0,0,UNKNOWN,-1,-1,-1,0
+Fluoxetine 10mg capsules,fluoxetine,4,0,UNKNOWN,-1,-1,-1,0
+Co-amilofruse 5mg/40mg tablets,co-amilofruse,1,0,UNKNOWN,-1,-1,-1,0
+Midodrine 2.5mg tablets,midodrine,1,0,UNKNOWN,-1,-1,-1,0
+Betamethasone valerate 0.1% ointment,betamethasone,5,1,UNKNOWN,-1,-1,-1,0
+Moxonidine 200microgram tablets,moxonidine,2,0,UNKNOWN,-1,-1,-1,0
+Codeine 60mg tablets,codeine phosphate,18,2,HIGH,4,70,1,0
+Travoprost 40micrograms/ml / Timolol 5mg/ml eye drops,travoprost,1,0,UNKNOWN,-1,-1,-1,0
+Rosuvastatin 5mg tablets,rosuvastatin,3,0,UNKNOWN,-1,-1,-1,0
+Duloxetine 40mg gastro-resistant capsules,duloxetine,5,0,UNKNOWN,-1,-1,-1,0
+Ropinirole 500microgram tablets,ropinirole,3,0,UNKNOWN,-1,-1,-1,0
+Esomeprazole 20mg gastro-resistant tablets,esomeprazole,5,4,HIGH,4,75,1,0
+Carvedilol 12.5mg tablets,carvedilol,3,0,UNKNOWN,-1,-1,-1,0
+Esomeprazole 40mg gastro-resistant tablets,esomeprazole,5,4,HIGH,4,75,1,0
+Topiramate 50mg tablets,topiramate,3,0,UNKNOWN,-1,-1,-1,0
+Nebivolol 5mg tablets,nebivolol,1,0,UNKNOWN,-1,-1,-1,0
+Ciprofloxacin 250mg tablets,ciprofloxacin,1,1,UNKNOWN,-1,-1,-1,0
+Paroxetine 10mg tablets,paroxetine,2,0,UNKNOWN,-1,-1,-1,0
+Calcipotriol 0.005% / Betamethasone dipropionate 0.05% gel,calcipotriol,1,0,UNKNOWN,-1,-1,-1,0
+Glycopyrronium bromide 200micrograms/1ml solution for injection ampoules,glycopyrronium,0,0,UNKNOWN,-1,-1,-1,0
+Sevelamer 800mg tablets,sevelamer,0,0,UNKNOWN,-1,-1,-1,0
+Metoprolol 100mg tablets,metoprolol,1,0,UNKNOWN,-1,-1,-1,0
+Mirtazapine 30mg orodispersible tablets,mirtazapine,6,0,UNKNOWN,-1,-1,-1,0
+Prednisolone 5mg soluble tablets sugar free,prednisolone,5,0,UNKNOWN,-1,-1,-1,0
+Cabergoline 500microgram tablets,cabergoline,0,0,UNKNOWN,-1,-1,-1,0
+Levetiracetam 1g tablets,levetiracetam,4,0,UNKNOWN,-1,-1,-1,0
+Fosinopril 10mg tablets,fosinopril,1,0,UNKNOWN,-1,-1,-1,0
+Moxonidine 300microgram tablets,moxonidine,2,0,UNKNOWN,-1,-1,-1,0
+Paroxetine 20mg tablets,paroxetine,3,0,UNKNOWN,-1,-1,-1,0
+Amitriptyline 10mg tablets,amitriptyline,2,0,UNKNOWN,-1,-1,-1,0
+Phenoxymethylpenicillin 125mg/5ml oral solution sugar free,phenoxymethylpenicillin,4,1,UNKNOWN,-1,-1,-1,0
+Cefalexin 250mg capsules,cefalexin,3,1,UNKNOWN,-1,-1,-1,0
+Co-dydramol 10mg/500mg tablets,co-dydramol,0,0,UNKNOWN,-1,-1,-1,0
+Duloxetine 20mg gastro-resistant capsules,duloxetine,4,0,UNKNOWN,-1,-1,-1,0
+Duloxetine 60mg gastro-resistant capsules,duloxetine,4,0,UNKNOWN,-1,-1,-1,0
+Rabeprazole 20mg gastro-resistant tablets,rabeprazole,1,0,UNKNOWN,-1,-1,-1,0
+Bicalutamide 150mg tablets,bicalutamide,1,0,UNKNOWN,-1,-1,-1,0
+Pizotifen 500microgram tablets,pizotifen,1,0,UNKNOWN,-1,-1,-1,0
+Clotrimazole 1% cream,clotrimazole,1,1,UNKNOWN,-1,-1,-1,0
+Fluconazole 50mg capsules,fluconazole,1,0,UNKNOWN,-1,-1,-1,0
+Hydralazine 50mg tablets,hydralazine,1,0,UNKNOWN,-1,-1,-1,0
+Acamprosate 333mg gastro-resistant tablets,acamprosate,0,0,UNKNOWN,-1,-1,-1,0
+Rizatriptan 10mg orodispersible tablets sugar free,rizatriptan,1,0,UNKNOWN,-1,-1,-1,0
+Cetirizine 10mg tablets,cetirizine,0,0,UNKNOWN,-1,-1,-1,0
+Fesoterodine 8mg modified-release tablets,fesoterodine,1,0,UNKNOWN,-1,-1,-1,0
+Amitriptyline 25mg tablets,amitriptyline,2,0,UNKNOWN,-1,-1,-1,0
+Fesoterodine 4mg modified-release tablets,fesoterodine,1,0,UNKNOWN,-1,-1,-1,0
+Diclofenac sodium 25mg gastro-resistant tablets,diclofenac,1,1,UNKNOWN,-1,-1,-1,0
+Rivastigmine 3mg capsules,rivastigmine,1,0,UNKNOWN,-1,-1,-1,0
+Metformin 500mg modified-release tablets,metformin,6,0,MEDIUM,8,70,1,0
+Metformin 850mg tablets,metformin,6,0,MEDIUM,8,70,1,0
+Fluticasone propionate 50micrograms/dose / Azelastine 137micrograms/dose nasal spray,fluticasone,1,0,UNKNOWN,-1,-1,-1,0
+Flucloxacillin 250mg/5ml oral solution,flucloxacillin,6,0,UNKNOWN,-1,-1,-1,0
+Tolbutamide 500mg tablets,tolbutamide,0,0,UNKNOWN,-1,-1,-1,0
+Hydralazine 25mg tablets,hydralazine,1,0,UNKNOWN,-1,-1,-1,0
+Entacapone 200mg tablets,entacapone,0,0,UNKNOWN,-1,-1,-1,0
+Risedronate sodium 35mg tablets,risedronate,0,0,UNKNOWN,-1,-1,-1,0
+Zolpidem 10mg tablets,zolpidem,1,0,UNKNOWN,-1,-1,-1,0
+Ezetimibe 10mg tablets,ezetimibe,0,0,UNKNOWN,-1,-1,-1,0
+Nifedipine 10mg capsules,nifedipine,1,0,UNKNOWN,-1,-1,-1,0
+Zonisamide 100mg capsules,zonisamide,1,0,UNKNOWN,-1,-1,-1,0
+Co-dydramol 10mg/500mg tablets,co-dydramol,0,0,UNKNOWN,-1,-1,-1,0
+Glyceryl trinitrate 400micrograms/dose pump sublingual spray,glyceryl,1,0,UNKNOWN,-1,-1,-1,0
+Diamorphine 30mg powder for solution for injection ampoules,diamorphine,0,0,UNKNOWN,-1,-1,-1,0
+Glyceryl trinitrate 400micrograms/dose pump sublingual spray,glyceryl,1,0,UNKNOWN,-1,-1,-1,0
+Enalapril 10mg tablets,enalapril,3,0,UNKNOWN,-1,-1,-1,0
+Ondansetron 8mg tablets,ondansetron,2,0,UNKNOWN,-1,-1,-1,0
+Levetiracetam 750mg tablets,levetiracetam,4,0,UNKNOWN,-1,-1,-1,0
+Co-amoxiclav 250mg/125mg tablets,clavulanic acid,3,0,UNKNOWN,-1,-1,-1,0
+Glyceryl trinitrate 400micrograms/dose pump sublingual spray,glyceryl,1,0,UNKNOWN,-1,-1,-1,0
+Tamoxifen 20mg tablets,tamoxifen,0,0,UNKNOWN,-1,-1,-1,0
+Enalapril 20mg tablets,enalapril,3,0,UNKNOWN,-1,-1,-1,0
+Tadalafil 20mg tablets,tadalafil,2,0,UNKNOWN,-1,-1,-1,0
+Glyceryl trinitrate 400micrograms/dose pump sublingual spray,glyceryl,1,0,UNKNOWN,-1,-1,-1,0
+Fludrocortisone 100microgram tablets,fludrocortisone,0,0,UNKNOWN,-1,-1,-1,0
+Valsartan 40mg capsules,valsartan,3,0,UNKNOWN,-1,-1,-1,0
+Oxybutynin 5mg modified-release tablets,oxybutynin,3,2,UNKNOWN,-1,-1,-1,0
+Levothyroxine sodium 25microgram tablets,levothyroxine,4,0,UNKNOWN,-1,-1,-1,0
+Topiramate 25mg capsules,topiramate,3,0,UNKNOWN,-1,-1,-1,0
+Melatonin 2mg modified-release tablets,melatonin,2,0,UNKNOWN,-1,-1,-1,0
+Oxybutynin 10mg modified-release tablets,oxybutynin,3,2,UNKNOWN,-1,-1,-1,0
+Melatonin 1mg/ml oral solution sugar free,melatonin,2,0,UNKNOWN,-1,-1,-1,0
+Zonisamide 100mg capsules,zonisamide,1,0,UNKNOWN,-1,-1,-1,0
+Dorzolamide 20mg/ml / Timolol 5mg/ml eye drops 0.2ml unit dose preservative free,dorzolamide,2,0,UNKNOWN,-1,-1,-1,0
+Nifedipine 5mg capsules,nifedipine,1,0,UNKNOWN,-1,-1,-1,0
+Zonisamide 50mg capsules,zonisamide,2,0,UNKNOWN,-1,-1,-1,0
+Amoxicillin 500mg capsules,amoxicillin,10,1,HIGH,4,85,1,0
+Escitalopram 10mg tablets,citalopram,6,2,UNKNOWN,-1,-1,-1,0
+Mirtazapine 15mg orodispersible tablets,mirtazapine,6,0,UNKNOWN,-1,-1,-1,0
+Ursodeoxycholic acid 250mg capsules,ursodeoxycholic,0,0,UNKNOWN,-1,-1,-1,0
+Doxycycline 50mg capsules,doxycycline,1,0,HIGH,3,80,1,0
+Tizanidine 2mg tablets,tizanidine,0,0,UNKNOWN,-1,-1,-1,0
+Cyclizine 50mg tablets,cyclizine,1,1,UNKNOWN,-1,-1,-1,0
+Irbesartan 300mg / Hydrochlorothiazide 12.5mg tablets,irbesartan,3,1,UNKNOWN,-1,-1,-1,0
+Aciclovir 800mg tablets,aciclovir,3,1,UNKNOWN,-1,-1,-1,0
+Fluoxetine 10mg capsules,fluoxetine,4,0,UNKNOWN,-1,-1,-1,0
+Trandolapril 2mg capsules,trandolapril,0,0,UNKNOWN,-1,-1,-1,0
+Levothyroxine sodium 50microgram tablets,levothyroxine,4,0,UNKNOWN,-1,-1,-1,0
+Letrozole 2.5mg tablets,letrozole,0,0,UNKNOWN,-1,-1,-1,0
+Mebeverine 135mg tablets,mebeverine,1,0,UNKNOWN,-1,-1,-1,0
+Losartan 50mg tablets,losartan,5,0,UNKNOWN,-1,-1,-1,0
+Enalapril 5mg tablets,enalapril,3,0,UNKNOWN,-1,-1,-1,0
+Rivaroxaban 20mg tablets,rivaroxaban,3,0,UNKNOWN,-1,-1,-1,0
+Rivaroxaban 15mg tablets,rivaroxaban,3,0,UNKNOWN,-1,-1,-1,0
+Lacosamide 50mg tablets,lacosamide,2,0,UNKNOWN,-1,-1,-1,0
+Topiramate 25mg tablets,topiramate,3,0,UNKNOWN,-1,-1,-1,0
+Digoxin 125microgram tablets,digoxin,2,0,UNKNOWN,-1,-1,-1,0
+Bimatoprost 300micrograms/ml eye drops 0.4ml unit dose preservative free,bimatoprost,3,1,UNKNOWN,-1,-1,-1,0
+Lacosamide 200mg tablets,lacosamide,2,0,UNKNOWN,-1,-1,-1,0
+Lansoprazole 15mg orodispersible tablets,lansoprazole,3,1,UNKNOWN,-1,-1,-1,0
+Enalapril 2.5mg tablets,enalapril,3,0,UNKNOWN,-1,-1,-1,0
+Lacosamide 100mg tablets,lacosamide,2,0,UNKNOWN,-1,-1,-1,0
+Levetiracetam 250mg tablets,levetiracetam,4,0,UNKNOWN,-1,-1,-1,0
+Pregabalin 200mg capsules,pregabalin,7,0,MEDIUM,5,75,1,0
+Levetiracetam 100mg/ml oral solution sugar free,levetiracetam,4,0,UNKNOWN,-1,-1,-1,0
+Tranexamic acid 500mg tablets,tranexamic,0,0,UNKNOWN,-1,-1,-1,0
+Naratriptan 2.5mg tablets,naratriptan,0,0,UNKNOWN,-1,-1,-1,0
+Dexamfetamine 5mg tablets,dexamfetamine,0,0,UNKNOWN,-1,-1,-1,0
+Naratriptan 2.5mg tablets,naratriptan,0,0,UNKNOWN,-1,-1,-1,0
+Digoxin 62.5microgram tablets,digoxin,2,0,UNKNOWN,-1,-1,-1,0
+Topiramate 100mg tablets,topiramate,3,0,UNKNOWN,-1,-1,-1,0
+Aripiprazole 15mg tablets,aripiprazole,3,0,UNKNOWN,-1,-1,-1,0
+Atenolol 25mg tablets,atenolol,2,0,UNKNOWN,-1,-1,-1,0
+Dabigatran etexilate 110mg capsules,dabigatran,1,0,UNKNOWN,-1,-1,-1,0
+Ondansetron 4mg tablets,ondansetron,1,0,UNKNOWN,-1,-1,-1,0
+Dabigatran etexilate 110mg capsules,dabigatran,1,0,UNKNOWN,-1,-1,-1,0
+Phenoxymethylpenicillin 250mg/5ml oral solution sugar free,phenoxymethylpenicillin,4,1,UNKNOWN,-1,-1,-1,0
+Olmesartan medoxomil 40mg tablets,olmesartan,2,0,UNKNOWN,-1,-1,-1,0
+Levothyroxine sodium 100microgram tablets,levothyroxine,4,0,UNKNOWN,-1,-1,-1,0
+Midodrine 5mg tablets,midodrine,2,0,UNKNOWN,-1,-1,-1,0
+Dabigatran etexilate 150mg capsules,dabigatran,2,0,UNKNOWN,-1,-1,-1,0
+Doxazosin 2mg tablets,doxazosin,2,0,UNKNOWN,-1,-1,-1,0
+Midodrine 2.5mg tablets,midodrine,1,0,UNKNOWN,-1,-1,-1,0
+Salbutamol 2.5mg/2.5ml nebuliser liquid unit dose vials,salbutamol,0,0,UNKNOWN,-1,-1,-1,0
+Pantoprazole 40mg gastro-resistant tablets,pantoprazole,1,0,UNKNOWN,-1,-1,-1,0
+Lisinopril 20mg tablets,lisinopril,3,0,UNKNOWN,-1,-1,-1,0
+Risperidone 2mg tablets,risperidone,5,1,UNKNOWN,-1,-1,-1,0
+Spironolactone 50mg tablets,spironolactone,2,0,UNKNOWN,-1,-1,-1,0
+Losartan 100mg tablets,losartan,5,0,UNKNOWN,-1,-1,-1,0
+Pantoprazole 20mg gastro-resistant tablets,pantoprazole,1,0,UNKNOWN,-1,-1,-1,0
+Aripiprazole 5mg tablets,aripiprazole,2,0,UNKNOWN,-1,-1,-1,0
+Donepezil 5mg tablets,donepezil,1,0,UNKNOWN,-1,-1,-1,0
+Losartan 25mg tablets,losartan,5,0,UNKNOWN,-1,-1,-1,0
+Carbimazole 20mg tablets,carbimazole,1,0,UNKNOWN,-1,-1,-1,0
+Meloxicam 15mg tablets,meloxicam,1,0,UNKNOWN,-1,-1,-1,0
+Rabeprazole 10mg gastro-resistant tablets,rabeprazole,1,0,UNKNOWN,-1,-1,-1,0
+Azithromycin 250mg tablets,azithromycin,2,0,HIGH,4,80,1,0
+Doxycycline 100mg capsules,doxycycline,1,0,HIGH,3,80,1,0
+Co-codamol 8mg/500mg tablets,paracetamol,20,3,LOW,12,30,0,0
+Zopiclone 3.75mg tablets,zopiclone,1,0,UNKNOWN,-1,-1,-1,0
+Aciclovir 200mg tablets,aciclovir,3,1,UNKNOWN,-1,-1,-1,0
+Co-codamol 8mg/500mg tablets,paracetamol,20,3,LOW,12,30,0,0
+Olmesartan medoxomil 10mg tablets,olmesartan,2,0,UNKNOWN,-1,-1,-1,0
+Co-trimoxazole 80mg/400mg tablets,co-trimoxazole,0,0,UNKNOWN,-1,-1,-1,0
+Estradiol 10microgram pessaries,estradiol,0,0,UNKNOWN,-1,-1,-1,0
+Olmesartan medoxomil 20mg tablets,olmesartan,2,0,UNKNOWN,-1,-1,-1,0
+Bisacodyl 5mg gastro-resistant tablets,bisacodyl,0,0,UNKNOWN,-1,-1,-1,0
+Metoclopramide 10mg tablets,metoclopramide,0,0,UNKNOWN,-1,-1,-1,0
+Chlorphenamine 4mg tablets,chlorphenamine,0,0,UNKNOWN,-1,-1,-1,0
+Sumatriptan 100mg tablets,sumatriptan,1,0,UNKNOWN,-1,-1,-1,0
+Sulfasalazine 500mg gastro-resistant tablets,sulfasalazine,1,1,UNKNOWN,-1,-1,-1,0
+Leflunomide 10mg tablets,leflunomide,1,0,UNKNOWN,-1,-1,-1,0
+Lamotrigine 100mg dispersible tablets sugar free,lamotrigine,6,0,UNKNOWN,-1,-1,-1,0
+Venlafaxine 37.5mg tablets,venlafaxine,5,0,UNKNOWN,-1,-1,-1,0
+Naproxen 500mg tablets,naproxen,3,0,UNKNOWN,-1,-1,-1,0
+Co-codamol 30mg/500mg effervescent tablets,paracetamol,19,3,LOW,12,30,0,0
+Co-codamol 8mg/500mg effervescent tablets,paracetamol,19,3,LOW,12,30,0,0
+Benzydamine 0.15% mouthwash sugar free,benzydamine,1,0,UNKNOWN,-1,-1,-1,0
+Ferrous sulfate 200mg tablets,ferrous sulfate,0,0,UNKNOWN,-1,-1,-1,0
+Melatonin 1mg/ml oral solution sugar free,melatonin,2,0,UNKNOWN,-1,-1,-1,0
+Aciclovir 400mg tablets,aciclovir,3,1,UNKNOWN,-1,-1,-1,0
+Docusate 50mg/5ml oral solution sugar free,docusate,0,0,UNKNOWN,-1,-1,-1,0
+Lisinopril 10mg tablets,lisinopril,3,0,UNKNOWN,-1,-1,-1,0
+Flucloxacillin 500mg capsules,flucloxacillin,6,0,UNKNOWN,-1,-1,-1,0
+Ibuprofen 100mg/5ml oral suspension sugar free,ibuprofen,6,0,UNKNOWN,-1,-1,-1,0
+Bicalutamide 50mg tablets,bicalutamide,1,0,UNKNOWN,-1,-1,-1,0
+Rivastigmine 1.5mg capsules,rivastigmine,1,0,UNKNOWN,-1,-1,-1,0
+Memantine 20mg tablets,memantine,3,0,UNKNOWN,-1,-1,-1,0
+Travoprost 40micrograms/ml eye drops,travoprost,2,0,UNKNOWN,-1,-1,-1,0
+Flecainide 50mg tablets,flecainide,1,0,UNKNOWN,-1,-1,-1,0
+Meloxicam 7.5mg tablets,meloxicam,1,0,UNKNOWN,-1,-1,-1,0
+Phenytoin sodium 100mg tablets,phenytoin,1,0,UNKNOWN,-1,-1,-1,0
+Eplerenone 25mg tablets,eplerenone,1,0,UNKNOWN,-1,-1,-1,0
+Memantine 10mg/ml oral solution sugar free,memantine,3,0,UNKNOWN,-1,-1,-1,0
+Cinnarizine 15mg tablets,cinnarizine,0,0,UNKNOWN,-1,-1,-1,0
+Amlodipine 2.5mg tablets,amlodipine,2,0,MEDIUM,7,75,1,0
+Co-codamol 8mg/500mg effervescent tablets,paracetamol,19,3,LOW,12,30,0,0
+Gliclazide 40mg tablets,gliclazide,2,0,UNKNOWN,-1,-1,-1,0
+Co-codamol 8mg/500mg effervescent tablets,paracetamol,19,3,LOW,12,30,0,0
+Escitalopram 20mg tablets,citalopram,6,2,UNKNOWN,-1,-1,-1,0
+Gliclazide 80mg tablets,gliclazide,3,0,UNKNOWN,-1,-1,-1,0
+Prasugrel 10mg tablets,prasugrel,0,0,UNKNOWN,-1,-1,-1,0
+Mirtazapine 45mg tablets,mirtazapine,6,0,UNKNOWN,-1,-1,-1,0
+Lamotrigine 25mg tablets,lamotrigine,6,0,UNKNOWN,-1,-1,-1,0
+Paroxetine 30mg tablets,paroxetine,3,0,UNKNOWN,-1,-1,-1,0
+Lamotrigine 50mg tablets,lamotrigine,6,0,UNKNOWN,-1,-1,-1,0
+Carvedilol 25mg tablets,carvedilol,3,0,UNKNOWN,-1,-1,-1,0
+Mirtazapine 15mg tablets,mirtazapine,5,0,UNKNOWN,-1,-1,-1,0
+Metformin 1g modified-release tablets,metformin,6,0,MEDIUM,8,70,1,0
+Lymecycline 408mg capsules,lymecycline,0,0,UNKNOWN,-1,-1,-1,0
+Lisinopril 2.5mg tablets,lisinopril,3,0,UNKNOWN,-1,-1,-1,0
+Amlodipine 10mg tablets,amlodipine,3,0,MEDIUM,7,75,1,0
+Lisinopril 5mg tablets,lisinopril,3,0,UNKNOWN,-1,-1,-1,0
+Lymecycline 408mg capsules,lymecycline,0,0,UNKNOWN,-1,-1,-1,0
+Lansoprazole 15mg gastro-resistant capsules,lansoprazole,3,1,UNKNOWN,-1,-1,-1,0
+Sitagliptin 50mg / Metformin 1g tablets,metformin,6,0,MEDIUM,8,70,1,0
+Mirtazapine 30mg tablets,mirtazapine,6,0,UNKNOWN,-1,-1,-1,0
+Zopiclone 7.5mg tablets,zopiclone,1,0,UNKNOWN,-1,-1,-1,0
+Diltiazem 60mg modified-release tablets,diltiazem,0,0,UNKNOWN,-1,-1,-1,0
+Risperidone 4mg tablets,risperidone,5,1,UNKNOWN,-1,-1,-1,0
+Solifenacin 10mg tablets,solifenacin,1,0,UNKNOWN,-1,-1,-1,0
+Losartan 12.5mg tablets,losartan,5,0,UNKNOWN,-1,-1,-1,0
+Atenolol 50mg tablets,atenolol,2,0,UNKNOWN,-1,-1,-1,0
+Pregabalin 150mg capsules,pregabalin,7,0,MEDIUM,5,75,1,0
+Loratadine 5mg/5ml oral solution,loratadine,2,0,UNKNOWN,-1,-1,-1,0
+Fluconazole 150mg capsules,fluconazole,1,0,UNKNOWN,-1,-1,-1,0
+Finasteride 5mg tablets,finasteride,0,0,UNKNOWN,-1,-1,-1,0
+Atenolol 100mg tablets,atenolol,2,0,UNKNOWN,-1,-1,-1,0
+Omeprazole 10mg gastro-resistant capsules,omeprazole,10,4,MEDIUM,6,65,1,0
+Carvedilol 3.125mg tablets,carvedilol,3,0,UNKNOWN,-1,-1,-1,0
+Donepezil 10mg tablets,donepezil,1,0,UNKNOWN,-1,-1,-1,0
+Atorvastatin 20mg tablets,atorvastatin,3,0,MEDIUM,6,70,1,0
+Loratadine 10mg tablets,loratadine,2,0,UNKNOWN,-1,-1,-1,0
+Atorvastatin 40mg tablets,atorvastatin,3,0,MEDIUM,6,70,1,0
+Aspirin 300mg dispersible tablets,aspirin,4,2,UNKNOWN,-1,-1,-1,0
+Lansoprazole 30mg gastro-resistant capsules,lansoprazole,3,1,UNKNOWN,-1,-1,-1,0
+Rivaroxaban 2.5mg tablets,rivaroxaban,3,0,UNKNOWN,-1,-1,-1,0
+Ivabradine 5mg tablets,ivabradine,2,2,UNKNOWN,-1,-1,-1,0
+Co-amoxiclav 500mg/125mg tablets,clavulanic acid,3,0,UNKNOWN,-1,-1,-1,0
+Vitamin B compound strong tablets,vitamin,0,0,UNKNOWN,-1,-1,-1,0
+Tamsulosin 400microgram modified-release capsules,tamsulosin,1,0,UNKNOWN,-1,-1,-1,0
+Metformin 500mg/5ml oral solution sugar free,metformin,5,0,MEDIUM,8,70,1,0
+Omeprazole 40mg gastro-resistant tablets,omeprazole,10,4,MEDIUM,6,65,1,0
+Rivaroxaban 10mg tablets,rivaroxaban,3,0,UNKNOWN,-1,-1,-1,0
+Betamethasone valerate 0.1% ointment,betamethasone,5,1,UNKNOWN,-1,-1,-1,0
+Ibuprofen 5% gel,ibuprofen,5,0,UNKNOWN,-1,-1,-1,0
+Tramadol 50mg capsules,tramadol,1,0,UNKNOWN,-1,-1,-1,0
+Naproxen 250mg tablets,naproxen,3,0,UNKNOWN,-1,-1,-1,0
+Ibuprofen 5% gel,ibuprofen,5,0,UNKNOWN,-1,-1,-1,0
+Amlodipine 2.5mg tablets,amlodipine,2,0,MEDIUM,7,75,1,0
+Amitriptyline 50mg tablets,amitriptyline,2,0,UNKNOWN,-1,-1,-1,0
+Warfarin 500microgram tablets,warfarin,3,0,UNKNOWN,-1,-1,-1,0
+Fludrocortisone 100microgram tablets,fludrocortisone,0,0,UNKNOWN,-1,-1,-1,0
+Candesartan 32mg tablets,candesartan,4,0,UNKNOWN,-1,-1,-1,0
+Amlodipine 5mg tablets,amlodipine,3,0,MEDIUM,7,75,1,0
+Tramadol 50mg capsules,tramadol,1,0,UNKNOWN,-1,-1,-1,0
+Candesartan 16mg tablets,candesartan,4,0,UNKNOWN,-1,-1,-1,0
+Ranolazine 375mg modified-release tablets,ranolazine,2,0,UNKNOWN,-1,-1,-1,0
+Melatonin 2mg modified-release tablets,melatonin,2,0,UNKNOWN,-1,-1,-1,0
+Lercanidipine 10mg tablets,lercanidipine,1,0,UNKNOWN,-1,-1,-1,0
+Candesartan 8mg tablets,candesartan,4,0,UNKNOWN,-1,-1,-1,0
+Risperidone 1mg tablets,risperidone,5,1,UNKNOWN,-1,-1,-1,0
+Ranolazine 750mg modified-release tablets,ranolazine,2,0,UNKNOWN,-1,-1,-1,0
+Ranolazine 500mg modified-release tablets,ranolazine,2,0,UNKNOWN,-1,-1,-1,0
+Atorvastatin 80mg tablets,atorvastatin,3,0,MEDIUM,6,70,1,0
+Spironolactone 25mg tablets,spironolactone,2,0,UNKNOWN,-1,-1,-1,0
+Atorvastatin 10mg tablets,atorvastatin,3,0,MEDIUM,6,70,1,0
+Apixaban 5mg tablets,apixaban,1,0,UNKNOWN,-1,-1,-1,0
+Apixaban 2.5mg tablets,apixaban,1,0,UNKNOWN,-1,-1,-1,0
+Risperidone 3mg tablets,risperidone,5,1,UNKNOWN,-1,-1,-1,0
+Colchicine 500microgram tablets,colchicine,0,0,UNKNOWN,-1,-1,-1,0
+Sildenafil 100mg tablets,sildenafil,2,0,UNKNOWN,-1,-1,-1,0
+Allopurinol 100mg tablets,allopurinol,1,0,UNKNOWN,-1,-1,-1,0
+Azathioprine 25mg tablets,azathioprine,1,0,UNKNOWN,-1,-1,-1,0
+Orlistat 120mg capsules,orlistat,0,0,UNKNOWN,-1,-1,-1,0
+Sildenafil 50mg tablets,sildenafil,2,0,UNKNOWN,-1,-1,-1,0
+Fexofenadine 120mg tablets,fexofenadine,1,1,UNKNOWN,-1,-1,-1,0
+Amoxicillin 125mg/5ml oral suspension sugar free,amoxicillin,12,1,HIGH,4,85,1,0
+Benzydamine 0.15% oromucosal spray sugar free,benzydamine,1,0,UNKNOWN,-1,-1,-1,0
+Sertraline 25mg tablets,sertraline,2,0,MEDIUM,6,70,1,0
+Ramipril 5mg tablets,ramipril,7,0,UNKNOWN,-1,-1,-1,0
+Simvastatin 20mg tablets,simvastatin,3,0,UNKNOWN,-1,-1,-1,0
+Simvastatin 10mg tablets,simvastatin,3,0,UNKNOWN,-1,-1,-1,0
+Ramipril 10mg capsules,ramipril,7,0,UNKNOWN,-1,-1,-1,0
+Ramipril 2.5mg capsules,ramipril,7,0,UNKNOWN,-1,-1,-1,0
+Ramipril 5mg capsules,ramipril,7,0,UNKNOWN,-1,-1,-1,0
+Doxazosin 1mg tablets,doxazosin,2,0,UNKNOWN,-1,-1,-1,0
+Nitrofurantoin 50mg capsules,nitrofurantoin,2,0,UNKNOWN,-1,-1,-1,0
+Doxazosin 4mg tablets,doxazosin,2,0,UNKNOWN,-1,-1,-1,0
+Sumatriptan 50mg tablets,sumatriptan,1,0,UNKNOWN,-1,-1,-1,0
+Mirtazapine 15mg tablets,mirtazapine,5,0,UNKNOWN,-1,-1,-1,0
+Trazodone 100mg capsules,trazodone,3,0,UNKNOWN,-1,-1,-1,0
+Aspirin 75mg tablets,aspirin,5,2,UNKNOWN,-1,-1,-1,0
+Clopidogrel 75mg tablets,clopidogrel,0,0,UNKNOWN,-1,-1,-1,0
+Ramipril 2.5mg tablets,ramipril,7,0,UNKNOWN,-1,-1,-1,0
+Montelukast 4mg chewable tablets sugar free,montelukast,3,0,UNKNOWN,-1,-1,-1,0
+Ramipril 1.25mg capsules,ramipril,7,0,UNKNOWN,-1,-1,-1,0
+Trazodone 50mg capsules,trazodone,3,0,UNKNOWN,-1,-1,-1,0
+Trazodone 150mg tablets,trazodone,3,0,UNKNOWN,-1,-1,-1,0
+Allopurinol 300mg tablets,allopurinol,1,0,UNKNOWN,-1,-1,-1,0
+Ramipril 10mg tablets,ramipril,7,0,UNKNOWN,-1,-1,-1,0
+Trazodone 50mg/5ml oral solution sugar free,trazodone,3,0,UNKNOWN,-1,-1,-1,0
+Azathioprine 50mg tablets,azathioprine,1,0,UNKNOWN,-1,-1,-1,0
+Chloramphenicol 0.5% eye drops,chloramphenicol,1,0,UNKNOWN,-1,-1,-1,0
+Amoxicillin 250mg/5ml oral suspension sugar free,amoxicillin,12,1,HIGH,4,85,1,0
+Ibuprofen 200mg tablets,ibuprofen,5,0,UNKNOWN,-1,-1,-1,0
+Ibuprofen 200mg tablets,ibuprofen,5,0,UNKNOWN,-1,-1,-1,0
+Lamotrigine 100mg tablets,lamotrigine,6,0,UNKNOWN,-1,-1,-1,0
+Azithromycin 500mg tablets,azithromycin,3,0,HIGH,4,80,1,0
+Montelukast 10mg tablets,montelukast,3,0,UNKNOWN,-1,-1,-1,0
+Omeprazole 20mg gastro-resistant capsules,omeprazole,10,4,MEDIUM,6,65,1,0
+Pregabalin 25mg capsules,pregabalin,7,0,MEDIUM,5,75,1,0
+Solifenacin 5mg tablets,solifenacin,1,0,UNKNOWN,-1,-1,-1,0
+Phenobarbital 30mg tablets,phenobarbital,0,0,UNKNOWN,-1,-1,-1,0
+Pregabalin 225mg capsules,pregabalin,7,0,MEDIUM,5,75,1,0
+Omeprazole 40mg gastro-resistant capsules,omeprazole,10,4,MEDIUM,6,65,1,0
+Loperamide 2mg capsules,loperamide,1,0,UNKNOWN,-1,-1,-1,0
+Pregabalin 75mg capsules,pregabalin,7,0,MEDIUM,5,75,1,0
+Bisoprolol 5mg tablets,bisoprolol,5,0,UNKNOWN,-1,-1,-1,0
+Bisoprolol 7.5mg tablets,bisoprolol,5,0,UNKNOWN,-1,-1,-1,0
+Pregabalin 100mg capsules,pregabalin,7,0,MEDIUM,5,75,1,0
+Diazepam 2mg tablets,diazepam,2,0,UNKNOWN,-1,-1,-1,0
+Bisoprolol 10mg tablets,bisoprolol,5,0,UNKNOWN,-1,-1,-1,0
+Bisoprolol 3.75mg tablets,bisoprolol,5,0,UNKNOWN,-1,-1,-1,0
+Diazepam 10mg tablets,diazepam,2,0,UNKNOWN,-1,-1,-1,0
+Ibuprofen 400mg tablets,ibuprofen,5,0,UNKNOWN,-1,-1,-1,0
+Ibuprofen 400mg tablets,ibuprofen,5,0,UNKNOWN,-1,-1,-1,0
+Gabapentin 300mg capsules,gabapentin,3,0,MEDIUM,5,75,1,0
+Candesartan 4mg tablets,candesartan,4,0,UNKNOWN,-1,-1,-1,0
+Azithromycin 250mg tablets,azithromycin,2,0,HIGH,4,80,1,0
+Gabapentin 100mg capsules,gabapentin,3,0,MEDIUM,5,75,1,0
+Amoxicillin 500mg capsules,amoxicillin,10,1,HIGH,4,85,1,0
+Amoxicillin 500mg capsules,amoxicillin,10,1,HIGH,4,85,1,0
+Diazepam 5mg tablets,diazepam,2,0,UNKNOWN,-1,-1,-1,0
+Gabapentin 400mg capsules,gabapentin,3,0,MEDIUM,5,75,1,0
+Amoxicillin 250mg capsules,amoxicillin,11,1,HIGH,4,85,1,0
+Omeprazole 20mg gastro-resistant tablets,omeprazole,10,4,MEDIUM,6,65,1,0
+Metformin 500mg tablets,metformin,6,0,MEDIUM,8,70,1,0
+Methadone 1mg/ml oral solution sugar free,methadone,2,0,UNKNOWN,-1,-1,-1,0
+Sertraline 100mg tablets,sertraline,2,0,MEDIUM,6,70,1,0
+Methadone 1mg/ml oral solution sugar free,methadone,2,0,UNKNOWN,-1,-1,-1,0
+Bisoprolol 2.5mg tablets,bisoprolol,5,0,UNKNOWN,-1,-1,-1,0
+Methadone 1mg/ml oral solution,methadone,2,0,UNKNOWN,-1,-1,-1,0
+Sertraline 50mg tablets,sertraline,2,0,MEDIUM,6,70,1,0
+Methadone 1mg/ml oral solution,methadone,2,0,UNKNOWN,-1,-1,-1,0
+Sildenafil 25mg tablets,sildenafil,2,0,UNKNOWN,-1,-1,-1,0
+Candesartan 2mg tablets,candesartan,4,0,UNKNOWN,-1,-1,-1,0
+Rosuvastatin 5mg tablets,rosuvastatin,3,0,UNKNOWN,-1,-1,-1,0
+Baclofen 10mg tablets,baclofen,1,0,UNKNOWN,-1,-1,-1,0
+Amoxicillin 250mg capsules,amoxicillin,11,1,HIGH,4,85,1,0
+Prednisolone 1mg tablets,prednisolone,5,0,UNKNOWN,-1,-1,-1,0
+Rosuvastatin 20mg tablets,rosuvastatin,4,0,UNKNOWN,-1,-1,-1,0
+Rosuvastatin 10mg tablets,rosuvastatin,4,0,UNKNOWN,-1,-1,-1,0
+Rosuvastatin 40mg tablets,rosuvastatin,4,0,UNKNOWN,-1,-1,-1,0
+Prednisolone 2.5mg gastro-resistant tablets,prednisolone,5,0,UNKNOWN,-1,-1,-1,0
+Prednisolone 5mg tablets,prednisolone,5,0,UNKNOWN,-1,-1,-1,0
+Prednisolone 5mg gastro-resistant tablets,prednisolone,5,0,UNKNOWN,-1,-1,-1,0
