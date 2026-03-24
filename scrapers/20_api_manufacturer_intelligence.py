@@ -220,18 +220,48 @@ def fetch_ema_epar() -> pd.DataFrame:
     """
     Download EMA centrally authorised medicines list (daily updated Excel).
     Provides EU Marketing Authorisation Holder (MAH) per molecule.
+    EMA periodically changes the file URL — try multiple patterns.
     """
-    url = ("https://www.ema.europa.eu/sites/default/files/"
-           "Medicines_output_human_medicines_en.xlsx")
+    urls_to_try = [
+        "https://www.ema.europa.eu/sites/default/files/Medicines_output_human_medicines_en.xlsx",
+        "https://www.ema.europa.eu/en/documents/other/medicines-output-human-medicines_en.xlsx",
+        "https://www.ema.europa.eu/sites/default/files/medicines-output-human-medicines_en.xlsx",
+    ]
+    for url in urls_to_try:
+        try:
+            r = requests.get(url, headers=HEADERS, timeout=60)
+            r.raise_for_status()
+            df = pd.read_excel(io.BytesIO(r.content), engine="openpyxl")
+            print(f"  EMA EPAR: {len(df)} medicines")
+            return df
+        except Exception:
+            continue
+
+    # Try scraping the download page for the current link
     try:
-        r = requests.get(url, headers=HEADERS, timeout=120)
-        r.raise_for_status()
-        df = pd.read_excel(io.BytesIO(r.content), engine="openpyxl")
-        print(f"  EMA EPAR: {len(df)} medicines")
-        return df
+        page = requests.get(
+            "https://www.ema.europa.eu/en/medicines/download-medicine-data",
+            headers=HEADERS, timeout=30
+        )
+        soup = BeautifulSoup(page.content, "html.parser")
+        xlsx_link = next(
+            (a["href"] for a in soup.find_all("a", href=True)
+             if "human_medicines" in a["href"].lower() and ".xlsx" in a["href"].lower()),
+            None
+        )
+        if xlsx_link:
+            if not xlsx_link.startswith("http"):
+                xlsx_link = "https://www.ema.europa.eu" + xlsx_link
+            r = requests.get(xlsx_link, headers=HEADERS, timeout=120)
+            r.raise_for_status()
+            df = pd.read_excel(io.BytesIO(r.content), engine="openpyxl")
+            print(f"  EMA EPAR (via page scrape): {len(df)} medicines")
+            return df
     except Exception as e:
-        print(f"  WARNING: EMA EPAR download failed: {e}")
-        return pd.DataFrame()
+        pass
+
+    print("  WARNING: EMA EPAR unavailable — continuing without EU MAH data")
+    return pd.DataFrame()
 
 
 def search_ema_for_molecule(molecule: str, ema_df: pd.DataFrame) -> list[str]:
