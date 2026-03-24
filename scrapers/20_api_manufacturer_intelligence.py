@@ -355,9 +355,13 @@ def build_manufacturer_database(watchlist: list[str], ema_df: pd.DataFrame) -> p
         # EMA MAH lookup
         ema_mahs = search_ema_for_molecule(molecule, ema_df)
 
-        # query OpenFDA for US shortage
-        time.sleep(0.25)
-        fda = query_openfda_shortage_v2(molecule)
+        # query OpenFDA only for known high-risk molecules (skip unmapped ones)
+        if mfr_key in KNOWN_API_MANUFACTURERS:
+            time.sleep(0.25)
+            fda = query_openfda_shortage_v2(molecule)
+        else:
+            fda = {"us_shortage_total": 0, "us_shortage_active": 0,
+                   "us_shortage_reasons": "", "us_shortage_status": ""}
 
         records.append({
             "molecule":                   molecule,
