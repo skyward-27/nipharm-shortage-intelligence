@@ -65,6 +65,8 @@ def scrape_govuk_mhra_alerts(drug_names: list[str]) -> pd.DataFrame:
     feeds = [
         "https://www.gov.uk/drug-device-alerts.atom",
         "https://www.gov.uk/government/organisations/medicines-and-healthcare-products-regulatory-agency.atom",
+        "https://mhrainspectorate.blog.gov.uk/feed/",   # GMP inspection failures (4-16wk lead)
+        "https://cpe.org.uk/feed/",                     # CPE concession announcements (RSS)
     ]
     records = []
     shortage_keywords = [

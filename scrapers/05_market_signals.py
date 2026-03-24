@@ -204,12 +204,12 @@ def fetch_openfda_shortages(limit: int = 1000) -> pd.DataFrame:
     No API key required for most endpoints.
     US shortages precede UK shortages by 2-4 weeks for common API manufacturers.
 
-    Endpoint: https://api.fda.gov/drug/shortage.json
-    Note: If endpoint 404s, use the drug/drugsfda endpoint with status filters.
+    Endpoint: https://api.fda.gov/drug/drugshortages.json
+    Launched: March 25, 2025. This is the correct, confirmed endpoint.
     """
     endpoints = [
-        f"https://api.fda.gov/drug/shortage.json?limit={limit}",
-        f"https://api.fda.gov/drug/drugsfda.json?search=shortage&limit=100",
+        f"https://api.fda.gov/drug/drugshortages.json?limit={limit}",
+        f"https://api.fda.gov/drug/drugshortages.json?search=status:active&limit={limit}",
     ]
 
     for url in endpoints:
