@@ -18,6 +18,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import os
+import html as _html
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
@@ -838,33 +839,28 @@ elif page == "⚠️  Early Warning":
                 st.info("No MHRA alerts found for the selected date range.")
             else:
                 for _, row in filtered_mhra.head(50).iterrows():
-                    title   = str(row.get("title", "Untitled"))
+                    title   = _html.escape(str(row.get("title", "Untitled")))
                     summary = str(row.get("summary", ""))
-                    summary_short = (summary[:150] + "…") if len(summary) > 150 else summary
+                    summary_short = _html.escape((summary[:150] + "…") if len(summary) > 150 else summary)
                     pub_date = row.get("published", "")
-                    pub_str  = pub_date.strftime("%d %b %Y") if pd.notna(pub_date) and hasattr(pub_date, "strftime") else str(pub_date)
-                    source   = str(row.get("source", "MHRA"))
-                    url      = str(row.get("url", ""))
-                    drugs    = str(row.get("matched_drugs", ""))
-                    drug_count = row.get("drug_count", 0)
+                    pub_str  = pub_date.strftime("%d %b %Y") if pd.notna(pub_date) and hasattr(pub_date, "strftime") else _html.escape(str(pub_date))
+                    source   = _html.escape(str(row.get("source", "MHRA")))
+                    url      = str(row.get("url", "")).strip()
+                    drugs    = _html.escape(str(row.get("matched_drugs", "")))
 
-                    drug_info = ""
-                    if drugs and drugs != "nan":
-                        drug_info = f" · Drugs: {drugs[:80]}"
+                    drug_info = f" · {drugs[:80]}" if drugs and drugs != "nan" else ""
 
-                    link_html = f'<a href="{url}" target="_blank" style="color:#4a90d9;font-size:10px">→ View</a>' if url and url != "nan" else ""
+                    # Build link separately — only use url if it looks like a real URL
+                    if url and url != "nan" and url.startswith("http"):
+                        link_html = f'<a href="{_html.escape(url)}" target="_blank" rel="noopener" style="color:#4a90d9;font-size:10px;text-decoration:none">&#8599; View source</a>'
+                    else:
+                        link_html = ""
 
-                    st.markdown(f"""
-                    <div class="news-card">
-                        <div class="news-title">{title[:120]}</div>
-                        <div class="news-summary">{summary_short}</div>
-                        <div class="news-meta">{pub_str}
-                            <span class="source-badge" style="background:#1a3050;color:#4a90d9">{source}</span>
-                            {drug_info}
-                            &nbsp;&nbsp;{link_html}
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
+                    st.markdown(f"""<div class="news-card">
+<div class="news-title">{title[:120]}</div>
+<div class="news-summary">{summary_short}</div>
+<div class="news-meta">{pub_str}&nbsp;<span class="source-badge" style="background:#1a3050;color:#4a90d9">{source}</span>{drug_info}&nbsp;&nbsp;{link_html}</div>
+</div>""", unsafe_allow_html=True)
 
             # Early warning scores heat-map if available
             if ew_df is not None and "govuk_mhra_mentions" in ew_df.columns:
