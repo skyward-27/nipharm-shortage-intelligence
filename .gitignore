@@ -40,3 +40,12 @@ Thumbs.db
 # ── Secrets ───────────────────────────────────────────────────────────────────
 *.pkl
 pharmacy_invoices/
+
+# ── Invoice data — NEVER commit (contains real purchase prices) ───────────────
+# Raw PDFs and parsed data stay local only
+scrapers/data/pharmacy_invoices/*.csv
+session_cookies.json
+download_log.json
+
+# ── Playwright / browser automation ──────────────────────────────────────────
+.playwright/
