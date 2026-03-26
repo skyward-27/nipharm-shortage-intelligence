@@ -170,63 +170,53 @@ def load_pca_demand():
         return None
     return pd.read_csv(path)
 
-@st.cache_data
-def load_mhra_alerts():
-    path = f"{DATA_DIR}/early_warning/govuk_mhra_alerts.csv"
+def _safe_read_csv(path, **kwargs):
+    """Read a CSV safely — returns None if file missing, empty, or malformed."""
     if not os.path.exists(path):
         return None
-    df = pd.read_csv(path)
+    if os.path.getsize(path) == 0:
+        return None
+    try:
+        df = pd.read_csv(path, **kwargs)
+        return df if len(df) > 0 else None
+    except Exception:
+        return None
+
+@st.cache_data
+def load_mhra_alerts():
+    df = _safe_read_csv(f"{DATA_DIR}/early_warning/govuk_mhra_alerts.csv")
+    if df is None:
+        return None
     df["published"] = pd.to_datetime(df["published"], errors="coerce")
     return df.sort_values("published", ascending=False)
 
 @st.cache_data
 def load_fda_warnings():
-    path = f"{DATA_DIR}/early_warning/fda_warning_letters.csv"
-    if not os.path.exists(path):
-        return None
-    return pd.read_csv(path)
+    return _safe_read_csv(f"{DATA_DIR}/early_warning/fda_warning_letters.csv")
 
 @st.cache_data
 def load_cpe_news():
-    path = f"{DATA_DIR}/early_warning/cpe_shortage_news.csv"
-    if not os.path.exists(path):
-        return None
-    return pd.read_csv(path)
+    return _safe_read_csv(f"{DATA_DIR}/early_warning/cpe_shortage_news.csv")
 
 @st.cache_data
 def load_mims_shortages():
-    path = f"{DATA_DIR}/early_warning/mims_shortages.csv"
-    if not os.path.exists(path):
-        return None
-    return pd.read_csv(path)
+    return _safe_read_csv(f"{DATA_DIR}/early_warning/mims_shortages.csv")
 
 @st.cache_data
 def load_api_cascade():
-    path = f"{DATA_DIR}/early_warning/api_cascade_map.csv"
-    if not os.path.exists(path):
-        return None
-    return pd.read_csv(path)
+    return _safe_read_csv(f"{DATA_DIR}/early_warning/api_cascade_map.csv")
 
 @st.cache_data
 def load_api_manufacturers():
-    path = f"{DATA_DIR}/early_warning/api_manufacturer_db.csv"
-    if not os.path.exists(path):
-        return None
-    return pd.read_csv(path)
+    return _safe_read_csv(f"{DATA_DIR}/early_warning/api_manufacturer_db.csv")
 
 @st.cache_data
 def load_early_warning_features():
-    path = f"{DATA_DIR}/early_warning/early_warning_features.csv"
-    if not os.path.exists(path):
-        return None
-    return pd.read_csv(path)
+    return _safe_read_csv(f"{DATA_DIR}/early_warning/early_warning_features.csv")
 
 @st.cache_data
 def load_openfda_shortages():
-    path = f"{DATA_DIR}/market_signals/openfda_shortages.csv"
-    if not os.path.exists(path):
-        return None
-    return pd.read_csv(path)
+    return _safe_read_csv(f"{DATA_DIR}/market_signals/openfda_shortages.csv")
 
 
 # ════════════════════════════════════════════════════════════════════════════════
@@ -294,6 +284,59 @@ div[data-testid="metric-container"] {
     border-radius: 8px;
     padding: 12px 16px;
 }
+
+/* ── Sidebar nav: pill-button style ── */
+div[data-testid="stSidebar"] .stRadio > div {
+    gap: 3px !important;
+}
+div[data-testid="stSidebar"] .stRadio label {
+    background: #161b27 !important;
+    border-radius: 7px !important;
+    padding: 9px 14px !important;
+    width: 100% !important;
+    cursor: pointer !important;
+    border: 1px solid transparent !important;
+    transition: background 0.15s, border-color 0.15s !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: #8896b3 !important;
+}
+div[data-testid="stSidebar"] .stRadio label:hover {
+    background: #1e2740 !important;
+    border-color: #2e3650 !important;
+    color: #c8d0e0 !important;
+}
+div[data-testid="stSidebar"] .stRadio label[data-checked="true"],
+div[data-testid="stSidebar"] .stRadio input:checked + div {
+    background: #0f2a4a !important;
+    border-color: #4a90d9 !important;
+    color: #e8ecf4 !important;
+}
+/* Hide the radio circle dot */
+div[data-testid="stSidebar"] .stRadio input[type="radio"] {
+    display: none !important;
+}
+/* Sidebar section headers */
+div[data-testid="stSidebar"] h3,
+div[data-testid="stSidebar"] h4 {
+    color: #5a6a8a !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1.5px !important;
+    margin: 12px 0 6px 0 !important;
+}
+/* Sidebar metrics smaller */
+div[data-testid="stSidebar"] div[data-testid="metric-container"] {
+    padding: 8px 12px !important;
+}
+div[data-testid="stSidebar"] div[data-testid="metric-container"] label {
+    font-size: 10px !important;
+}
+div[data-testid="stSidebar"] div[data-testid="metric-container"] div[data-testid="stMetricValue"] {
+    font-size: 22px !important;
+    font-weight: 800 !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -303,10 +346,16 @@ div[data-testid="metric-container"] {
 # ════════════════════════════════════════════════════════════════════════════════
 
 with st.sidebar:
-    st.markdown("## 💊 Nipharma Tech")
-    st.caption("Stock Intelligence Unit")
-    st.markdown("---")
+    # ── Brand header ─────────────────────────────────────────────────────────
+    st.markdown("""
+    <div style="padding:14px 4px 10px;margin-bottom:4px">
+        <div style="font-size:20px;font-weight:900;color:#e8ecf4;letter-spacing:-0.5px">💊 Nipharma Tech</div>
+        <div style="font-size:11px;color:#5a6a8a;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-top:2px">Stock Intelligence Unit</div>
+        <div style="height:2px;background:linear-gradient(90deg,#4a90d9,#e63950,transparent);margin-top:10px;border-radius:2px"></div>
+    </div>
+    """, unsafe_allow_html=True)
 
+    st.markdown("#### Navigation")
     page = st.radio(
         "Navigate",
         [
@@ -322,26 +371,47 @@ with st.sidebar:
     )
 
     st.markdown("---")
-    st.markdown("**Model v6** · Random Forest (panel)")
 
+    # ── Live snapshot ─────────────────────────────────────────────────────────
     predictions_sidebar = load_predictions()
     if predictions_sidebar is not None:
-        n_high   = int((predictions_sidebar["shortage_probability"] >= 0.70).sum())
-        n_conc   = int(predictions_sidebar["on_concession"].sum()) if "on_concession" in predictions_sidebar.columns else 0
-        n_scored = len(predictions_sidebar)
-        st.metric("Drugs scored", n_scored)
-        st.metric("🔴 High risk (≥70%)", n_high)
-        st.metric("⚠️  On concession now", n_conc)
+        n_buy_now = int((predictions_sidebar["buy_action"] == "🔴 BUY NOW").sum()) if "buy_action" in predictions_sidebar.columns else 0
+        n_high    = int((predictions_sidebar["shortage_probability"] >= 0.70).sum())
+        n_conc    = int(predictions_sidebar["on_concession"].sum()) if "on_concession" in predictions_sidebar.columns else 0
+        n_scored  = len(predictions_sidebar)
 
+        st.markdown("#### Live Snapshot")
+        c1, c2 = st.columns(2)
+        c1.metric("Scored", n_scored)
+        c2.metric("🔴 Buy Now", n_buy_now)
+        c3, c4 = st.columns(2)
+        c3.metric("High risk", n_high)
+        c4.metric("On conc.", n_conc)
+
+    # ── Model metrics ─────────────────────────────────────────────────────────
     st.markdown("---")
-    st.markdown(
-        "| Metric | Score |\n|---|---|\n"
-        "| ROC-AUC | **0.998** |\n"
-        "| PR-AUC  | **0.990** |\n"
-        "| F1      | **0.932** |\n"
-        "| Training rows | 44,363 |"
-    )
-    st.caption("Data: March 2026")
+    st.markdown("""
+    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#5a6a8a;margin-bottom:8px">Model v6 · Random Forest</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
+        <div style="background:#1a2035;border:1px solid #2e3650;border-radius:6px;padding:8px 10px">
+            <div style="font-size:9px;color:#5a6a8a;text-transform:uppercase;letter-spacing:0.8px">ROC-AUC</div>
+            <div style="font-size:17px;font-weight:900;color:#4a90d9">0.998</div>
+        </div>
+        <div style="background:#1a2035;border:1px solid #2e3650;border-radius:6px;padding:8px 10px">
+            <div style="font-size:9px;color:#5a6a8a;text-transform:uppercase;letter-spacing:0.8px">PR-AUC</div>
+            <div style="font-size:17px;font-weight:900;color:#43aa8b">0.990</div>
+        </div>
+        <div style="background:#1a2035;border:1px solid #2e3650;border-radius:6px;padding:8px 10px">
+            <div style="font-size:9px;color:#5a6a8a;text-transform:uppercase;letter-spacing:0.8px">F1 Score</div>
+            <div style="font-size:17px;font-weight:900;color:#f9c74f">0.932</div>
+        </div>
+        <div style="background:#1a2035;border:1px solid #2e3650;border-radius:6px;padding:8px 10px">
+            <div style="font-size:9px;color:#5a6a8a;text-transform:uppercase;letter-spacing:0.8px">Features</div>
+            <div style="font-size:17px;font-weight:900;color:#f4845f">27</div>
+        </div>
+    </div>
+    <div style="font-size:9px;color:#3a4a6a;margin-top:6px">Data: March 2026 · 44,363 rows</div>
+    """, unsafe_allow_html=True)
 
     # ── Per-page sidebar filters ────────────────────────────────────────────────
     if page == "🏠 Intelligence Dashboard":
