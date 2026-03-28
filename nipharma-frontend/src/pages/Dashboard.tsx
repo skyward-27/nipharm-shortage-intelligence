@@ -77,11 +77,16 @@ export default function Dashboard() {
           </p>
         </div>
 
-        <div className="kpi-card alert">
+        <div
+          className="kpi-card alert kpi-clickable"
+          onClick={() => navigate("/alerts")}
+          title="Click to view all MHRA alerts"
+          style={{ cursor: "pointer" }}
+        >
           <div className="kpi-icon">📍</div>
           <h3>Market Alert</h3>
           <p className="big-number" style={{fontSize: "1.8rem"}}>{signals?.market_alert || "GBP/INR ↑2.3%"}</p>
-          <p className="kpi-subtitle">{signals?.alert_detail || "API import cost rising"}</p>
+          <p className="kpi-subtitle">Click to view all alerts →</p>
         </div>
 
         <div className="kpi-card success">
@@ -94,13 +99,45 @@ export default function Dashboard() {
           </p>
           <p className="kpi-subtitle">Per pharmacy per year</p>
         </div>
+
+        <div
+          className="kpi-card kpi-clickable"
+          style={{ borderLeftColor: "#7b1fa2", background: "#faf5ff", cursor: "pointer" }}
+          onClick={() => navigate("/calculator")}
+          title="Open Bulk Savings Calculator"
+        >
+          <div className="kpi-icon">🧮</div>
+          <h3>Calculate Your Savings</h3>
+          <p className="big-number" style={{ fontSize: "1.5rem", color: "#6a1b9a" }}>
+            Try Now →
+          </p>
+          <p className="kpi-subtitle">Interactive bulk savings calculator</p>
+        </div>
       </div>
 
       {/* CTA Buttons */}
       <div className="cta-buttons">
-        <button className="btn btn-primary" onClick={() => navigate("/contact")}>📊 See My Bulk Savings</button>
+        <button className="btn btn-primary" onClick={() => navigate("/calculator")}>📊 See My Bulk Savings</button>
         <button className="btn btn-secondary" onClick={() => navigate("/contact")}>📅 Book Demo</button>
         <button className="btn btn-outline" onClick={() => navigate("/chat")}>💬 Chat with AI</button>
+      </div>
+
+      {/* Weekly Report Banner */}
+      <div className="report-banner">
+        <div className="report-banner-inner">
+          <div className="report-banner-left">
+            <span className="report-banner-icon">📊</span>
+            <div>
+              <div className="report-banner-title">Your Weekly Intelligence Report is Ready</div>
+              <div className="report-banner-subtitle">
+                Shortage alerts · NHS concessions · Market signals · AI forecast — delivered every Monday
+              </div>
+            </div>
+          </div>
+          <Link to="/report" className="report-banner-btn">
+            View Report →
+          </Link>
+        </div>
       </div>
 
       {/* Latest News Section */}
@@ -150,6 +187,9 @@ export default function Dashboard() {
           </Link>
           <Link to="/analytics" className="quick-link">
             📈 Analytics
+          </Link>
+          <Link to="/calculator" className="quick-link">
+            🧮 Savings Calculator
           </Link>
         </div>
       </div>
@@ -315,6 +355,68 @@ export default function Dashboard() {
 
         .btn-outline:hover {
           background: #f0f0f0;
+        }
+
+        /* Weekly Report Banner */
+        .report-banner {
+          background: linear-gradient(135deg, #0d47a1 0%, #1565c0 60%, #1976d2 100%);
+          border-radius: 14px;
+          margin-bottom: 40px;
+          box-shadow: 0 6px 24px rgba(13, 71, 161, 0.3);
+          overflow: hidden;
+        }
+
+        .report-banner-inner {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 24px 32px;
+          gap: 20px;
+          flex-wrap: wrap;
+        }
+
+        .report-banner-left {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          flex: 1;
+        }
+
+        .report-banner-icon {
+          font-size: 2.5rem;
+          flex-shrink: 0;
+        }
+
+        .report-banner-title {
+          font-size: 1.2rem;
+          font-weight: 700;
+          color: white;
+          margin-bottom: 4px;
+        }
+
+        .report-banner-subtitle {
+          font-size: 0.9rem;
+          color: rgba(255, 255, 255, 0.8);
+        }
+
+        .report-banner-btn {
+          background: white;
+          color: #0d47a1;
+          padding: 12px 24px;
+          border-radius: 8px;
+          font-weight: 700;
+          font-size: 1rem;
+          text-decoration: none;
+          white-space: nowrap;
+          transition: all 0.2s ease;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+          flex-shrink: 0;
+        }
+
+        .report-banner-btn:hover {
+          background: #e3f2fd;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
         }
 
         /* News Section */

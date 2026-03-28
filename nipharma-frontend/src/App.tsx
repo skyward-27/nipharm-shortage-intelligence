@@ -5,7 +5,10 @@ import MarketNews from "./pages/MarketNews";
 import Chat from "./pages/Chat";
 import Contact from "./pages/Contact";
 import Analytics from "./pages/Analytics";
+import Calculator from "./pages/Calculator";
 import DrugSearch from "./pages/DrugSearch";
+import Alerts from "./pages/Alerts";
+import WeeklyReport from "./pages/WeeklyReport";
 import { healthCheck } from "./api";
 
 export default function App() {
@@ -60,8 +63,25 @@ export default function App() {
               <Link to="/analytics" className="nav-link" onClick={() => setNavOpen(false)}>
                 Analytics
               </Link>
+              <Link to="/calculator" className="nav-link" onClick={() => setNavOpen(false)}>
+                💰 Calculator
+              </Link>
               <Link to="/drugs" className="nav-link" onClick={() => setNavOpen(false)}>
                 Drug Search
+              </Link>
+              <Link
+                to="/alerts"
+                className="nav-link nav-link-alerts"
+                onClick={() => setNavOpen(false)}
+              >
+                🚨 Alerts
+              </Link>
+              <Link
+                to="/report"
+                className="nav-link nav-link-report"
+                onClick={() => setNavOpen(false)}
+              >
+                📊 Weekly Report
               </Link>
               <Link to="/contact" className="nav-link" onClick={() => setNavOpen(false)}>
                 Contact Us
@@ -89,7 +109,10 @@ export default function App() {
             <Route path="/chat" element={<Chat />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/analytics" element={<Analytics />} />
+            <Route path="/calculator" element={<Calculator />} />
             <Route path="/drugs" element={<DrugSearch />} />
+            <Route path="/alerts" element={<Alerts />} />
+            <Route path="/report" element={<WeeklyReport />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
@@ -182,6 +205,30 @@ export default function App() {
 
           .nav-link:active {
             color: #1565c0;
+          }
+
+          .nav-link-alerts {
+            color: #d84315 !important;
+            font-weight: 700;
+          }
+
+          .nav-link-alerts:hover {
+            color: #bf360c !important;
+          }
+
+          .nav-link-report {
+            background: #1976d2;
+            color: white !important;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+          }
+
+          .nav-link-report:hover {
+            background: #1565c0 !important;
+            color: white !important;
+            box-shadow: 0 2px 8px rgba(25, 118, 210, 0.35);
           }
 
           .nav-toggle {
