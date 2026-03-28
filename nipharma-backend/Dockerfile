@@ -11,4 +11,4 @@ EXPOSE 8080
 
 # Run from the server directory so relative imports work correctly
 WORKDIR /app/server
-CMD uvicorn main:app --host 0.0.0.0 --port 8080
+CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-8080}
