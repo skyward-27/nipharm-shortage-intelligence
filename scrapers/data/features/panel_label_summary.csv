@@ -1,3 +1,0 @@
-split,total_rows,positive_labels,positive_rate_pct,unique_drugs,months_covered
-full_panel,44363,6179,13.9,801,61
-train_subset,43562,6083,14.0,797,60

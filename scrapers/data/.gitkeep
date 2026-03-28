@@ -1,7 +1,0 @@
-# This directory holds all data files produced by the scrapers.
-# Data files (CSV, PKL, JOBLIB) are gitignored and never committed.
-# Run the scrapers locally to populate this directory:
-#
-#   python scrapers/00_run_all_scrapers.py
-#
-# See scrapers/README.md for full setup instructions.
