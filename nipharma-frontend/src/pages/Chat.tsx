@@ -1,6 +1,20 @@
 import { useState, useRef, useEffect } from "react";
 import { chatWithGroq, ChatMessage } from "../api";
 
+// Simple markdown renderer - no external library needed
+function renderMarkdown(text: string): string {
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/^### (.+)$/gm, '<h4 style="margin:12px 0 4px;color:#1a1a1a">$1</h4>')
+    .replace(/^## (.+)$/gm, '<h3 style="margin:14px 0 6px;color:#1a1a1a">$1</h3>')
+    .replace(/^# (.+)$/gm, '<h2 style="margin:16px 0 8px;color:#1a1a1a">$1</h2>')
+    .replace(/^\d+\.\s(.+)$/gm, '<div style="display:flex;gap:8px;margin:4px 0"><span style="color:#1976d2;font-weight:600;min-width:20px">•</span><span>$1</span></div>')
+    .replace(/^[-•]\s(.+)$/gm, '<div style="display:flex;gap:8px;margin:4px 0"><span style="color:#1976d2;font-weight:600">•</span><span>$1</span></div>')
+    .replace(/\n\n/g, '<br/><br/>')
+    .replace(/\n/g, '<br/>');
+}
+
 export default function Chat() {
   const [message, setMessage] = useState("");
   const [history, setHistory] = useState<ChatMessage[]>([]);
@@ -76,7 +90,10 @@ export default function Chat() {
               {msg.role === "user" ? "👤" : "🤖"}
             </div>
             <div className="message-content">
-              <p>{msg.content}</p>
+              {msg.role === "assistant"
+                ? <div dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.content) }} />
+                : <p>{msg.content}</p>
+              }
             </div>
           </div>
         ))}
