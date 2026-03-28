@@ -57,11 +57,15 @@ export default function Dashboard() {
 
       {/* KPI Cards */}
       <div className="kpi-grid">
-        <div className="kpi-card highlight">
+        <div
+          className="kpi-card highlight kpi-clickable"
+          onClick={() => navigate("/analytics")}
+          title="Click to view Analytics"
+        >
           <div className="kpi-icon">⚠️</div>
           <h3>Drugs at Risk</h3>
           <p className="big-number">{signals?.drugs_at_risk || "12"}</p>
-          <p className="kpi-subtitle">Active shortage alerts</p>
+          <p className="kpi-subtitle">Active shortage alerts — click to view →</p>
         </div>
 
         <div className="kpi-card highlight">
@@ -141,10 +145,10 @@ export default function Dashboard() {
           <Link to="/chat" className="quick-link">
             🤖 AI Chat
           </Link>
-          <Link to="/contact" className="quick-link">
+          <Link to="/drugs" className="quick-link">
             💊 Drug Search
           </Link>
-          <Link to="/contact" className="quick-link">
+          <Link to="/analytics" className="quick-link">
             📈 Analytics
           </Link>
         </div>
@@ -213,6 +217,15 @@ export default function Dashboard() {
         .kpi-card:hover {
           box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
           transform: translateY(-2px);
+        }
+
+        .kpi-clickable {
+          cursor: pointer;
+        }
+
+        .kpi-clickable:hover {
+          border-left-color: #1565c0;
+          box-shadow: 0 6px 20px rgba(25, 118, 210, 0.18);
         }
 
         .kpi-card.highlight {

@@ -4,6 +4,8 @@ import Dashboard from "./pages/Dashboard";
 import MarketNews from "./pages/MarketNews";
 import Chat from "./pages/Chat";
 import Contact from "./pages/Contact";
+import Analytics from "./pages/Analytics";
+import DrugSearch from "./pages/DrugSearch";
 import { healthCheck } from "./api";
 
 export default function App() {
@@ -55,6 +57,12 @@ export default function App() {
               <Link to="/chat" className="nav-link" onClick={() => setNavOpen(false)}>
                 AI Chat
               </Link>
+              <Link to="/analytics" className="nav-link" onClick={() => setNavOpen(false)}>
+                Analytics
+              </Link>
+              <Link to="/drugs" className="nav-link" onClick={() => setNavOpen(false)}>
+                Drug Search
+              </Link>
               <Link to="/contact" className="nav-link" onClick={() => setNavOpen(false)}>
                 Contact Us
               </Link>
@@ -80,6 +88,8 @@ export default function App() {
             <Route path="/news" element={<MarketNews />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/drugs" element={<DrugSearch />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
