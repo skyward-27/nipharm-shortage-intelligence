@@ -49,7 +49,7 @@ export default function WeeklyReport() {
         </div>
         <div className="wr-actions">
           <button className="wr-btn wr-outline" onClick={() => window.print()}>🖨️ Print</button>
-          <button className="wr-btn wr-white" onClick={() => window.open(`mailto:?subject=${emailSubject}&body=${emailBody}`)}>
+          <button className="wr-btn wr-white" onClick={() => window.open(`mailto:anirudh@nipharm.co.uk?subject=${emailSubject}&body=${emailBody}`)}>
             📧 Email Team
           </button>
         </div>
