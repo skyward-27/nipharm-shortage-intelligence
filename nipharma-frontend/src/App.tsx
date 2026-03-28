@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import MarketNews from "./pages/MarketNews";
 import Chat from "./pages/Chat";
+import Contact from "./pages/Contact";
 import { healthCheck } from "./api";
 
 export default function App() {
@@ -54,9 +55,9 @@ export default function App() {
               <Link to="/chat" className="nav-link" onClick={() => setNavOpen(false)}>
                 AI Chat
               </Link>
-              <a href="https://www.linkedin.com" className="nav-link" target="_blank" rel="noopener noreferrer">
-                About
-              </a>
+              <Link to="/contact" className="nav-link" onClick={() => setNavOpen(false)}>
+                Contact Us
+              </Link>
             </nav>
 
             {/* Health Status Indicator */}
@@ -78,6 +79,7 @@ export default function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/news" element={<MarketNews />} />
             <Route path="/chat" element={<Chat />} />
+            <Route path="/contact" element={<Contact />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

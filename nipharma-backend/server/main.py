@@ -271,6 +271,50 @@ async def early_warnings_endpoint():
     }
 
 
+# ============================================================
+# LEAD / CONTACT CAPTURE ENDPOINT
+# ============================================================
+@app.post("/leads")
+async def capture_lead(
+    name: str = Query(..., description="Full name"),
+    email: str = Query(..., description="Email address"),
+    phone: str = Query("", description="Phone number (optional)"),
+    company: str = Query("", description="Pharmacy / company name"),
+    message: str = Query("", description="Optional message"),
+):
+    """
+    Capture pharmacy contact details for follow-up demo / sales.
+    Stores to a local CSV and returns a confirmation message.
+    """
+    import csv
+    import pathlib
+    from datetime import datetime
+
+    lead = {
+        "timestamp": datetime.utcnow().isoformat(),
+        "name": name,
+        "email": email,
+        "phone": phone,
+        "company": company,
+        "message": message,
+    }
+
+    # Persist to CSV (safe, no database needed)
+    csv_path = pathlib.Path(__file__).parent.parent / "leads.csv"
+    file_exists = csv_path.exists()
+    with open(csv_path, "a", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=lead.keys())
+        if not file_exists:
+            writer.writeheader()
+        writer.writerow(lead)
+
+    return {
+        "status": "success",
+        "message": f"Thank you {name}! We'll be in touch at {email} within 24 hours.",
+        "lead_id": f"NPT-{abs(hash(email)) % 100000:05d}",
+    }
+
+
 # Error handlers
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request, exc):
