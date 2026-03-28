@@ -35,7 +35,7 @@ export interface Concession {
 
 // Health check
 export const healthCheck = async () => {
-  const res = await fetch(`${API_URL}/health`);
+  const res = await fetch(`${API_URL}/`);
   if (!res.ok) throw new Error("Backend health check failed");
   return res.json();
 };
@@ -44,7 +44,9 @@ export const healthCheck = async () => {
 export const fetchNews = async (): Promise<NewsArticle[]> => {
   const res = await fetch(`${API_URL}/news`);
   if (!res.ok) throw new Error("Failed to fetch news");
-  return res.json();
+  const data = await res.json();
+  // Backend returns {success, count, articles:[]} - extract the array
+  return Array.isArray(data) ? data : (data.articles || []);
 };
 
 // Signals endpoints
