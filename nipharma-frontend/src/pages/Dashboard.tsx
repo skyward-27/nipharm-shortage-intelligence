@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { fetchNews, fetchSignals, NewsArticle, Signal } from "../api";
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const [news, setNews] = useState<NewsArticle[]>([]);
   const [signals, setSignals] = useState<Signal | null>(null);
   const [loading, setLoading] = useState(true);
@@ -59,49 +61,51 @@ export default function Dashboard() {
           <div className="kpi-icon">⚠️</div>
           <h3>Drugs at Risk</h3>
           <p className="big-number">{signals?.drugs_at_risk || "12"}</p>
-          <p className="kpi-subtitle">Shortage alerts in pipeline</p>
+          <p className="kpi-subtitle">Active shortage alerts</p>
         </div>
 
         <div className="kpi-card highlight">
           <div className="kpi-icon">🎯</div>
           <h3>Best Opportunity</h3>
-          <p className="big-number">{signals?.best_opportunity || "Paracetamol"}</p>
+          <p className="big-number" style={{fontSize: "1.4rem"}}>{signals?.best_opportunity || "Amoxicillin 500mg"}</p>
           <p className="kpi-subtitle">
-            {signals?.best_discount || "15"}% bulk discount
+            {signals?.best_discount ? `${signals.best_discount}% bulk discount available` : "18% bulk discount available"}
           </p>
         </div>
 
         <div className="kpi-card alert">
           <div className="kpi-icon">📍</div>
           <h3>Market Alert</h3>
-          <p className="big-number">India API</p>
-          <p className="kpi-subtitle">Risk ↑{signals?.alert_severity || "5%"}</p>
+          <p className="big-number" style={{fontSize: "1.8rem"}}>{signals?.market_alert || "GBP/INR ↑2.3%"}</p>
+          <p className="kpi-subtitle">{signals?.alert_detail || "API import cost rising"}</p>
         </div>
 
         <div className="kpi-card success">
           <div className="kpi-icon">💰</div>
           <h3>Savings Potential</h3>
           <p className="big-number">
-            £{((signals?.total_savings_potential || 245000) / 1000).toFixed(0)}k
+            {signals?.total_savings_potential
+              ? `£${((signals.total_savings_potential) / 1000).toFixed(0)}k`
+              : "£12k–£45k"}
           </p>
-          <p className="kpi-subtitle">Next 90 days</p>
+          <p className="kpi-subtitle">Per pharmacy per year</p>
         </div>
       </div>
 
       {/* CTA Buttons */}
       <div className="cta-buttons">
-        <button className="btn btn-primary">📊 See My Bulk Savings</button>
-        <button className="btn btn-secondary">📅 Book Demo</button>
-        <button className="btn btn-outline">💬 Chat with AI</button>
+        <button className="btn btn-primary" onClick={() => navigate("/contact")}>📊 See My Bulk Savings</button>
+        <button className="btn btn-secondary" onClick={() => navigate("/contact")}>📅 Book Demo</button>
+        <button className="btn btn-outline" onClick={() => navigate("/chat")}>💬 Chat with AI</button>
       </div>
 
       {/* Latest News Section */}
       <div className="news-section">
         <div className="section-header">
           <h2>Latest Pharma News</h2>
-          <a href="/news" className="view-all">
+          <Link to="/news" className="view-all">
             View all →
-          </a>
+          </Link>
         </div>
 
         <div className="news-cards">
@@ -131,18 +135,18 @@ export default function Dashboard() {
       <div className="quick-links">
         <h3>Quick Navigation</h3>
         <div className="links-grid">
-          <a href="/news" className="quick-link">
+          <Link to="/news" className="quick-link">
             📰 Market News
-          </a>
-          <a href="/chat" className="quick-link">
+          </Link>
+          <Link to="/chat" className="quick-link">
             🤖 AI Chat
-          </a>
-          <a href="/drugs" className="quick-link">
+          </Link>
+          <Link to="/contact" className="quick-link">
             💊 Drug Search
-          </a>
-          <a href="/analytics" className="quick-link">
+          </Link>
+          <Link to="/contact" className="quick-link">
             📈 Analytics
-          </a>
+          </Link>
         </div>
       </div>
 

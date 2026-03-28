@@ -11,7 +11,7 @@ export default function MarketNews() {
       try {
         setLoading(true);
         const data = await fetchNews();
-        setNews(data);
+        setNews(Array.isArray(data) ? data : []);
         setError(null);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load news");

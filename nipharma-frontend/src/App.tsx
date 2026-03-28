@@ -89,9 +89,9 @@ export default function App() {
           <div className="footer-content">
             <p>&copy; 2026 Nipharma Tech Stock Intelligence. Pharmaceutical supply chain intelligence.</p>
             <div className="footer-links">
-              <a href="/">Dashboard</a>
-              <a href="/news">News</a>
-              <a href="/chat">Chat</a>
+              <Link to="/">Dashboard</Link>
+              <Link to="/news">News</Link>
+              <Link to="/chat">Chat</Link>
               <a href="https://www.github.com">GitHub</a>
             </div>
           </div>
@@ -155,6 +155,7 @@ export default function App() {
             display: flex;
             gap: 32px;
             align-items: center;
+            margin-left: 48px;
           }
 
           .nav-link {
