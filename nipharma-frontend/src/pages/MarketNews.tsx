@@ -79,12 +79,6 @@ export default function MarketNews() {
       <h1>Market News</h1>
       <p className="subtitle">Latest pharmaceutical and supply chain updates</p>
 
-      {usingFallback && (
-        <div className="fallback-notice">
-          Live news feed temporarily unavailable — showing curated recent articles.
-        </div>
-      )}
-
       <div className="news-grid">
         {news.map((article, idx) => (
           <article key={article.url || idx} className="news-card">

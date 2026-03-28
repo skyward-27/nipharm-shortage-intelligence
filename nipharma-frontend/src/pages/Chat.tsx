@@ -126,9 +126,8 @@ export default function Chat() {
         <div className="chat-header-top">
           <h1>Pharma Intelligence Chat</h1>
           <div className="header-badges">
-            <span className="badge badge-groq">🟢 AI Powered by Groq</span>
             {tavilyEnabled && (
-              <span className="badge badge-tavily">🔍 Web Search Enabled</span>
+              <span className="badge badge-tavily">🔍 Live Web Search Enabled</span>
             )}
           </div>
         </div>

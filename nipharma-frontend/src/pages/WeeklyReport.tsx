@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const REPORT_DATA = {
@@ -33,16 +32,6 @@ const REPORT_DATA = {
 };
 
 export default function WeeklyReport() {
-  const [email, setEmail] = useState("");
-  const [subscribed, setSubscribed] = useState(false);
-
-  const handleSubscribe = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email.trim()) {
-      setSubscribed(true);
-    }
-  };
-
   const severityColor = (sev: string) => {
     if (sev === "HIGH") return "#c62828";
     if (sev === "MEDIUM") return "#f57c00";
@@ -73,9 +62,6 @@ export default function WeeklyReport() {
             <button className="wr-btn wr-btn-outline" onClick={() => window.print()}>
               🖨️ Print Report
             </button>
-            <a href="#subscribe" className="wr-btn wr-btn-white">
-              📧 Subscribe Free
-            </a>
           </div>
         </div>
       </div>
@@ -264,33 +250,17 @@ export default function WeeklyReport() {
           </div>
         </div>
 
-        {/* ── CTA: SUBSCRIBE ── */}
-        <div className="wr-subscribe" id="subscribe">
+        {/* ── CTA: CONTACT ── */}
+        <div className="wr-subscribe">
           <div className="wr-subscribe-inner">
-            <h2>📧 Get This Report Every Monday</h2>
+            <h2>📅 Want a Personalised Report for Your Pharmacy?</h2>
             <p>
-              Join 400+ UK pharmacy owners who receive their free weekly intelligence report every
-              Monday morning. No spam. Unsubscribe anytime.
+              Contact our team to receive a customised weekly intelligence report tailored to your
+              pharmacy's dispensing data and stock profile.
             </p>
-            {subscribed ? (
-              <div className="wr-success">
-                ✅ You'll receive your first report next Monday! Check your inbox for a confirmation.
-              </div>
-            ) : (
-              <form className="wr-subscribe-form" onSubmit={handleSubscribe}>
-                <input
-                  type="email"
-                  className="wr-email-input"
-                  placeholder="your@pharmacy.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-                <button type="submit" className="wr-btn wr-btn-primary">
-                  Subscribe Free →
-                </button>
-              </form>
-            )}
+            <Link to="/contact" className="wr-btn wr-btn-white">
+              Contact Us →
+            </Link>
           </div>
         </div>
       </div>

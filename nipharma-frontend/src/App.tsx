@@ -39,7 +39,7 @@ export default function App() {
         <header className="navbar">
           <div className="navbar-container">
             <Link to="/" className="navbar-logo">
-              💊 Nipharma Tech Stock Intelligence
+              <span className="logo-mark">NPT</span> Intel
             </Link>
 
             <button
@@ -120,7 +120,7 @@ export default function App() {
         {/* Footer */}
         <footer className="footer">
           <div className="footer-content">
-            <p>&copy; 2026 Nipharma Tech Stock Intelligence. Pharmaceutical supply chain intelligence.</p>
+            <p>&copy; 2026 NPT Intel. Pharmaceutical supply chain intelligence for UK pharmacies.</p>
             <div className="footer-links">
               <Link to="/">Dashboard</Link>
               <Link to="/news">News</Link>
@@ -173,15 +173,29 @@ export default function App() {
           }
 
           .navbar-logo {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 700;
             color: #1a1a1a;
             text-decoration: none;
             transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
           }
 
           .navbar-logo:hover {
             color: #1976d2;
+          }
+
+          .logo-mark {
+            background: #1976d2;
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 800;
+            padding: 4px 8px;
+            border-radius: 6px;
+            letter-spacing: 0.5px;
           }
 
           .navbar-menu {
@@ -353,7 +367,7 @@ export default function App() {
             }
 
             .navbar-logo {
-              font-size: 1.25rem;
+              font-size: 1.1rem;
             }
 
             .nav-toggle {

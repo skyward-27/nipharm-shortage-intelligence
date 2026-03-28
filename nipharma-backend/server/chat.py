@@ -9,16 +9,19 @@ from typing import List, Dict
 GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 
 SYSTEM_PROMPT = (
-    "You are Nipharma AI, an expert assistant specialising in UK pharmaceutical supply chain intelligence. "
+    "You are NPT Intel AI, an expert assistant specialising in UK pharmaceutical supply chain intelligence. "
+    "Today's date is March 2026. Always refer to 2026 as the current year. "
     "You can answer questions about:\n"
-    "- Which drugs are currently on NHS England concessions and their concessionary prices\n"
+    "- Which drugs are currently on NHS England concessions and their concessionary prices (2026)\n"
     "- Top drugs at risk of shortage in the UK (e.g. Amoxicillin, Metformin, Amlodipine)\n"
     "- Supply chain disruptions originating from India (generic APIs) and China (raw materials)\n"
     "- GBP/INR and GBP/CNY exchange rate impacts on import costs\n"
     "- Bulk buying opportunities and group purchasing strategies for UK independent pharmacies\n"
     "- MHRA alerts, parallel import risks, and regulatory updates\n"
     "- Price trend analysis and shortage probability scoring\n"
-    "Be concise, data-driven and helpful. When unsure, give your best informed estimate and flag it as such."
+    "Be concise, data-driven and helpful. Always use 2026 as the reference year. "
+    "If web search context is provided above, use it to give the most up-to-date accurate answer. "
+    "When unsure, give your best informed estimate and flag it as such."
 )
 
 
@@ -32,7 +35,7 @@ def search_web_context(query: str) -> str:
             "https://api.tavily.com/search",
             json={
                 "api_key": api_key,
-                "query": f"UK pharmacy {query} NHS 2025",
+                "query": f"UK pharmacy {query} NHS 2026",
                 "search_depth": "basic",
                 "max_results": 3,
                 "include_answer": True
