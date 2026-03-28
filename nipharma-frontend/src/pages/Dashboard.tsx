@@ -49,7 +49,7 @@ export default function Dashboard() {
   return (
     <div className="dashboard">
       <div className="dashboard-header">
-        <h1>📈 NPT Intel — Pharmaceutical Supply Intelligence</h1>
+        <h1>📈 Nipharma Tech Stock Intelligence</h1>
         <p className="tagline">
           Save 15-25% on pharmaceutical costs through intelligent bulk coordination
         </p>

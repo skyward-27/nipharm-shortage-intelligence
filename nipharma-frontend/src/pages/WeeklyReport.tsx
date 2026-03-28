@@ -60,7 +60,27 @@ export default function WeeklyReport() {
           </div>
           <div className="wr-header-actions">
             <button className="wr-btn wr-btn-outline" onClick={() => window.print()}>
-              🖨️ Print Report
+              🖨️ Print / PDF
+            </button>
+            <button
+              className="wr-btn wr-btn-white"
+              onClick={() => {
+                const subject = encodeURIComponent(`Nipharma Weekly Intelligence Report — ${REPORT_DATA.week}`);
+                const body = encodeURIComponent(
+                  `Hi Team,\n\nPlease find this week's Nipharma pharmaceutical intelligence report below.\n\n` +
+                  `📊 Week of: ${REPORT_DATA.week}\n` +
+                  `🚨 MHRA Alerts: ${REPORT_DATA.alerts_count} new alerts\n` +
+                  `💰 Savings Opportunity: £${REPORT_DATA.savings_opportunity.toLocaleString()}\n` +
+                  `💊 Drugs on Concession: ${REPORT_DATA.concessions_count}\n\n` +
+                  `View the full report here:\nhttps://nipharm-shortage-intelligence.vercel.app/report\n\n` +
+                  `Key actions this week:\n` +
+                  REPORT_DATA.top_alerts.map(a => `• ${a.drug} [${a.severity}]: ${a.action}`).join('\n') +
+                  `\n\nBest regards,\nNipharma Tech Stock Intelligence`
+                );
+                window.open(`mailto:?subject=${subject}&body=${body}`);
+              }}
+            >
+              📧 Email Team
             </button>
           </div>
         </div>

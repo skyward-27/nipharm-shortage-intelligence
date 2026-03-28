@@ -39,7 +39,7 @@ export default function App() {
         <header className="navbar">
           <div className="navbar-container">
             <Link to="/" className="navbar-logo">
-              <span className="logo-mark">NPT</span> Intel
+              💊 Nipharma Tech Stock Intelligence
             </Link>
 
             <button
