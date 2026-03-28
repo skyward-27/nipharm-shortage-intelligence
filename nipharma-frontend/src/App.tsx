@@ -34,7 +34,7 @@ export default function App() {
         <header className="navbar">
           <div className="navbar-container">
             <Link to="/" className="navbar-logo">
-              💊 Nipharma Intelligence
+              💊 Nipharma Tech Stock Intelligence
             </Link>
 
             <button
@@ -87,7 +87,7 @@ export default function App() {
         {/* Footer */}
         <footer className="footer">
           <div className="footer-content">
-            <p>&copy; 2026 Nipharma Intelligence. Pharmaceutical supply chain intelligence.</p>
+            <p>&copy; 2026 Nipharma Tech Stock Intelligence. Pharmaceutical supply chain intelligence.</p>
             <div className="footer-links">
               <a href="/">Dashboard</a>
               <a href="/news">News</a>
