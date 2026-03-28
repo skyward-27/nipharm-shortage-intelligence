@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CTO Advisory Memo — NPT Drug Price Intelligence Platform</title>
+<style>
+  :root {
+    --ink: #0F172A;
+    --blue: #1D4ED8;
+    --blue-lt: #EFF6FF;
+    --blue-mid: #DBEAFE;
+    --red: #B91C1C;
+    --red-lt: #FEF2F2;
+    --green: #15803D;
+    --green-lt: #F0FDF4;
+    --amber: #B45309;
+    --amber-lt: #FFFBEB;
+    --purple: #6D28D9;
+    --purple-lt: #F5F3FF;
+    --teal: #0F766E;
+    --teal-lt: #F0FDFA;
+    --border: #E2E8F0;
+    --muted: #64748B;
+    --surface: #F8FAFC;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Georgia', 'Times New Roman', serif; background: white; color: var(--ink); line-height: 1.75; font-size: 15px; }
+
+  /* ─── MASTHEAD ─── */
+  .masthead {
+    background: var(--ink);
+    color: white;
+    padding: 0;
+  }
+  .masthead-top {
+    background: var(--blue);
+    padding: 8px 60px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    justify-content: space-between;
+  }
+  .masthead-body {
+    padding: 56px 60px 40px;
+  }
+  .memo-label {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #94A3B8;
+    margin-bottom: 16px;
+  }
+  .masthead h1 {
+    font-size: 34px;
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+  }
+  .masthead h1 strong { font-weight: 700; }
+  .masthead .sub {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 15px;
+    color: #94A3B8;
+    margin-bottom: 32px;
+  }
+  .memo-meta {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: #1E293B;
+    border-top: 1px solid #1E293B;
+  }
+  .memo-meta-item {
+    background: #0F172A;
+    padding: 14px 20px;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  .memo-meta-item .label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #64748B; margin-bottom: 4px; }
+  .memo-meta-item .value { font-size: 13px; color: #E2E8F0; font-weight: 600; }
+
+  /* ─── VERDICT BANNER ─── */
+  .verdict {
+    background: #FEF9C3;
+    border-top: 4px solid #CA8A04;
+    border-bottom: 4px solid #CA8A04;
+    padding: 24px 60px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .verdict-icon { font-size: 28px; flex-shrink: 0; margin-top: 2px; }
+  .verdict-body h2 { font-size: 17px; font-weight: 700; color: #78350F; font-family: 'Segoe UI', sans-serif; margin-bottom: 6px; }
+  .verdict-body p { font-size: 14px; color: #92400E; font-family: 'Segoe UI', sans-serif; line-height: 1.7; }
+
+  /* ─── BODY ─── */
+  .body { max-width: 920px; margin: 0 auto; padding: 56px 48px; }
+
+  /* ─── SECTION HEADERS ─── */
+  .sh {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin: 52px 0 22px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border);
+  }
+  .sh-num {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .sh h2 { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; font-family: 'Segoe UI', sans-serif; }
+  .sh-tag {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 700;
+  }
+  .tag-danger { background: #FEE2E2; color: #991B1B; }
+  .tag-strategy { background: #DBEAFE; color: #1E40AF; }
+  .tag-data { background: #D1FAE5; color: #065F46; }
+  .tag-build { background: #EDE9FE; color: #5B21B6; }
+  .tag-verdict { background: #FEF3C7; color: #92400E; }
+
+  /* ─── PROSE ─── */
+  p { margin-bottom: 16px; }
+  p:last-child { margin-bottom: 0; }
+
+  /* ─── CALLOUTS ─── */
+  .callout {
+    display: flex;
+    gap: 16px;
+    padding: 18px 22px;
+    border-radius: 8px;
+    margin: 20px 0;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 14px;
+  }
+  .callout-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+  .callout-body strong { display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+  .callout-body p { font-size: 13px; line-height: 1.65; margin: 0; }
+  .co-danger { background: var(--red-lt); border: 1px solid #FECACA; }
+  .co-danger strong { color: var(--red); }
+  .co-insight { background: var(--purple-lt); border: 1px solid #DDD6FE; }
+  .co-insight strong { color: var(--purple); }
+  .co-action { background: var(--blue-lt); border: 1px solid #BFDBFE; }
+  .co-action strong { color: var(--blue); }
+  .co-success { background: var(--green-lt); border: 1px solid #BBF7D0; }
+  .co-success strong { color: var(--green); }
+  .co-warning { background: var(--amber-lt); border: 1px solid #FDE68A; }
+  .co-warning strong { color: var(--amber); }
+
+  /* ─── FINDING CARDS ─── */
+  .finding-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  .finding {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  .finding-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .finding-num { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; }
+  .fn-red { background: #FEE2E2; color: #B91C1C; }
+  .fn-blue { background: #DBEAFE; color: #1D4ED8; }
+  .fn-green { background: #D1FAE5; color: #15803D; }
+  .fn-amber { background: #FEF3C7; color: #B45309; }
+  .fn-purple { background: #EDE9FE; color: #6D28D9; }
+  .finding-header h4 { font-size: 14px; font-weight: 700; }
+  .finding p { font-size: 13px; color: var(--ink); line-height: 1.65; }
+  .verdict-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 10px; }
+  .verdict-red { color: var(--red); }
+  .verdict-green { color: var(--green); }
+  .verdict-amber { color: var(--amber); }
+
+  /* ─── PRIORITY TABLE ─── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 13px;
+    margin: 20px 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  th { background: var(--ink); color: white; padding: 11px 16px; text-align: left; font-weight: 600; font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase; }
+  td { padding: 11px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: var(--surface); }
+
+  /* ─── SCHEMA ─── */
+  .schema-box {
+    background: #0F172A;
+    border-radius: 10px;
+    padding: 28px 32px;
+    margin: 20px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: #E2E8F0;
+    line-height: 1.8;
+    overflow-x: auto;
+  }
+  .schema-table { margin-bottom: 20px; }
+  .schema-title { color: #60A5FA; font-weight: 700; font-size: 13px; margin-bottom: 8px; }
+  .schema-col { color: #A5F3FC; }
+  .schema-type { color: #FDE68A; }
+  .schema-comment { color: #6B7280; }
+  .schema-pk { color: #34D399; }
+  .schema-fk { color: #F472B6; }
+
+  /* ─── SIGNAL REDUCTION ─── */
+  .signal-map { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 20px 0; }
+  .signal-cluster { border-radius: 8px; padding: 16px; font-family: 'Segoe UI', sans-serif; }
+  .sc-1 { background: #FFF7ED; border: 1px solid #FED7AA; }
+  .sc-2 { background: #EFF6FF; border: 1px solid #BFDBFE; }
+  .sc-3 { background: #F0FDF4; border: 1px solid #BBF7D0; }
+  .sc-4 { background: #FFF1F2; border: 1px solid #FECDD3; }
+  .sc-5 { background: #F5F3FF; border: 1px solid #DDD6FE; }
+  .sc-6 { background: #ECFDF5; border: 1px solid #A7F3D0; }
+  .sc-7 { background: #FFFBEB; border: 1px solid #FDE68A; }
+  .sc-8 { background: #F0F9FF; border: 1px solid #BAE6FD; }
+  .signal-cluster h4 { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .sc-1 h4 { color: #C2410C; }
+  .sc-2 h4 { color: #1D4ED8; }
+  .sc-3 h4 { color: #15803D; }
+  .sc-4 h4 { color: #BE185D; }
+  .sc-5 h4 { color: #6D28D9; }
+  .sc-6 h4 { color: #0F766E; }
+  .sc-7 h4 { color: #B45309; }
+  .sc-8 h4 { color: #0369A1; }
+  .signal-cluster p { font-size: 11px; line-height: 1.6; color: var(--ink); }
+  .signal-cluster .count { font-size: 18px; font-weight: 800; opacity: 0.4; float: right; margin-top: -4px; }
+
+  /* ─── RECOMMENDATION REDESIGN ─── */
+  .rec-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 16px 0;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  .rec-header {
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .rec-header h4 { font-size: 14px; font-weight: 800; letter-spacing: 0.5px; }
+  .rec-header .confidence { font-size: 11px; font-weight: 700; }
+  .rec-body { padding: 16px 20px; background: white; border-top: 1px solid var(--border); }
+  .rec-financials { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 14px; }
+  .rec-fin-item { text-align: center; padding: 10px; background: var(--surface); border-radius: 6px; }
+  .rec-fin-item .lbl { font-size: 10px; letter-spacing: 0.5px; color: var(--muted); text-transform: uppercase; }
+  .rec-fin-item .val { font-size: 18px; font-weight: 800; margin-top: 2px; }
+  .rec-rationale { font-size: 13px; color: var(--muted); border-top: 1px solid var(--border); padding-top: 12px; margin-top: 12px; }
+  .rec-buy { background: #DCFCE7; }
+  .rec-buy h4 { color: #15803D; }
+  .rec-buy .confidence { color: #15803D; }
+  .rec-hold { background: #FEF3C7; }
+  .rec-hold h4 { color: #B45309; }
+  .rec-hold .confidence { color: #B45309; }
+
+  /* ─── BACKTEST VISUAL ─── */
+  .backtest-visual {
+    background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+    border-radius: 10px;
+    padding: 28px;
+    margin: 20px 0;
+    font-family: 'Segoe UI', sans-serif;
+    color: white;
+  }
+  .backtest-title { font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: #94A3B8; margin-bottom: 20px; }
+  .backtest-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+  .bt-step { text-align: center; }
+  .bt-step .step-num { font-size: 11px; color: #64748B; margin-bottom: 8px; }
+  .bt-circle { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; margin: 0 auto 8px; }
+  .bt-blue { background: #1D4ED8; }
+  .bt-teal { background: #0F766E; }
+  .bt-green { background: #15803D; }
+  .bt-amber { background: #B45309; }
+  .bt-red { background: #991B1B; }
+  .bt-step h5 { font-size: 11px; font-weight: 700; }
+  .bt-step p { font-size: 10px; color: #94A3B8; margin-top: 4px; }
+  .bt-arrow { display: flex; align-items: center; justify-content: center; color: #475569; font-size: 18px; padding-top: 20px; }
+
+  /* ─── MOAT DIAGRAM ─── */
+  .moat-rings { display: flex; flex-direction: column; gap: 0; margin: 20px 0; }
+  .moat-ring { padding: 14px 20px; border-radius: 6px; margin-bottom: 8px; font-family: 'Segoe UI', sans-serif; display: flex; align-items: center; gap: 16px; }
+  .moat-ring-1 { background: #FEE2E2; border-left: 4px solid #DC2626; }
+  .moat-ring-2 { background: #FEF3C7; border-left: 4px solid #D97706; margin-left: 20px; }
+  .moat-ring-3 { background: #DBEAFE; border-left: 4px solid #2563EB; margin-left: 40px; }
+  .moat-ring-4 { background: #D1FAE5; border-left: 4px solid #059669; margin-left: 60px; }
+  .moat-ring h4 { font-size: 13px; font-weight: 700; flex-shrink: 0; min-width: 160px; }
+  .moat-ring p { font-size: 12px; color: var(--muted); }
+  .moat-ring .time { font-size: 11px; font-weight: 700; color: var(--muted); flex-shrink: 0; margin-left: auto; }
+
+  /* ─── FIVE MOVES ─── */
+  .moves { margin: 20px 0; }
+  .move { display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid var(--border); font-family: 'Segoe UI', sans-serif; }
+  .move:last-child { border-bottom: none; }
+  .move-num { font-size: 32px; font-weight: 900; color: #E2E8F0; flex-shrink: 0; width: 48px; line-height: 1; }
+  .move-content h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .move-content p { font-size: 13px; line-height: 1.7; color: var(--ink); }
+  .move-content .move-tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 4px; margin-bottom: 8px; text-transform: uppercase; }
+  .mt-now { background: #FEE2E2; color: #991B1B; }
+  .mt-week { background: #FEF3C7; color: #92400E; }
+  .mt-build { background: #DBEAFE; color: #1E40AF; }
+  .mt-design { background: #EDE9FE; color: #5B21B6; }
+  .mt-strategy { background: #D1FAE5; color: #065F46; }
+
+  /* ─── FOOTER ─── */
+  .footer { background: var(--ink); color: #475569; text-align: center; padding: 20px; font-family: 'Segoe UI', sans-serif; font-size: 11px; letter-spacing: 0.5px; }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="masthead-top">
+    <span>NPT Stock Intelligence Unit · Strictly Confidential</span>
+    <span>CTO Advisory Memo · March 2026</span>
+  </div>
+  <div class="masthead-body">
+    <div class="memo-label">Memorandum</div>
+    <h1><strong>Drug Price Intelligence Platform</strong><br>CTO Advisory Assessment</h1>
+    <div class="sub">An honest, data-driven critique with strategic recommendations</div>
+  </div>
+  <div class="memo-meta">
+    <div class="memo-meta-item"><div class="label">From</div><div class="value">CTO Strategic Advisor</div></div>
+    <div class="memo-meta-item"><div class="label">Subject</div><div class="value">PRD v1.0 — Critical Analysis</div></div>
+    <div class="memo-meta-item"><div class="label">Date</div><div class="value">March 2026</div></div>
+    <div class="memo-meta-item"><div class="label">Priority</div><div class="value">⚠ High — Act Before Build</div></div>
+  </div>
+</div>
+
+<!-- VERDICT -->
+<div class="verdict">
+  <div class="verdict-icon">⚖️</div>
+  <div class="verdict-body">
+    <h2>Overall Verdict: The Core Thesis Is Sound. The Execution Plan Has Five Critical Gaps That Will Cause Expensive Rework If Not Addressed Before a Single Line of Code Is Written.</h2>
+    <p>The "unprofitable floor" insight is genuinely novel and probably correct. The signal architecture is thoughtful. The n8n automation approach is pragmatic. But the PRD treats the ML model as the hard problem — it's not. The hard problems are: <strong>(1) you have no validated proof the thesis works on real data</strong>, <strong>(2) there's no database schema</strong>, <strong>(3) the recommendation engine is a direction indicator not a decision tool</strong>, <strong>(4) the competitive moat is being built in the wrong place</strong>, and <strong>(5) WaveData is being treated as a data source when it's actually an existential dependency</strong>. These five gaps must be addressed before Week 4.</p>
+  </div>
+</div>
+
+<div class="body">
+
+<!-- ════════════ SECTION 1 ════════════ -->
+<div class="sh">
+  <span class="sh-num">01</span>
+  <h2>The Five Critical Gaps</h2>
+  <span class="sh-tag tag-danger">Act Before You Build</span>
+</div>
+
+<div class="finding-grid">
+
+  <div class="finding">
+    <div class="finding-header">
+      <div class="finding-num fn-red">1</div>
+      <h4>The Hypothesis Has Never Been Backtested</h4>
+    </div>
+    <p>The "unprofitable floor predicts shortage" claim is attributed to WaveData's 24-year analysis. But has <em>this team</em> run that analysis against the freely available NHSBSA data? Before building a 12-month roadmap on this thesis, spend 2 days in Python validating it. Take every price concession event from NHSBSA records (2019–2024). Ask: was the Drug Tariff price within 10% of its 5-year low in the 6 months prior? If the answer is "yes, in >70% of cases," the thesis is validated. If it's 40%, rethink the entire architecture.</p>
+    <div class="verdict-label verdict-red">⛔ Blocker — Validate Before Week 4</div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-header">
+      <div class="finding-num fn-red">2</div>
+      <h4>The Molecule Identity Problem Will Break Everything</h4>
+    </div>
+    <p>The platform pulls data from 10+ sources. Each uses a different drug identifier: NHSBSA uses BNF codes, WaveData uses proprietary IDs, DaSH portal uses free-text product names, wholesalers use their own catalogue numbers. Without a clean "Molecule Master" database mapping all identifiers, every signal JOIN is unreliable. You'll conflate Metformin 500mg and 850mg, miss strengths, double-count generics. This is Week 1 work that nobody is talking about — and it will silently corrupt every analysis built on top.</p>
+    <div class="verdict-label verdict-red">⛔ Blocker — Solve Before Any Data Integration</div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-header">
+      <div class="finding-num fn-amber">3</div>
+      <h4>The Recommendation Engine Is a Compass, Not a GPS</h4>
+    </div>
+    <p>"BUY FORWARD" tells a procurement manager the direction. It doesn't tell them <em>how much to buy, by when, at what cost, and what they're risking by waiting</em>. The difference between "BUY FORWARD" and "BUY FORWARD — order 4.5 additional weeks now, cost £12,400, expected saving if concession materialises: £47,000, decision must be made by 15th March" is the difference between a dashboard nobody acts on and a tool that changes procurement behaviour. The financial calculator layer is missing entirely from the PRD.</p>
+    <div class="verdict-label verdict-amber">⚠ Critical Enhancement — Before Phase 1 Launch</div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-header">
+      <div class="finding-num fn-amber">4</div>
+      <h4>The Moat Is Being Built in the Wrong Place</h4>
+    </div>
+    <p>The PRD treats the ML model as the competitive moat. It isn't — LightGBM trained on NHSBSA historical data can be replicated by a funded competitor in 3 months. The <em>real</em> moat is the proprietary outcome dataset: which recommendations were acted on, what actually happened, did the price move as predicted? Once you have 18 months of this data, no new entrant can replicate it regardless of how good their model is. The outcome tracking database isn't scheduled until Phase 2. It should be Day 1 infrastructure.</p>
+    <div class="verdict-label verdict-amber">⚠ Strategic Priority Inversion — Move to Phase 1</div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-header">
+      <div class="finding-num fn-red">5</div>
+      <h4>WaveData Is an Existential Dependency Disguised as a Data Source</h4>
+    </div>
+    <p>The PRD lists WaveData as one integration among many. But WaveData's 24-year historical price data is the foundation for the unprofitable floor calculation — the platform's entire core IP. If WaveData costs £80–120K/year, it becomes the single largest cost item. If WaveData launches a competing product, they have everything needed to do so. If WaveData changes API terms, the platform degrades overnight. This needs a mitigation strategy now: build a parallel floor calculator from NHSBSA historical data. Prove it works to 70% accuracy. Then WaveData becomes an enhancement, not a single point of failure.</p>
+    <div class="verdict-label verdict-red">⛔ Risk — Mitigation Required Before Phase 1</div>
+  </div>
+
+  <div class="finding">
+    <div class="finding-header">
+      <div class="finding-num fn-blue">+</div>
+      <h4>The 57-Signal Model Has a Dimensionality Problem</h4>
+    </div>
+    <p>With ~200–400 price concession events historically as training labels, a 57-feature model is severely underdetermined. LightGBM handles sparse data better than most, but the model will learn noise rather than signal. The solution: reduce 57 signals to 8 composite scores through signal clustering. "Supply Stress Score," "Demand Pressure Score," "Market Structure Score," etc. This improves model stability, interpretability, and dramatically reduces the risk of overfitting to the training period. It also makes the explainability layer simpler: "your score is driven by Supply Stress and Demand Pressure."</p>
+    <div class="verdict-label verdict-amber">⚠ Architectural Decision — Before ML Model Design</div>
+  </div>
+
+</div>
+
+
+<!-- ════════════ SECTION 2 ════════════ -->
+<div class="sh">
+  <span class="sh-num">02</span>
+  <h2>The Backtest — The Most Important Thing You Can Do This Week</h2>
+  <span class="sh-tag tag-data">Data Validation</span>
+</div>
+
+<p>Before any infrastructure is built, the platform's core thesis must be empirically validated. This is 2–3 days of work using freely available data. Here is exactly what to run:</p>
+
+<div class="backtest-visual">
+  <div class="backtest-title">Backtest Protocol — 5 Steps to Validating the Thesis</div>
+  <div class="backtest-grid">
+    <div class="bt-step">
+      <div class="step-num">Step 1</div>
+      <div class="bt-circle bt-blue">📥</div>
+      <h5>Download NHSBSA Data</h5>
+      <p>Drug Tariff Part VIIIA prices 2014–2024 + all price concession records. Free. nhsbsa.nhs.uk/open-data</p>
+    </div>
+    <div class="bt-step">
+      <div class="step-num">Step 2</div>
+      <div class="bt-circle bt-teal">🧮</div>
+      <h5>Calculate Molecule Floors</h5>
+      <p>For each molecule: identify the price level at which historical shortages began. Use 5th percentile of 5-year price range as proxy floor.</p>
+    </div>
+    <div class="bt-step">
+      <div class="step-num">Step 3</div>
+      <div class="bt-circle bt-green">🔍</div>
+      <h5>Label Concession Events</h5>
+      <p>For every price concession granted 2019–2024: was the molecule within 15% of its floor in the 6 months prior? Calculate hit rate.</p>
+    </div>
+    <div class="bt-step">
+      <div class="step-num">Step 4</div>
+      <div class="bt-circle bt-amber">📊</div>
+      <h5>Calculate Lead Time</h5>
+      <p>For successful predictions: how many weeks/months before the concession announcement did the floor approach signal fire? This is the "prediction horizon."</p>
+    </div>
+    <div class="bt-step">
+      <div class="step-num">Step 5</div>
+      <div class="bt-circle bt-red">💰</div>
+      <h5>Calculate Retrospective ROI</h5>
+      <p>Applied to NPT's buying patterns: if you had acted on these signals, what would you have saved? This is the investor slide.</p>
+    </div>
+  </div>
+</div>
+
+<div class="callout co-success">
+  <div class="callout-icon">✅</div>
+  <div class="callout-body">
+    <strong>If Backtest Hit Rate > 65%</strong>
+    <p>The thesis is validated. Proceed with full platform build. The backtest result becomes the opening slide of every investor conversation: "We backtested our model against 5 years of NHSBSA data. We would have predicted X% of price concessions an average of Y weeks in advance, representing £Z in avoidable overpayments for a 30-pharmacy group."</p>
+  </div>
+</div>
+
+<div class="callout co-danger">
+  <div class="callout-icon">⛔</div>
+  <div class="callout-body">
+    <strong>If Backtest Hit Rate &lt; 50%</strong>
+    <p>The floor-alone thesis is insufficient. This doesn't invalidate the platform — it tells you that the floor must be combined with manufacturer count and CPE request volume as a compound signal. Redesign the entry condition before building. Better to learn this in a Python notebook than after 3 months of platform development.</p>
+  </div>
+</div>
+
+<h3 style="font-family:'Segoe UI',sans-serif; font-size:16px; margin: 24px 0 12px;">Four Additional Analyses That Will Shape the Architecture</h3>
+
+<table>
+  <thead>
+    <tr><th>Analysis</th><th>Data Needed</th><th>Hypothesis Being Tested</th><th>Time to Run</th><th>Impact If True</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Manufacturer Count Correlation</strong></td>
+      <td>NHSBSA Part VIIIA (free)</td>
+      <td>≤2 manufacturers predicts shortage in &lt;6 months</td>
+      <td>1 day</td>
+      <td>Validates the most actionable Tier 1 signal</td>
+    </tr>
+    <tr>
+      <td><strong>Rx Volume Surge → Shortage Lag</strong></td>
+      <td>OpenPrescribing (free)</td>
+      <td>Prescription acceleration precedes DaSH notice by 4–8 weeks</td>
+      <td>1 day</td>
+      <td>Quantifies the predictive horizon for Tier 2 demand signal</td>
+    </tr>
+    <tr>
+      <td><strong>Price Concession Recurrence</strong></td>
+      <td>NHSBSA Open Data (free)</td>
+      <td>Molecules that concession once are 3× more likely to concession again</td>
+      <td>0.5 days</td>
+      <td>Defines the "high-risk watchlist" for Phase 1 focus</td>
+    </tr>
+    <tr>
+      <td><strong>GBP/INR Lag Analysis</strong></td>
+      <td>Bank of England API (free)</td>
+      <td>GBP weakening leads manufacturer cost pressure by 3–6 months</td>
+      <td>0.5 days</td>
+      <td>Validates or rejects a key Tier 1 macro signal</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<!-- ════════════ SECTION 3 ════════════ -->
+<div class="sh">
+  <span class="sh-num">03</span>
+  <h2>The Database Schema — The Most Important Architectural Decision You're Not Making</h2>
+  <span class="sh-tag tag-build">Architecture</span>
+</div>
+
+<p>The PRD has detailed feature specs, signal descriptions, and a delivery roadmap. It has no database schema. This is the most dangerous omission, because every subsequent engineering decision — signal storage, prediction queries, recommendation generation, outcome tracking — depends on getting the schema right. Here is the schema that should anchor the entire platform:</p>
+
+<div class="schema-box">
+<div class="schema-table">
+<div class="schema-title">-- MOLECULE MASTER (the foundation that solves the identity problem)</div>
+<span class="schema-col">molecules</span> (<br>
+&nbsp;&nbsp;<span class="schema-pk">molecule_id</span>        <span class="schema-type">UUID PRIMARY KEY</span>,<br>
+&nbsp;&nbsp;<span class="schema-col">bnf_code</span>          <span class="schema-type">VARCHAR(15) UNIQUE NOT NULL</span>, <span class="schema-comment">-- Primary identifier, cross-source</span><br>
+&nbsp;&nbsp;<span class="schema-col">bnf_name</span>          <span class="schema-type">TEXT NOT NULL</span>,<br>
+&nbsp;&nbsp;<span class="schema-col">drug_name</span>         <span class="schema-type">TEXT</span>,<br>
+&nbsp;&nbsp;<span class="schema-col">form</span>              <span class="schema-type">TEXT</span>, <span class="schema-comment">-- tablet, capsule, liquid, injection</span><br>
+&nbsp;&nbsp;<span class="schema-col">strength</span>          <span class="schema-type">TEXT</span>,<br>
+&nbsp;&nbsp;<span class="schema-col">wavedata_id</span>       <span class="schema-type">VARCHAR(50)</span>, <span class="schema-comment">-- WaveData proprietary ID mapping</span><br>
+&nbsp;&nbsp;<span class="schema-col">openprescribing_id</span><span class="schema-type">VARCHAR(50)</span>,<br>
+&nbsp;&nbsp;<span class="schema-col">therapeutic_category</span> <span class="schema-type">TEXT</span>,<br>
+&nbsp;&nbsp;<span class="schema-col">monitoring_tier</span>   <span class="schema-type">VARCHAR(10)</span>, <span class="schema-comment">-- 'watchlist', 'standard', 'low-risk'</span><br>
+&nbsp;&nbsp;<span class="schema-col">created_at</span>        <span class="schema-type">TIMESTAMPTZ DEFAULT NOW()</span><br>
+);
+</div>
+<div class="schema-table">
+<div class="schema-title">-- PRICE HISTORY (time-series, TimescaleDB hypertable)</div>
+<span class="schema-col">price_history</span> (<br>
+&nbsp;&nbsp;<span class="schema-fk">molecule_id</span>       <span class="schema-type">UUID REFERENCES molecules</span>,<br>
+&nbsp;&nbsp;<span class="schema-col">effective_date</span>    <span class="schema-type">DATE NOT NULL</span>,<br>
+&nbsp;&nbsp;<span class="schema-col">tariff_price_pence</span><span class="schema-type">INTEGER</span>, <span class="schema-comment">-- Category A/C/M Drug Tariff price</span><br>
+&nbsp;&nbsp;<span class="schema-col">concession_price_pence</span> <span class="schema-type">INTEGER</span>, <span class="schema-comment">-- NULL if no active concession</span><br>
+&nbsp;&nbsp;<span class="schema-col">unprofitable_floor_pence</span> <span class="schema-type">INTEGER</span>, <span class="schema-comment">-- Calculated floor for this molecule</span><br>
+&nbsp;&nbsp;<span class="schema-col">distance_from_floor_pct</span> <span class="schema-type">DECIMAL(5,2)</span>, <span class="schema-comment">-- (tariff_price - floor) / floor * 100</span><br>
+&nbsp;&nbsp;<span class="schema-col">manufacturer_count</span><span class="schema-type">SMALLINT</span>, <span class="schema-comment">-- From NHSBSA Part VIIIA this month</span><br>
+&nbsp;&nbsp;<span class="schema-col">data_source</span>       <span class="schema-type">VARCHAR(20)</span>, <span class="schema-comment">-- 'nhsbsa_api', 'nhsbsa_pdf', 'wavedata'</span><br>
+&nbsp;&nbsp;PRIMARY KEY (molecule_id, effective_date)<br>
+);
+</div>
+<div class="schema-table">
+<div class="schema-title">-- SIGNAL READINGS (every signal, every molecule, every refresh)</div>
+<span class="schema-col">signal_readings</span> (<br>
+&nbsp;&nbsp;<span class="schema-fk">molecule_id</span>       <span class="schema-type">UUID REFERENCES molecules</span>,<br>
+&nbsp;&nbsp;<span class="schema-col">signal_id</span>         <span class="schema-type">VARCHAR(50) NOT NULL</span>, <span class="schema-comment">-- e.g., 'oos_frequency', 'cpe_requests'</span><br>
+&nbsp;&nbsp;<span class="schema-col">signal_tier</span>       <span class="schema-type">SMALLINT</span>, <span class="schema-comment">-- 1, 2, 3, or 4</span><br>
+&nbsp;&nbsp;<span class="schema-col">composite_score</span>   <span class="schema-type">VARCHAR(30)</span>, <span class="schema-comment">-- Which composite it feeds: 'supply_stress'</span><br>
+&nbsp;&nbsp;<span class="schema-col">raw_value</span>         <span class="schema-type">JSONB</span>, <span class="schema-comment">-- Actual signal data (flexible)</span><br>
+&nbsp;&nbsp;<span class="schema-col">normalised_score</span>  <span class="schema-type">DECIMAL(5,2)</span>, <span class="schema-comment">-- 0.0 to 1.0 (green to red)</span><br>
+&nbsp;&nbsp;<span class="schema-col">status</span>            <span class="schema-type">VARCHAR(10)</span>, <span class="schema-comment">-- 'green', 'amber', 'red'</span><br>
+&nbsp;&nbsp;<span class="schema-col">recorded_at</span>       <span class="schema-type">TIMESTAMPTZ NOT NULL</span>,<br>
+&nbsp;&nbsp;<span class="schema-col">data_age_hours</span>    <span class="schema-type">INTEGER</span>, <span class="schema-comment">-- ⚡ KEY: staleness detection</span><br>
+&nbsp;&nbsp;<span class="schema-col">is_fresh</span>          <span class="schema-type">BOOLEAN GENERATED ALWAYS AS ...</span> <span class="schema-comment">-- Auto-calculated from max_age config</span><br>
+);
+</div>
+<div class="schema-table">
+<div class="schema-title">-- PREDICTIONS (model output, every molecule, every run)</div>
+<span class="schema-col">predictions</span> (<br>
+&nbsp;&nbsp;<span class="schema-pk">prediction_id</span>     <span class="schema-type">UUID PRIMARY KEY</span>,<br>
+&nbsp;&nbsp;<span class="schema-fk">molecule_id</span>       <span class="schema-type">UUID REFERENCES molecules</span>,<br>
+&nbsp;&nbsp;<span class="schema-col">prediction_date</span>   <span class="schema-type">DATE NOT NULL</span>,<br>
+&nbsp;&nbsp;<span class="schema-col">horizon_months</span>    <span class="schema-type">SMALLINT</span>, <span class="schema-comment">-- 1, 3, or 6</span><br>
+&nbsp;&nbsp;<span class="schema-col">concession_prob</span>   <span class="schema-type">DECIMAL(4,3)</span>, <span class="schema-comment">-- 0.000 to 1.000</span><br>
+&nbsp;&nbsp;<span class="schema-col">price_direction</span>   <span class="schema-type">VARCHAR(20)</span>, <span class="schema-comment">-- 'strong_up', 'moderate_up', 'stable', etc.</span><br>
+&nbsp;&nbsp;<span class="schema-col">confidence_pct</span>    <span class="schema-type">DECIMAL(4,1)</span>,<br>
+&nbsp;&nbsp;<span class="schema-col">model_version</span>     <span class="schema-type">VARCHAR(20)</span>, <span class="schema-comment">-- For retraining comparison</span><br>
+&nbsp;&nbsp;<span class="schema-col">top_signals_json</span>  <span class="schema-type">JSONB</span>, <span class="schema-comment">-- Top 3 signals driving this prediction</span><br>
+&nbsp;&nbsp;<span class="schema-col">outcome</span>           <span class="schema-type">VARCHAR(20)</span>, <span class="schema-comment">-- NULL until horizon passes; 'correct'/'incorrect'</span><br>
+&nbsp;&nbsp;<span class="schema-col">outcome_date</span>      <span class="schema-type">DATE</span> <span class="schema-comment">-- When outcome was recorded — THIS IS THE MOAT</span><br>
+);
+</div>
+<div class="schema-table">
+<div class="schema-title">-- RECOMMENDATIONS + OUTCOMES (the moat table — never Phase 2, always Day 1)</div>
+<span class="schema-col">recommendations</span> (<br>
+&nbsp;&nbsp;<span class="schema-pk">rec_id</span>            <span class="schema-type">UUID PRIMARY KEY</span>,<br>
+&nbsp;&nbsp;<span class="schema-fk">molecule_id</span>       <span class="schema-type">UUID REFERENCES molecules</span>,<br>
+&nbsp;&nbsp;<span class="schema-col">rec_date</span>          <span class="schema-type">DATE NOT NULL</span>,<br>
+&nbsp;&nbsp;<span class="schema-col">action_type</span>       <span class="schema-type">VARCHAR(30)</span>, <span class="schema-comment">-- 'buy_forward', 'buffer_stock', 'hold', etc.</span><br>
+&nbsp;&nbsp;<span class="schema-col">urgency_score</span>     <span class="schema-type">DECIMAL(3,1)</span>, <span class="schema-comment">-- 0-10</span><br>
+&nbsp;&nbsp;<span class="schema-col">rationale_text</span>    <span class="schema-type">TEXT</span>,<br>
+&nbsp;&nbsp;<span class="schema-col">recommended_weeks_stock</span> <span class="schema-type">DECIMAL(4,1)</span>,<br>
+&nbsp;&nbsp;<span class="schema-col">current_stock_weeks</span>     <span class="schema-type">DECIMAL(4,1)</span>,<br>
+&nbsp;&nbsp;<span class="schema-col">order_units_suggested</span>   <span class="schema-type">INTEGER</span>,<br>
+&nbsp;&nbsp;<span class="schema-col">cost_to_act_gbp</span>   <span class="schema-type">DECIMAL(10,2)</span>, <span class="schema-comment">-- Financial calculator output</span><br>
+&nbsp;&nbsp;<span class="schema-col">expected_saving_gbp</span>     <span class="schema-type">DECIMAL(10,2)</span>, <span class="schema-comment">-- If prediction correct</span><br>
+&nbsp;&nbsp;<span class="schema-col">decision_deadline</span> <span class="schema-type">DATE</span>, <span class="schema-comment">-- "Act by this date to capture the opportunity"</span><br>
+&nbsp;&nbsp;<span class="schema-col">was_shown</span>         <span class="schema-type">BOOLEAN DEFAULT FALSE</span>,<br>
+&nbsp;&nbsp;<span class="schema-col">was_acted_on</span>      <span class="schema-type">BOOLEAN</span>, <span class="schema-comment">-- NULL = not yet decided</span><br>
+&nbsp;&nbsp;<span class="schema-col">acted_on_date</span>     <span class="schema-type">DATE</span>,<br>
+&nbsp;&nbsp;<span class="schema-col">actual_outcome</span>    <span class="schema-type">VARCHAR(20)</span>, <span class="schema-comment">-- 'correct_acted', 'correct_ignored', 'wrong_acted', 'wrong_ignored'</span><br>
+&nbsp;&nbsp;<span class="schema-col">pnl_impact_gbp</span>   <span class="schema-type">DECIMAL(10,2)</span> <span class="schema-comment">-- Actual financial impact — this is the ROI metric</span><br>
+);
+</div>
+</div>
+
+<div class="callout co-warning">
+  <div class="callout-icon">⚡</div>
+  <div class="callout-body">
+    <strong>The <code>data_age_hours</code> and <code>is_fresh</code> Columns Are Non-Negotiable</strong>
+    <p>The PRD mentions n8n automation failures as a risk, with the mitigation "show data age warning to users." That's not enough. Every signal must carry a staleness flag, and any signal older than its expected refresh window must display as grey/stale on the dashboard rather than appearing current. A procurement manager seeing a "green" OOS signal that was last updated 3 weeks ago will make a wrong decision with confidence. This is one of the most common failure modes in operational dashboards.</p>
+  </div>
+</div>
+
+
+<!-- ════════════ SECTION 4 ════════════ -->
+<div class="sh">
+  <span class="sh-num">04</span>
+  <h2>Redesigning the Recommendation Engine — From Direction to Decision</h2>
+  <span class="sh-tag tag-build">Product Design</span>
+</div>
+
+<p>The current recommendation engine outputs six states. A procurement manager needs a decision, not a direction. Here is what the redesigned output looks like:</p>
+
+<div class="rec-card">
+  <div class="rec-header rec-buy">
+    <h4>⬆ BUY FORWARD — Metformin 500mg Tablets (BNF: 06.01.2.2)</h4>
+    <span class="confidence">78% Confidence · Updated 2 hours ago</span>
+  </div>
+  <div class="rec-body">
+    <div class="rec-financials">
+      <div class="rec-fin-item">
+        <div class="lbl">Current Stock</div>
+        <div class="val" style="color:#B45309">1.5 wks</div>
+      </div>
+      <div class="rec-fin-item">
+        <div class="lbl">Suggested Buffer</div>
+        <div class="val" style="color:#15803D">6 wks</div>
+      </div>
+      <div class="rec-fin-item">
+        <div class="lbl">Order Now Costs</div>
+        <div class="val" style="color:#0F172A">£12,400</div>
+      </div>
+      <div class="rec-fin-item">
+        <div class="lbl">Risk-Adj. Saving</div>
+        <div class="val" style="color:#15803D">+£36,700</div>
+      </div>
+    </div>
+    <div class="rec-rationale">
+      <strong>Why:</strong> DT price is 4.2% above calculated floor (threshold: 5%). Generic manufacturer count: 2 (threshold: ≤2). CPE concession requests up 180% in last 4 weeks. Concession probability: <strong>78% within 3 months</strong>.
+      <br><br><strong>Decision deadline: 15 March 2026</strong> — floor breach expected within 2–3 weeks at current price trajectory.
+    </div>
+  </div>
+</div>
+
+<div class="rec-card">
+  <div class="rec-header rec-hold">
+    <h4>⬇ HOLD — DO NOT BULK BUY — Atorvastatin 20mg Tablets (BNF: 02.12.1)</h4>
+    <span class="confidence">82% Confidence · Updated 4 hours ago</span>
+  </div>
+  <div class="rec-body">
+    <div class="rec-financials">
+      <div class="rec-fin-item">
+        <div class="lbl">Patent Expiry</div>
+        <div class="val" style="color:#B91C1C">Jun 2026</div>
+      </div>
+      <div class="rec-fin-item">
+        <div class="lbl">Generic Entry Est.</div>
+        <div class="val" style="color:#B45309">Q3 2026</div>
+      </div>
+      <div class="rec-fin-item">
+        <div class="lbl">Expected Price Drop</div>
+        <div class="val" style="color:#15803D">-65%</div>
+      </div>
+      <div class="rec-fin-item">
+        <div class="lbl">Over-buy Risk</div>
+        <div class="val" style="color:#B91C1C">£28,000</div>
+      </div>
+    </div>
+    <div class="rec-rationale">
+      <strong>Why:</strong> Branded patent expires June 2026. 3 generic manufacturers have Para IV filings. Buying more than 2 weeks of supply at current brand price risks £28,000 in stranded inventory when the price drops 60–65% on generic entry. Maintain minimum stock only.
+    </div>
+  </div>
+</div>
+
+<div class="callout co-insight">
+  <div class="callout-icon">💡</div>
+  <div class="callout-body">
+    <strong>The "Risk-Adjusted Saving" Calculation — How to Build It</strong>
+    <p>Risk-adjusted saving = (expected_saving_if_correct × concession_probability) − (overstocking_cost × (1 − concession_probability)). This requires: (1) historical average price concession uplift per category, (2) current DT price, (3) estimated order quantity from purchasing system. When the risk-adjusted saving is positive, BUY FORWARD. When negative, MONITOR. This single calculation turns the recommendation from subjective guidance into an objective financial decision.</p>
+  </div>
+</div>
+
+
+<!-- ════════════ SECTION 5 ════════════ -->
+<div class="sh">
+  <span class="sh-num">05</span>
+  <h2>Signal Reduction — From 57 Features to 8 Composite Scores</h2>
+  <span class="sh-tag tag-data">ML Architecture</span>
+</div>
+
+<p>Feeding 57 signals into a model with ~400 training examples creates severe overfitting risk. More signals is not a better model — it's a fragile model that memorises training noise. The solution is to cluster correlated signals into 8 independent composite scores. This also makes the explainability layer dramatically simpler: "your risk score is driven primarily by Supply Stress (0.82) and Demand Pressure (0.71)."</p>
+
+<div class="signal-map">
+  <div class="signal-cluster sc-1">
+    <div class="count">6</div>
+    <h4>Supply Stress</h4>
+    <p>Manufacturer count, DaSH notices, discontinuation notices, wholesaler OOS, delivery lead times, historical shortage frequency</p>
+  </div>
+  <div class="signal-cluster sc-2">
+    <h4>Demand Pressure</h4>
+    <div class="count">5</div>
+    <p>OpenPrescribing Rx volume trend, Rx acceleration, NHS 111 calls, seasonal calendar, social media demand signals</p>
+  </div>
+  <div class="signal-cluster sc-3">
+    <h4>Price Momentum</h4>
+    <div class="count">4</div>
+    <p>DT price trend (3m, 6m), distance from unprofitable floor, CPE concession request volume, wholesaler price list changes</p>
+  </div>
+  <div class="signal-cluster sc-4">
+    <h4>Market Structure</h4>
+    <div class="count">5</div>
+    <p>Patent expiry calendar, biosimilar pipeline, generic entry timing, Para IV challenges, brand-to-generic price erosion history</p>
+  </div>
+  <div class="signal-cluster sc-5">
+    <h4>Macro Environment</h4>
+    <div class="count">5</div>
+    <p>GBP/INR rate, GBP/CNY rate, energy futures, raw material costs, VPAG rebate rate changes</p>
+  </div>
+  <div class="signal-cluster sc-6">
+    <h4>Geopolitical Risk</h4>
+    <div class="count">4</div>
+    <p>India/China API country risk, US tariff announcements, shipping disruption indices, FDA warning letters on API facilities</p>
+  </div>
+  <div class="signal-cluster sc-7">
+    <h4>Policy & Regulatory</h4>
+    <div class="count">4</div>
+    <p>NHS budget allocations, NICE appraisal pipeline, MHRA licence actions, UK-EU regulatory divergence</p>
+  </div>
+  <div class="signal-cluster sc-8">
+    <h4>Competitive Dynamics</h4>
+    <div class="count">3</div>
+    <p>Competitor pharmacy pricing intelligence, WaveData market price vs DT spread, new market entrant signals</p>
+  </div>
+</div>
+
+<div class="callout co-action">
+  <div class="callout-icon">📐</div>
+  <div class="callout-body">
+    <strong>How to Calculate Each Composite Score</strong>
+    <p>For each composite score: (1) normalise each constituent signal to 0–1 scale, (2) apply the weighted average using the PRD's existing signal priority weights, (3) output a single 0–1 score with a green/amber/red threshold. The ML model then takes 8 inputs, not 57 — dramatically reducing overfitting, improving training data sufficiency, and making the model retrainable in minutes rather than hours.</p>
+  </div>
+</div>
+
+
+<!-- ════════════ SECTION 6 ════════════ -->
+<div class="sh">
+  <span class="sh-num">06</span>
+  <h2>The Real Competitive Moat — Building It From Day One</h2>
+  <span class="sh-tag tag-strategy">Strategic Architecture</span>
+</div>
+
+<p>Most SaaS platforms think of their moat as their algorithm. The algorithm is table stakes — it can be replicated. The real moat in a prediction product is the <strong>outcome feedback loop</strong>: proprietary knowledge of which predictions were correct, under which conditions, and with what financial impact. This data cannot be purchased or replicated.</p>
+
+<div class="moat-rings">
+  <div class="moat-ring moat-ring-1">
+    <h4>🔴 Weakest Moat: The Algorithm</h4>
+    <p>LightGBM on NHSBSA data. Replicable by a funded competitor in 3–6 months. This is what the PRD focuses on building.</p>
+    <span class="time">Replicable: 3–6 months</span>
+  </div>
+  <div class="moat-ring moat-ring-2">
+    <h4>🟡 Moderate Moat: Historical Signal Data</h4>
+    <p>5+ years of signal readings per molecule. Proprietary aggregated wholesaler OOS data. Requires time to accumulate but data sources are mostly public.</p>
+    <span class="time">Replicable: 12–18 months</span>
+  </div>
+  <div class="moat-ring moat-ring-3">
+    <h4>🔵 Strong Moat: Network Effects (Multi-Customer)</h4>
+    <p>Aggregated buying patterns from 10+ pharmacy groups creates demand signal impossible to replicate from public data. Each new customer improves the model for all customers.</p>
+    <span class="time">Replicable: 24–36 months</span>
+  </div>
+  <div class="moat-ring moat-ring-4">
+    <h4>🟢 Strongest Moat: Prediction Outcome Database</h4>
+    <p>The recommendations table: which drugs, which action, acted on or ignored, actual outcome, financial impact. 18+ months of this data is the most valuable dataset in UK pharmacy procurement intelligence. Cannot be purchased. Cannot be replicated without the customer relationships. This is the table that, if built Day 1, becomes the platform's most defensible asset.</p>
+    <span class="time">Irreplicable after 18 months</span>
+  </div>
+</div>
+
+
+<!-- ════════════ SECTION 7 ════════════ -->
+<div class="sh">
+  <span class="sh-num">07</span>
+  <h2>Five Moves — What I'd Do in the Next 30 Days</h2>
+  <span class="sh-tag tag-verdict">Actionable Recommendations</span>
+</div>
+
+<div class="moves">
+
+  <div class="move">
+    <div class="move-num">01</div>
+    <div class="move-content">
+      <span class="move-tag mt-now">This Week</span>
+      <h3>Run the Backtest. Before Any Infrastructure.</h3>
+      <p>Download NHSBSA Drug Tariff history 2014–2024 and all price concession records from nhsbsa.nhs.uk/open-data. Write a 100-line Python script. Ask: for every concession event, was the molecule approaching its price floor in the 3–6 months prior? Calculate the hit rate. This is 2 days of work that either validates the entire platform thesis or tells you what to fix before you build. Do not skip this step. It is the most important thing in this document.</p>
+    </div>
+  </div>
+
+  <div class="move">
+    <div class="move-num">02</div>
+    <div class="move-content">
+      <span class="move-tag mt-week">Week 1</span>
+      <h3>Build the Molecule Master Database First. Before Any Other Data Integration.</h3>
+      <p>Create a clean mapping of all NHS-dispensed molecules: BNF code → drug name → form → strength → WaveData ID → OpenPrescribing ID → DaSH product name. This is the Rosetta Stone of the platform. Without it, every data JOIN from week 2 onwards is unreliable. Pull from NHSBSA Part VIIIA (the definitive source), enrich with OpenPrescribing BNF tree, and add a manual QA pass on the top 500 molecules by dispensing volume. Estimate: 3–4 days of data engineering.</p>
+    </div>
+  </div>
+
+  <div class="move">
+    <div class="move-num">03</div>
+    <div class="move-content">
+      <span class="move-tag mt-build">Phase 1 Design</span>
+      <h3>Redesign the Recommendation Output to Include Financial Impact.</h3>
+      <p>Every recommendation must output: recommended action, weeks of stock suggested, current stock (pull from ERP/buying system or manual input), order quantity, cost to act today, expected saving if prediction correct, risk-adjusted net value, and decision deadline. The formula is simple: (saving × probability) − (overstocking_cost × (1−probability)). When positive: recommend action. When negative: monitor. This single change transforms the platform from "interesting dashboard" to "procurement decision engine." Design this financial calculator before the UI is built — it's far cheaper to add now than to retrofit.</p>
+    </div>
+  </div>
+
+  <div class="move">
+    <div class="move-num">04</div>
+    <div class="move-content">
+      <span class="move-tag mt-design">Architecture Decision</span>
+      <h3>Move Outcome Tracking From Phase 2 to Day 1 Infrastructure.</h3>
+      <p>The recommendations table with outcome tracking fields (was_acted_on, actual_outcome, pnl_impact_gbp) must be part of the Phase 1 schema, even if it's only populated manually in Phase 1. The data you collect in the first 6 months of operation is irreplaceable. If you wait until Phase 2 to design this, you'll have 6 months of recommendation history with no recorded outcomes — and you'll need to reconstruct it manually. Build the table now. Populate it from Day 1, even with spreadsheet entries if needed.</p>
+    </div>
+  </div>
+
+  <div class="move">
+    <div class="move-num">05</div>
+    <div class="move-content">
+      <span class="move-tag mt-strategy">Strategic</span>
+      <h3>Treat WaveData as Optional Enhancement, Not Required Dependency. Build the Floor Calculator From NHSBSA Data First.</h3>
+      <p>Prove the unprofitable floor can be calculated from freely available NHSBSA data alone. Use the backtest to measure its accuracy. If NHSBSA-derived floors predict >60% of concessions, you have a negotiating position with WaveData: "we can launch without you, but your data would improve our accuracy from 65% to 80% — here's what we'd pay for that." If you need WaveData before launch, they control your timeline, your cost structure, and your competitive positioning. Never let a single vendor control any of those three.</p>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ════════════ SECTION 8 ════════════ -->
+<div class="sh">
+  <span class="sh-num">08</span>
+  <h2>Honest Assessment: What the PRD Gets Right and Wrong</h2>
+  <span class="sh-tag tag-verdict">Balanced View</span>
+</div>
+
+<div class="finding-grid">
+  <div class="finding">
+    <div class="finding-header">
+      <div class="finding-num fn-green">✓</div>
+      <h4>What the PRD Gets Right</h4>
+    </div>
+    <p><strong>The core "unprofitable floor" insight is genuinely novel</strong> — I've reviewed the competitive landscape and no existing UK pharmacy software company is doing this calculation. It's defensible IP if validated.</p>
+    <p style="margin-top:10px"><strong>The n8n automation architecture is the right call</strong> — pragmatic, low-cost, handles 90% of the workflow needs, avoids premature microservices complexity.</p>
+    <p style="margin-top:10px"><strong>The signal tiering by time horizon is sound</strong> — distinguishing 3–12 month strategic signals from 1–14 day tactical signals is the correct mental model for procurement decision support.</p>
+    <p style="margin-top:10px"><strong>The buying recommendation framework (6 states) is clean</strong> — the states themselves are right. The financial calculator layer missing around them is the gap, not the states themselves.</p>
+    <div class="verdict-label verdict-green">✓ Solid Strategic Foundation</div>
+  </div>
+  <div class="finding">
+    <div class="finding-header">
+      <div class="finding-num fn-red">✗</div>
+      <h4>What the PRD Gets Wrong</h4>
+    </div>
+    <p><strong>No backtest before build</strong> — the most expensive assumption in any data product is an unvalidated hypothesis. The thesis must be proven on historical data before the platform is scoped.</p>
+    <p style="margin-top:10px"><strong>No database schema</strong> — a 27-page PRD with no schema is an engineering risk. The schema is where product and engineering thinking collide; get it wrong and everything downstream is harder.</p>
+    <p style="margin-top:10px"><strong>57 signals into a small training set</strong> — this will overfit. Signal reduction to composites is required for model stability.</p>
+    <p style="margin-top:10px"><strong>Outcome tracking as Phase 2</strong> — this is the moat. It should never be Phase 2.</p>
+    <p style="margin-top:10px"><strong>WaveData treated as a data source</strong> — it's an existential dependency. The distinction matters for risk management.</p>
+    <div class="verdict-label verdict-red">⚠ Fixable Before Build Starts</div>
+  </div>
+</div>
+
+<div class="callout co-success">
+  <div class="callout-icon">🎯</div>
+  <div class="callout-body">
+    <strong>Final CTO Advisor Verdict</strong>
+    <p>Build this. The market is real, the core insight is novel, the open-source data availability is better than the team realises, and the competitive white space in UK pharmacy procurement intelligence is genuine. But spend 2 weeks in a Python notebook before writing a single line of application code. Validate the thesis. Build the molecule master. Design the schema with outcome tracking. Then build — and build fast. The first-mover advantage in this space is significant and the window is probably 12–18 months before a well-funded competitor notices the same gap.</p>
+  </div>
+</div>
+
+</div>
+
+<div class="footer">
+  NPT Stock Intelligence Unit · CTO Advisory Memo · March 2026 · Strictly Confidential — Internal Use Only
+</div>
+
+</body>
+</html>

@@ -1,0 +1,119 @@
+================================================================================
+NIPHARMA BACKEND - QUICK START (5 MINUTES)
+================================================================================
+
+STEP 1: Get API Keys
+─────────────────────────────────────────────────────────────────────────────
+□ Go to https://console.groq.com/keys → Get GROQ_API_KEY
+□ Go to https://newsapi.org/ → Get NEWS_API_KEY
+
+STEP 2: Navigate & Setup
+─────────────────────────────────────────────────────────────────────────────
+$ cd "/Users/chaitanyawarhade/Documents/NPT Stock Inteligance Unit/nipharma-backend"
+$ python3 -m venv venv
+$ source venv/bin/activate
+
+STEP 3: Configure Environment
+─────────────────────────────────────────────────────────────────────────────
+$ cp .env.example .env
+$ nano .env  # Or use your favorite editor
+
+Edit .env and add:
+  GROQ_API_KEY=your_groq_api_key_here
+  NEWS_API_KEY=your_news_api_key_here
+
+STEP 4: Install & Run
+─────────────────────────────────────────────────────────────────────────────
+$ pip install -r requirements.txt
+$ ./start.sh
+
+STEP 5: Test
+─────────────────────────────────────────────────────────────────────────────
+Visit: http://localhost:8000/docs
+Or run: curl http://localhost:8000/
+
+================================================================================
+PROJECT STRUCTURE
+================================================================================
+
+nipharma-backend/
+├── server/
+│   ├── main.py       → FastAPI application
+│   ├── chat.py       → Groq integration
+│   └── news.py       → NewsAPI integration
+├── requirements.txt  → Dependencies
+├── .env.example      → Environment template
+├── config.py         → Settings
+└── README.md         → Full documentation
+
+================================================================================
+KEY ENDPOINTS
+================================================================================
+
+GET /                    Health check
+POST /chat               Chat with AI assistant
+GET /news?limit=10      Pharmaceutical news
+GET /news/supply-chain  Supply chain news
+GET /news/search?query= Search news
+GET /drugs?search=      Drug database (coming soon)
+GET /signals            Market signals (coming soon)
+GET /concessions        Concession trends (coming soon)
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Problem                 Solution
+─────────────────────────────────────────────────────────────────────────────
+API returns 500         Check .env file has GROQ_API_KEY and NEWS_API_KEY
+Port 8000 in use        Use: uvicorn server.main:app --reload --port 8001
+venv not found          Run: python3 -m venv venv
+ModuleNotFoundError     Run: pip install -r requirements.txt
+API keys invalid        Regenerate at console.groq.com and newsapi.org
+
+================================================================================
+USEFUL COMMANDS
+================================================================================
+
+Activate venv:          source venv/bin/activate
+Deactivate venv:        deactivate
+Start server:           ./start.sh
+Direct server start:    uvicorn server.main:app --reload
+Run tests:              pytest
+Format code:            black server/
+Lint code:              flake8 server/
+
+================================================================================
+DOCUMENTATION
+================================================================================
+
+SETUP_GUIDE.md      → Complete setup instructions
+README.md           → Project overview
+API_TESTING.md      → Detailed endpoint testing
+DEPLOYMENT.md       → Production deployment guide
+QUICKSTART.txt      → This file
+
+================================================================================
+NEED HELP?
+================================================================================
+
+1. Check .env file exists and has valid API keys
+2. Read SETUP_GUIDE.md for detailed instructions
+3. Visit http://localhost:8000/docs for interactive API docs
+4. Check terminal output for specific error messages
+5. Verify API keys at:
+   - https://console.groq.com/keys
+   - https://newsapi.org/account
+
+================================================================================
+IMPORTANT NOTES
+================================================================================
+
+✓ Never commit .env file to git
+✓ Keep API keys private and secure
+✓ Chat responses may take 5-10 seconds (normal)
+✓ Free tier: 500 news API calls/month
+✓ Backend runs on http://localhost:8000
+✓ API docs available at http://localhost:8000/docs
+
+================================================================================
