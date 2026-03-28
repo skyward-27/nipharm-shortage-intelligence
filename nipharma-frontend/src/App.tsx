@@ -39,7 +39,7 @@ export default function App() {
         <header className="navbar">
           <div className="navbar-container">
             <Link to="/" className="navbar-logo">
-              💊 Nipharma Tech Stock Intelligence
+              Nipharma
             </Link>
 
             <button
