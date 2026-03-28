@@ -41,7 +41,7 @@ def chat_with_groq(user_message: str, chat_history: List[Dict] = None) -> str:
         r = requests.post(
             GROQ_API_URL,
             json={
-                "model": "llama3-8b-8192",
+                "model": "llama-3.1-8b-instant",
                 "messages": messages,
                 "temperature": 0.7,
                 "max_tokens": 512
