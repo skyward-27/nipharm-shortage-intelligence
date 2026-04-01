@@ -174,10 +174,9 @@ export default function App() {
 
           .navbar-logo {
             font-size: 1.4rem;
-            font-weight: 700;
-            color: #1a1a1a;
-            text-decoration: none;
-            transition: color 0.3s ease;
+            font-weight: 800;
+            color: #0d0d0d;
+            text-decoration: none !important;
             display: flex;
             align-items: center;
             gap: 10px;

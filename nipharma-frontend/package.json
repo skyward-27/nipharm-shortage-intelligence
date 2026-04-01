@@ -27,6 +27,7 @@
   "engines": {
     "node": "18.x"
   },
+  "homepage": ".",
   "browserslist": {
     "production": [
       ">0.2%",
