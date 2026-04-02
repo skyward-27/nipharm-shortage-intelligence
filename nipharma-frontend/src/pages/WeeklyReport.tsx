@@ -28,14 +28,6 @@ const REPORT_DATA = {
 const sev = (s: string) => s === "HIGH" ? { bg: "#ffebee", color: "#c62828" } : s === "MEDIUM" ? { bg: "#fff8e1", color: "#e65100" } : { bg: "#e8f5e9", color: "#2e7d32" };
 
 export default function WeeklyReport() {
-  const emailBody = encodeURIComponent(
-    `Hi Team,\n\nWeekly Intelligence Brief — ${REPORT_DATA.week}\n\n` +
-    `🚨 MHRA Alerts: ${REPORT_DATA.alerts_count}  |  💰 Savings: £${REPORT_DATA.savings_opportunity.toLocaleString()}  |  💊 Concessions: ${REPORT_DATA.concessions_count}\n\n` +
-    `KEY ACTIONS:\n` + REPORT_DATA.top_alerts.map(a => `• [${a.severity}] ${a.drug}: ${a.action}`).join('\n') +
-    `\n\nFULL REPORT: https://nipharm-shortage-intelligence.vercel.app/report\n\nNipharma Tech Stock Intelligence`
-  );
-  const emailSubject = encodeURIComponent(`Weekly Intelligence Brief — ${REPORT_DATA.week}`);
-
   return (
     <div className="wr">
       {/* Header */}
