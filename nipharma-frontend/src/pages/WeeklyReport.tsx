@@ -1,5 +1,11 @@
 import { Link } from "react-router-dom";
 
+const SPECIAL_WATCH = [
+  { name: "Amoxicillin 500mg Capsules", probability: 78, savings: "22%", reason: "India API disruption · MHRA alert · 3rd consecutive concession" },
+  { name: "Amlodipine 10mg Tablets",    probability: 75, savings: "20%", reason: "GBP/INR stress +2.3% · Price +15% YoY · 2 MHRA shortage pubs" },
+  { name: "Levothyroxine 100mcg",       probability: 73, savings: "19%", reason: "Demand surge · India sole-source risk · Concession streak 4mo" },
+];
+
 const REPORT_DATA = {
   week: "28 March 2026",
   alerts_count: 6,
@@ -66,6 +72,24 @@ export default function WeeklyReport() {
           <div className="wr-kpi wr-kpi-amber">
             <div className="wr-kpi-num">{REPORT_DATA.signals.india_api}</div>
             <div className="wr-kpi-label">🇮🇳 India API Vol</div>
+          </div>
+        </div>
+
+        {/* Special Watch Flags */}
+        <div className="wr-watch">
+          <div className="wr-watch-title">🚨 SPECIAL WATCH — Buy Before Next Month</div>
+          <div className="wr-watch-grid">
+            {SPECIAL_WATCH.map((d) => (
+              <div key={d.name} className="wr-watch-item">
+                <div className="wr-watch-top">
+                  <span className="wr-watch-tag">BUY NOW</span>
+                  <span className="wr-watch-prob">{d.probability}% risk</span>
+                  <span className="wr-watch-sav">Save {d.savings}</span>
+                </div>
+                <div className="wr-watch-name">{d.name}</div>
+                <div className="wr-watch-reason">{d.reason}</div>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -198,6 +222,56 @@ export default function WeeklyReport() {
         .wr-kpi-green { border-top-color: #2e7d32; }
         .wr-kpi-blue { border-top-color: #1976d2; }
         .wr-kpi-amber { border-top-color: #f57c00; }
+
+        /* Special Watch */
+        .wr-watch {
+          background: #1a0808;
+          border: 2px solid #c62828;
+          border-radius: 10px;
+          padding: 18px 22px;
+          margin-bottom: 20px;
+        }
+        .wr-watch-title {
+          color: #ff5252;
+          font-size: 0.95rem;
+          font-weight: 800;
+          letter-spacing: 0.5px;
+          margin-bottom: 14px;
+          text-transform: uppercase;
+        }
+        .wr-watch-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+          gap: 12px;
+        }
+        .wr-watch-item {
+          background: rgba(198,40,40,0.12);
+          border: 1px solid rgba(198,40,40,0.35);
+          border-radius: 8px;
+          padding: 14px;
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+        .wr-watch-top {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+        .wr-watch-tag {
+          background: #c62828;
+          color: white;
+          font-size: 0.65rem;
+          font-weight: 800;
+          padding: 2px 8px;
+          border-radius: 20px;
+          letter-spacing: 0.8px;
+        }
+        .wr-watch-prob { color: #ff9090; font-size: 0.78rem; font-weight: 700; }
+        .wr-watch-sav  { color: #69f0ae; font-size: 0.78rem; font-weight: 700; margin-left: auto; }
+        .wr-watch-name { color: white; font-size: 0.9rem; font-weight: 700; }
+        .wr-watch-reason { color: rgba(255,255,255,0.6); font-size: 0.76rem; line-height: 1.4; }
 
         /* TWO COLUMNS */
         .wr-cols {

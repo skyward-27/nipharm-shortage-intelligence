@@ -2,6 +2,30 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchNews, fetchSignals, NewsArticle, Signal } from "../api";
 
+const SPECIAL_WATCH = [
+  {
+    name: "Amoxicillin 500mg Capsules",
+    probability: 78,
+    reason: "India API supply disruption · MHRA alert active · 3rd consecutive concession month",
+    action: "BUY NOW" as const,
+    savings: "22%",
+  },
+  {
+    name: "Amlodipine 10mg Tablets",
+    probability: 75,
+    reason: "GBP/INR stress +2.3% · Price +15% YoY · 2 active MHRA shortage publications",
+    action: "BUY NOW" as const,
+    savings: "20%",
+  },
+  {
+    name: "Levothyroxine 100mcg Tablets",
+    probability: 73,
+    reason: "Demand surge post-pandemic · India sole-source risk · Concession streak 4 months",
+    action: "BUY NOW" as const,
+    savings: "19%",
+  },
+];
+
 export default function Dashboard() {
   const navigate = useNavigate();
   const [news, setNews] = useState<NewsArticle[]>([]);
@@ -53,6 +77,31 @@ export default function Dashboard() {
         <p className="tagline">
           Save 15-25% on pharmaceutical costs through intelligent bulk coordination
         </p>
+      </div>
+
+      {/* Special Watch Flags */}
+      <div className="special-watch">
+        <div className="watch-header">
+          <span className="watch-icon">🚨</span>
+          <h2>Special Watch — Act Before Next Month</h2>
+          <Link to="/drugs" className="watch-view-all">View all drugs →</Link>
+        </div>
+        <div className="watch-grid">
+          {SPECIAL_WATCH.map((drug) => (
+            <div key={drug.name} className="watch-card">
+              <div className="watch-card-top">
+                <div className="watch-tag">BUY NOW</div>
+                <div className="watch-prob">{drug.probability}% shortage risk</div>
+              </div>
+              <div className="watch-name">{drug.name}</div>
+              <div className="watch-reason">{drug.reason}</div>
+              <div className="watch-footer">
+                <span className="watch-savings">Save {drug.savings} bulk discount</span>
+                <Link to="/calculator" className="watch-calc-btn">Calculate savings →</Link>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* KPI Cards */}
@@ -235,6 +284,130 @@ export default function Dashboard() {
         .error {
           background: #ffebee;
           color: #c62828;
+        }
+
+        /* Special Watch */
+        .special-watch {
+          background: #1a0a0a;
+          border: 2px solid #c62828;
+          border-radius: 14px;
+          padding: 24px 28px;
+          margin-bottom: 40px;
+          box-shadow: 0 4px 20px rgba(198, 40, 40, 0.25);
+        }
+
+        .watch-header {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin-bottom: 20px;
+          flex-wrap: wrap;
+        }
+
+        .watch-icon {
+          font-size: 1.6rem;
+          flex-shrink: 0;
+        }
+
+        .watch-header h2 {
+          margin: 0;
+          color: #ff5252;
+          font-size: 1.2rem;
+          font-weight: 800;
+          letter-spacing: 0.3px;
+          flex: 1;
+        }
+
+        .watch-view-all {
+          color: #ff9090;
+          text-decoration: none;
+          font-size: 0.85rem;
+          font-weight: 600;
+          white-space: nowrap;
+        }
+
+        .watch-view-all:hover {
+          color: #ff5252;
+        }
+
+        .watch-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 16px;
+        }
+
+        .watch-card {
+          background: rgba(198, 40, 40, 0.12);
+          border: 1px solid rgba(198, 40, 40, 0.4);
+          border-radius: 10px;
+          padding: 18px;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .watch-card-top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 8px;
+        }
+
+        .watch-tag {
+          background: #c62828;
+          color: white;
+          font-size: 0.7rem;
+          font-weight: 800;
+          padding: 3px 10px;
+          border-radius: 20px;
+          letter-spacing: 0.8px;
+        }
+
+        .watch-prob {
+          color: #ff9090;
+          font-size: 0.82rem;
+          font-weight: 700;
+        }
+
+        .watch-name {
+          color: white;
+          font-size: 1rem;
+          font-weight: 700;
+          line-height: 1.3;
+        }
+
+        .watch-reason {
+          color: rgba(255, 255, 255, 0.65);
+          font-size: 0.8rem;
+          line-height: 1.5;
+        }
+
+        .watch-footer {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 8px;
+          padding-top: 8px;
+          border-top: 1px solid rgba(198, 40, 40, 0.3);
+          flex-wrap: wrap;
+        }
+
+        .watch-savings {
+          color: #69f0ae;
+          font-size: 0.82rem;
+          font-weight: 700;
+        }
+
+        .watch-calc-btn {
+          color: #ff9090;
+          text-decoration: none;
+          font-size: 0.8rem;
+          font-weight: 600;
+          white-space: nowrap;
+        }
+
+        .watch-calc-btn:hover {
+          color: #ff5252;
         }
 
         /* KPI Grid */
