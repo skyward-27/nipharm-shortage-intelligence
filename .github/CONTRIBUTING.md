@@ -8,7 +8,7 @@ This is a private commercial project. These guidelines apply to internal contrib
 
 ### Branching
 
-- `main` — production branch, auto-deploys to Streamlit Cloud
+- `main` — production branch, auto-deploys to Vercel (frontend) and Railway (backend)
 - `dev` — integration branch for testing before merge to main
 - Feature branches: `feature/<description>` (e.g., `feature/script-21-substitution`)
 - Bugfix branches: `fix/<description>` (e.g., `fix/tariff-scraper-timeout`)

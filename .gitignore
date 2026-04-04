@@ -8,12 +8,13 @@ scrapers/data/molecule_master/
 scrapers/data/mhra/
 scrapers/data/ssp/
 
-# ── Keep these — needed by the Streamlit dashboard ───────────────────────────
+# ── Keep these — needed by the dashboard ─────────────────────────────────────
 !scrapers/data/model/panel_predictions.csv
 !scrapers/data/model/panel_feature_importance.csv
 !scrapers/data/model/panel_cv_metrics.txt
 !scrapers/data/concessions/cpe_archive_full.csv
 !scrapers/data/concessions/cpe_current_month.csv
+!scrapers/data/concessions/cpni_concessions.csv
 !scrapers/data/features/panel_feature_store.csv
 !scrapers/data/market_signals/brent_crude.csv
 !scrapers/data/market_signals/fx_rates_stress.csv
