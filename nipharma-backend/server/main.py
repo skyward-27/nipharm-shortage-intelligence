@@ -21,16 +21,28 @@ from news import get_pharma_news, get_supply_chain_news, search_news
 # Load environment variables
 load_dotenv()
 
-# Load ML model at startup
-MODEL_PATH = "../scrapers/data/model/panel_model.pkl"
+# Load ML model at startup (try multiple paths)
 ml_model = None
-try:
-    with open(MODEL_PATH, 'rb') as f:
-        ml_model = pickle.load(f)
-    print(f"✅ ML Model v4 loaded from {MODEL_PATH}")
-except Exception as e:
-    print(f"⚠️ Warning: Could not load ML model: {e}")
-    ml_model = None
+MODEL_PATHS = [
+    "../scrapers/data/model/panel_model.pkl",  # Local dev
+    "./model/panel_model.pkl",                  # Railway deployment
+    "/app/model/panel_model.pkl",               # Railway alternate
+]
+
+for MODEL_PATH in MODEL_PATHS:
+    try:
+        with open(MODEL_PATH, 'rb') as f:
+            ml_model = pickle.load(f)
+        print(f"✅ ML Model v4 loaded from {MODEL_PATH}")
+        break
+    except FileNotFoundError:
+        continue
+    except Exception as e:
+        print(f"⚠️ Error loading from {MODEL_PATH}: {e}")
+        continue
+
+if ml_model is None:
+    print("⚠️ Warning: ML model not found. /predict endpoint will return error until model is deployed.")
 
 # Initialize FastAPI app
 app = FastAPI(
