@@ -43,7 +43,6 @@ const FALLBACK_ARTICLES: NewsArticle[] = [
 export default function MarketNews() {
   const [news, setNews] = useState<NewsArticle[]>([]);
   const [loading, setLoading] = useState(true);
-  const [usingFallback, setUsingFallback] = useState(false);
 
   useEffect(() => {
     const loadNews = async () => {
@@ -52,10 +51,8 @@ export default function MarketNews() {
         const data = await fetchNews();
         const articles = Array.isArray(data) && data.length > 0 ? data : FALLBACK_ARTICLES;
         setNews(articles);
-        setUsingFallback(!Array.isArray(data) || data.length === 0);
       } catch {
         setNews(FALLBACK_ARTICLES);
-        setUsingFallback(true);
       } finally {
         setLoading(false);
       }
