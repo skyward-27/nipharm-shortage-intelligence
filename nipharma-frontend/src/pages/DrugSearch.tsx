@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 type RiskLevel = "HIGH" | "MEDIUM" | "LOW";
 type ActionTag = "BUY NOW" | "BUFFER" | "MONITOR";
@@ -72,10 +72,80 @@ const actionStyle = (a: ActionTag) => {
 
 const riskOrder: Record<RiskLevel, number> = { HIGH: 0, MEDIUM: 1, LOW: 2 };
 
+interface PredictionResult {
+  model_probability: number;
+  real_time_signals: number;
+  final_probability: number;
+  action: ActionTag;
+  confidence: string;
+  explanation: string;
+}
+
 export default function DrugSearch() {
   const [query, setQuery]         = useState("");
   const [filterRisk, setFilterRisk] = useState<RiskLevel | "ALL">("ALL");
   const [filterBNF, setFilterBNF]   = useState<BNFCategory | "ALL">("ALL");
+  const [predictions, setPredictions] = useState<Record<string, PredictionResult>>({});
+  const [loading, setLoading] = useState<Record<string, boolean>>({});
+
+  // Fetch prediction from /predict endpoint
+  const getPrediction = async (drug: Drug) => {
+    if (predictions[drug.name]) return; // Already have prediction
+
+    setLoading((prev) => ({ ...prev, [drug.name]: true }));
+    try {
+      const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:8000";
+      const response = await fetch(`${apiUrl}/predict`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          drug_name: drug.name,
+          price_gbp: 2.0,                      // Default estimate
+          floor_price_gbp: 1.5,                // Default estimate
+          floor_proximity: 0.75,               // Default estimate
+          within_15pct_of_floor: 0,
+          price_mom_pct: 5.0,                  // Default estimate
+          price_6mo_avg: 2.1,                  // Default estimate
+          price_yoy_pct: drug.priceTrend === "stable" ? 0 : 5,
+          on_concession: 0,
+          gbp_inr: 106.8,                      // Current rate estimate
+          fx_stress_score: 1.2,                // Default estimate
+          boe_bank_rate: 5.25,                 // Current rate
+          mhra_mention_count: drug.risk === "HIGH" ? 2 : drug.risk === "MEDIUM" ? 1 : 0,
+          us_shortage_flag: 0,
+          concession_streak: drug.risk === "HIGH" ? 3 : 1,
+          conc_last_6mo: Math.floor(drug.shortageProbability / 20),
+          pharmacy_over_tariff: 0.15,
+          pharmacy_unit_price: 2.0,
+          pharmacy_qty_ordered: 100,
+          items_mom_pct: drug.priceTrend === "stable" ? 0 : 8,
+          demand_spike: drug.risk === "HIGH" ? 1 : 0,
+          demand_trend_6mo: 2.5,
+          avg_items_3mo: 95,
+          cpe_price_pence: 200,
+          cpe_price_gbp: 2.0,
+          ni_price_gbp: 0.0,
+          price_vs_cpe_pct: 25,
+          cpe_conc_available: drug.risk === "HIGH" ? 1 : 0,
+          cpe_avail_6mo: drug.shortageProbability / 100,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setPredictions((prev) => ({ ...prev, [drug.name]: data }));
+      }
+    } catch (error) {
+      console.error("Prediction error:", error);
+    } finally {
+      setLoading((prev) => ({ ...prev, [drug.name]: false }));
+    }
+  };
+
+  // Fetch predictions for all visible drugs on mount
+  useEffect(() => {
+    filtered.forEach((drug) => getPrediction(drug));
+  }, [filtered]);
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
@@ -171,9 +241,12 @@ export default function DrugSearch() {
         ) : (
           filtered.map((drug) => {
             const rs  = riskStyle(drug.risk);
-            const action = getAction(drug.shortageProbability);
+            // Use ML prediction if available, otherwise fall back to hardcoded
+            const prediction = predictions[drug.name];
+            const action = prediction?.action || getAction(drug.shortageProbability);
             const as  = actionStyle(action);
             const bnf = bnfCategoryColor[drug.bnfCategory];
+            const isLoadingPrediction = loading[drug.name];
             return (
               <div key={drug.name}
                 style={{ background: "white", borderRadius: 12, padding: 20, border: "1px solid #e8ecf0", boxShadow: "0 2px 6px rgba(0,0,0,0.05)", transition: "box-shadow 0.2s, transform 0.2s" }}
@@ -191,7 +264,9 @@ export default function DrugSearch() {
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 5 }}>
                     <span style={{ ...rs, borderRadius: 20, padding: "3px 12px", fontSize: "0.75rem", fontWeight: 700, whiteSpace: "nowrap" }}>{drug.risk} RISK</span>
-                    <span style={{ ...as, borderRadius: 20, padding: "3px 12px", fontSize: "0.75rem", fontWeight: 800, whiteSpace: "nowrap" }}>{action}</span>
+                    <span style={{ ...as, borderRadius: 20, padding: "3px 12px", fontSize: "0.75rem", fontWeight: 800, whiteSpace: "nowrap", opacity: isLoadingPrediction ? 0.6 : 1 }}>
+                      {isLoadingPrediction ? "Loading..." : action}
+                    </span>
                   </div>
                 </div>
 
@@ -202,8 +277,10 @@ export default function DrugSearch() {
                     <div style={{ fontWeight: 700, color: "#2e7d32", fontSize: "1.2rem" }}>{drug.bulkDiscount}%</div>
                   </div>
                   <div style={statCell}>
-                    <div style={{ color: "#999", fontSize: "0.72rem", marginBottom: 2 }}>SHORTAGE PROB.</div>
-                    <div style={{ fontWeight: 700, fontSize: "1.2rem", color: probabilityColor(drug.shortageProbability) }}>{drug.shortageProbability}%</div>
+                    <div style={{ color: "#999", fontSize: "0.72rem", marginBottom: 2 }}>ML PREDICTION</div>
+                    <div style={{ fontWeight: 700, fontSize: "1.2rem", color: prediction ? probabilityColor(prediction.final_probability * 100) : probabilityColor(drug.shortageProbability) }}>
+                      {prediction ? `${(prediction.final_probability * 100).toFixed(0)}%` : `${drug.shortageProbability}%`}
+                    </div>
                   </div>
                   <div style={statCell}>
                     <div style={{ color: "#999", fontSize: "0.72rem", marginBottom: 2 }}>PRIMARY SOURCE</div>
@@ -219,17 +296,24 @@ export default function DrugSearch() {
 
                 {/* Progress bar */}
                 <div style={{ marginTop: 12 }}>
-                  <div style={{ fontSize: "0.72rem", color: "#999", marginBottom: 4 }}>Shortage Risk Meter</div>
+                  <div style={{ fontSize: "0.72rem", color: "#999", marginBottom: 4 }}>ML Risk Meter {prediction && <span style={{ color: "#666", fontSize: "0.65rem" }}>(Confidence: {prediction.confidence})</span>}</div>
                   <div style={{ height: 7, background: "#f0f0f0", borderRadius: 4, overflow: "hidden" }}>
-                    <div style={{ width: `${drug.shortageProbability}%`, height: "100%", background: probabilityColor(drug.shortageProbability), borderRadius: 4 }} />
+                    <div style={{ width: `${prediction ? prediction.final_probability * 100 : drug.shortageProbability}%`, height: "100%", background: prediction ? probabilityColor(prediction.final_probability * 100) : probabilityColor(drug.shortageProbability), borderRadius: 4 }} />
                   </div>
                 </div>
 
-                {/* Alternative drug */}
-                <div style={{ marginTop: 12, padding: "8px 12px", background: "#f0f4ff", borderRadius: 8, borderLeft: "3px solid #1976d2" }}>
-                  <div style={{ fontSize: "0.72rem", color: "#1976d2", fontWeight: 700, marginBottom: 2 }}>ALTERNATIVE IF UNAVAILABLE</div>
-                  <div style={{ fontSize: "0.85rem", color: "#333", fontWeight: 500 }}>{drug.alternative}</div>
-                </div>
+                {/* ML Explanation or Alternative drug */}
+                {prediction ? (
+                  <div style={{ marginTop: 12, padding: "8px 12px", background: "#f0f4ff", borderRadius: 8, borderLeft: "3px solid #1976d2" }}>
+                    <div style={{ fontSize: "0.72rem", color: "#1976d2", fontWeight: 700, marginBottom: 2 }}>AI INSIGHT</div>
+                    <div style={{ fontSize: "0.85rem", color: "#333", fontWeight: 500 }}>{prediction.explanation}</div>
+                  </div>
+                ) : (
+                  <div style={{ marginTop: 12, padding: "8px 12px", background: "#f0f4ff", borderRadius: 8, borderLeft: "3px solid #1976d2" }}>
+                    <div style={{ fontSize: "0.72rem", color: "#1976d2", fontWeight: 700, marginBottom: 2 }}>ALTERNATIVE IF UNAVAILABLE</div>
+                    <div style={{ fontSize: "0.85rem", color: "#333", fontWeight: 500 }}>{drug.alternative}</div>
+                  </div>
+                )}
               </div>
             );
           })
