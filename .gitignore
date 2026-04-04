@@ -53,3 +53,4 @@ download_log.json
 
 # ── Playwright / browser automation ──────────────────────────────────────────
 .playwright/
+CLAUDE.md
