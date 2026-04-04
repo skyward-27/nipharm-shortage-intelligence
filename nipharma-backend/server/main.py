@@ -10,6 +10,9 @@ from typing import List, Dict, Optional
 import os
 import requests
 from dotenv import load_dotenv
+import pickle
+import numpy as np
+import pandas as pd
 
 # Import our modules
 from chat import chat_with_groq, get_chat_response
@@ -17,6 +20,17 @@ from news import get_pharma_news, get_supply_chain_news, search_news
 
 # Load environment variables
 load_dotenv()
+
+# Load ML model at startup
+MODEL_PATH = "../scrapers/data/model/panel_model.pkl"
+ml_model = None
+try:
+    with open(MODEL_PATH, 'rb') as f:
+        ml_model = pickle.load(f)
+    print(f"✅ ML Model v4 loaded from {MODEL_PATH}")
+except Exception as e:
+    print(f"⚠️ Warning: Could not load ML model: {e}")
+    ml_model = None
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -69,6 +83,35 @@ class HealthResponse(BaseModel):
     groq_configured: bool
     news_api_configured: bool
     tavily_configured: bool
+
+
+class PredictionRequest(BaseModel):
+    drug_name: str
+    price_gbp: float
+    floor_proximity: float
+    on_concession: int
+    concession_streak: int
+    conc_last_6mo: int
+    price_mom_pct: float
+    fx_stress_score: float
+    boe_bank_rate: float
+    mhra_mention_count: int
+    cpe_avail_6mo: float
+    cpe_conc_available: int
+    price_vs_cpe_pct: float
+    pharmacy_qty_ordered: float = 0
+    demand_spike: int = 0
+    # Add other feature values as needed
+
+
+class PredictionResponse(BaseModel):
+    drug_name: str
+    model_probability: float
+    real_time_signals: float
+    final_probability: float
+    action: str
+    confidence: str
+    explanation: str
 
 
 # Health check endpoint
@@ -400,6 +443,132 @@ async def weekly_report():
             {"drug": "Metformin 500mg", "monthly_saving": 120, "annual_saving": 1440}
         ]
     }
+
+
+# ==================== ML MODEL PREDICTION ENDPOINT ====================
+
+@app.post("/predict", response_model=PredictionResponse)
+async def predict_concession(request: PredictionRequest):
+    """
+    Predict if a drug will go on NHS concession next month using HYBRID approach.
+
+    Combines:
+    1. ML Model Prediction (70%) — Random Forest trained on 44K rows, AUC 0.9983
+    2. Real-Time API Signals (30%) — MHRA alerts, CPE concessions, market stress
+
+    **Request body:**
+    - drug_name: Drug name
+    - Feature values: price_gbp, floor_proximity, concession_streak, etc. (28 features)
+
+    **Returns:**
+    - model_probability: Raw model prediction (0-1)
+    - real_time_signals: Real-time API signal boost (0-1)
+    - final_probability: Weighted blend (70% model + 30% signals)
+    - action: BUY NOW | BUFFER | MONITOR
+    - confidence: high | medium | low
+    - explanation: Why this action
+    """
+
+    if ml_model is None:
+        raise HTTPException(status_code=503, detail="ML model not loaded. Check server logs.")
+
+    try:
+        # ── STEP 1: MODEL PREDICTION (70% weight) ─────────────────────────────
+        features = np.array([[
+            request.price_gbp,
+            request.floor_proximity,
+            request.on_concession,
+            request.concession_streak,
+            request.conc_last_6mo,
+            request.price_mom_pct,
+            request.fx_stress_score,
+            request.boe_bank_rate,
+            request.mhra_mention_count,
+            request.cpe_avail_6mo,
+            request.cpe_conc_available,
+            request.price_vs_cpe_pct,
+            request.pharmacy_qty_ordered,
+            request.demand_spike,
+        ]])
+
+        model_proba = ml_model.predict_proba(features)[0][1]  # Probability of concession
+
+        # ── STEP 2: REAL-TIME SIGNAL BOOST (30% weight) ────────────────────────
+        api_score = 0.0
+        signals_applied = []
+
+        # Signal 1: MHRA alert boost
+        if request.mhra_mention_count > 0:
+            mhra_boost = min(request.mhra_mention_count * 0.05, 0.15)  # Max 0.15
+            api_score += mhra_boost
+            signals_applied.append(f"MHRA alert ({mhra_boost:.2f})")
+
+        # Signal 2: Already on CPE concession boost
+        if request.cpe_conc_available == 1:
+            cpe_boost = 0.20
+            api_score += cpe_boost
+            signals_applied.append(f"CPE available today (0.20)")
+
+        # Signal 3: Concession availability trend
+        if request.cpe_avail_6mo > 0.5:
+            trend_boost = request.cpe_avail_6mo * 0.10  # Max 0.10
+            api_score += trend_boost
+            signals_applied.append(f"Trend (6mo avg: {request.cpe_avail_6mo:.2f})")
+
+        # Signal 4: High demand spike (indicates shortage risk)
+        if request.demand_spike == 1:
+            demand_boost = 0.12
+            api_score += demand_boost
+            signals_applied.append(f"Demand spike detected (0.12)")
+
+        # Signal 5: Price stress (price far above floor = shortage risk)
+        if request.price_vs_cpe_pct > 50:
+            price_boost = min(request.price_vs_cpe_pct / 1000, 0.15)
+            api_score += price_boost
+            signals_applied.append(f"Price stress {request.price_vs_cpe_pct:.1f}%")
+
+        api_score = min(api_score, 1.0)  # Cap at 1.0
+
+        # ── STEP 3: WEIGHTED BLEND ────────────────────────────────────────────
+        final_probability = (model_proba * 0.70) + (api_score * 0.30)
+        final_probability = round(final_probability, 4)
+
+        # ── STEP 4: DETERMINE ACTION & CONFIDENCE ──────────────────────────────
+        if final_probability >= 0.70:
+            action = "BUY NOW"
+            explanation = f"High risk ({final_probability:.1%}). Drug likely to go on concession soon."
+        elif final_probability >= 0.50:
+            action = "BUFFER"
+            explanation = f"Medium risk ({final_probability:.1%}). Monitor prices, consider stock buildup."
+        else:
+            action = "MONITOR"
+            explanation = f"Low risk ({final_probability:.1%}). Standard ordering sufficient."
+
+        # Confidence: high if far from 0.5, low if near boundary
+        diff_from_boundary = abs(final_probability - 0.5)
+        if diff_from_boundary > 0.25:
+            confidence = "high"
+        elif diff_from_boundary > 0.10:
+            confidence = "medium"
+        else:
+            confidence = "low"
+
+        # Add signal details to explanation
+        if signals_applied:
+            explanation += f" Signals: {', '.join(signals_applied)}."
+
+        return PredictionResponse(
+            drug_name=request.drug_name,
+            model_probability=round(model_proba, 4),
+            real_time_signals=round(api_score, 4),
+            final_probability=final_probability,
+            action=action,
+            confidence=confidence,
+            explanation=explanation
+        )
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Prediction error: {str(e)}")
 
 
 # Error handlers

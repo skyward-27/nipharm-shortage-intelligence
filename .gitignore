@@ -8,20 +8,6 @@ scrapers/data/molecule_master/
 scrapers/data/mhra/
 scrapers/data/ssp/
 
-# ── Keep these — needed by the dashboard ─────────────────────────────────────
-!scrapers/data/model/panel_predictions.csv
-!scrapers/data/model/panel_feature_importance.csv
-!scrapers/data/model/panel_cv_metrics.txt
-!scrapers/data/concessions/cpe_archive_full.csv
-!scrapers/data/concessions/cpe_current_month.csv
-!scrapers/data/concessions/cpni_concessions.csv
-!scrapers/data/features/panel_feature_store.csv
-!scrapers/data/market_signals/brent_crude.csv
-!scrapers/data/market_signals/fx_rates_stress.csv
-!scrapers/data/market_signals/boe_inflation.csv
-!scrapers/data/market_signals/yfinance_monthly.csv
-!scrapers/data/openprescribing/pca_demand_features.csv
-
 # ── Python ────────────────────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
@@ -40,6 +26,23 @@ Thumbs.db
 
 # ── Secrets ───────────────────────────────────────────────────────────────────
 *.pkl
+
+# ── Keep these — needed by the dashboard & API ────────────────────────────────
+!scrapers/data/model/panel_model.pkl
+!nipharma-backend/model/panel_model.pkl
+!scrapers/data/model/panel_predictions.csv
+!scrapers/data/model/panel_feature_importance.csv
+!scrapers/data/model/panel_cv_metrics.txt
+!scrapers/data/concessions/cpe_archive_full.csv
+!scrapers/data/concessions/cpe_current_month.csv
+!scrapers/data/concessions/cpni_concessions.csv
+!scrapers/data/features/panel_feature_store.csv
+!scrapers/data/market_signals/brent_crude.csv
+!scrapers/data/market_signals/fx_rates_stress.csv
+!scrapers/data/market_signals/boe_inflation.csv
+!scrapers/data/market_signals/yfinance_monthly.csv
+!scrapers/data/openprescribing/pca_demand_features.csv
+
 pharmacy_invoices/
 
 # ── Invoice data — NEVER commit (contains real purchase prices) ───────────────
