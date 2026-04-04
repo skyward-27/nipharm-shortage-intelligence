@@ -87,21 +87,35 @@ class HealthResponse(BaseModel):
 
 class PredictionRequest(BaseModel):
     drug_name: str
+    # 28 features in exact model order
     price_gbp: float
+    floor_price_gbp: float
     floor_proximity: float
-    on_concession: int
-    concession_streak: int
-    conc_last_6mo: int
+    within_15pct_of_floor: int
     price_mom_pct: float
+    price_6mo_avg: float
+    price_yoy_pct: float
+    on_concession: int
+    gbp_inr: float
     fx_stress_score: float
     boe_bank_rate: float
     mhra_mention_count: int
-    cpe_avail_6mo: float
-    cpe_conc_available: int
-    price_vs_cpe_pct: float
-    pharmacy_qty_ordered: float = 0
+    us_shortage_flag: int = 0
+    concession_streak: int
+    conc_last_6mo: int
+    pharmacy_over_tariff: float = 0.0
+    pharmacy_unit_price: float = 0.0
+    pharmacy_qty_ordered: float = 0.0
+    items_mom_pct: float = 0.0
     demand_spike: int = 0
-    # Add other feature values as needed
+    demand_trend_6mo: float = 0.0
+    avg_items_3mo: float = 0.0
+    cpe_price_pence: float
+    cpe_price_gbp: float
+    ni_price_gbp: float = 0.0
+    price_vs_cpe_pct: float
+    cpe_conc_available: int
+    cpe_avail_6mo: float
 
 
 class PredictionResponse(BaseModel):
@@ -453,20 +467,24 @@ async def predict_concession(request: PredictionRequest):
     Predict if a drug will go on NHS concession next month using HYBRID approach.
 
     Combines:
-    1. ML Model Prediction (70%) — Random Forest trained on 44K rows, AUC 0.9983
+    1. ML Model Prediction (70%) — Random Forest trained on 44,074 rows, AUC 0.9983
     2. Real-Time API Signals (30%) — MHRA alerts, CPE concessions, market stress
 
-    **Request body:**
-    - drug_name: Drug name
-    - Feature values: price_gbp, floor_proximity, concession_streak, etc. (28 features)
+    **Request body (28 features):**
+    price_gbp, floor_price_gbp, floor_proximity, within_15pct_of_floor, price_mom_pct,
+    price_6mo_avg, price_yoy_pct, on_concession, gbp_inr, fx_stress_score, boe_bank_rate,
+    mhra_mention_count, us_shortage_flag, concession_streak, conc_last_6mo,
+    pharmacy_over_tariff, pharmacy_unit_price, pharmacy_qty_ordered, items_mom_pct,
+    demand_spike, demand_trend_6mo, avg_items_3mo, cpe_price_pence, cpe_price_gbp,
+    ni_price_gbp, price_vs_cpe_pct, cpe_conc_available, cpe_avail_6mo
 
     **Returns:**
-    - model_probability: Raw model prediction (0-1)
-    - real_time_signals: Real-time API signal boost (0-1)
+    - model_probability: Raw RF prediction (0-1)
+    - real_time_signals: Signal boost (0-1)
     - final_probability: Weighted blend (70% model + 30% signals)
-    - action: BUY NOW | BUFFER | MONITOR
-    - confidence: high | medium | low
-    - explanation: Why this action
+    - action: "BUY NOW" | "BUFFER" | "MONITOR"
+    - confidence: "high" | "medium" | "low"
+    - explanation: Human-readable reason
     """
 
     if ml_model is None:
@@ -474,21 +492,36 @@ async def predict_concession(request: PredictionRequest):
 
     try:
         # ── STEP 1: MODEL PREDICTION (70% weight) ─────────────────────────────
+        # All 28 features in exact training order
         features = np.array([[
             request.price_gbp,
+            request.floor_price_gbp,
             request.floor_proximity,
-            request.on_concession,
-            request.concession_streak,
-            request.conc_last_6mo,
+            request.within_15pct_of_floor,
             request.price_mom_pct,
+            request.price_6mo_avg,
+            request.price_yoy_pct,
+            request.on_concession,
+            request.gbp_inr,
             request.fx_stress_score,
             request.boe_bank_rate,
             request.mhra_mention_count,
-            request.cpe_avail_6mo,
-            request.cpe_conc_available,
-            request.price_vs_cpe_pct,
+            request.us_shortage_flag,
+            request.concession_streak,
+            request.conc_last_6mo,
+            request.pharmacy_over_tariff,
+            request.pharmacy_unit_price,
             request.pharmacy_qty_ordered,
+            request.items_mom_pct,
             request.demand_spike,
+            request.demand_trend_6mo,
+            request.avg_items_3mo,
+            request.cpe_price_pence,
+            request.cpe_price_gbp,
+            request.ni_price_gbp,
+            request.price_vs_cpe_pct,
+            request.cpe_conc_available,
+            request.cpe_avail_6mo,
         ]])
 
         model_proba = ml_model.predict_proba(features)[0][1]  # Probability of concession
