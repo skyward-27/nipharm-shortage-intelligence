@@ -54,3 +54,14 @@ download_log.json
 # ── Playwright / browser automation ──────────────────────────────────────────
 .playwright/
 CLAUDE.md
+
+# ── Chrome session extraction (script 28) — NEVER commit ────────────────────────
+scrapers/28_extract_chrome_cookies.py
+scrapers/27_login_aah_extract.py
+scrapers/29_direct_login_aah.py
+NPT_Invoice_Data/sessions/
+sessions/
+*_session.json
+aah_session.json
+alliance_session.json
+chrome_cookies.json
