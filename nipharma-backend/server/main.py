@@ -118,7 +118,7 @@ class HealthResponse(BaseModel):
 
 class PredictionRequest(BaseModel):
     drug_name: str
-    # 28 features in exact model order
+    # Core pricing features (required)
     price_gbp: float
     floor_price_gbp: float
     floor_proximity: float
@@ -137,16 +137,29 @@ class PredictionRequest(BaseModel):
     pharmacy_over_tariff: float = 0.0
     pharmacy_unit_price: float = 0.0
     pharmacy_qty_ordered: float = 0.0
-    items_mom_pct: float = 0.0
-    demand_spike: int = 0
-    demand_trend_6mo: float = 0.0
-    avg_items_3mo: float = 0.0
     cpe_price_pence: float
     cpe_price_gbp: float
     ni_price_gbp: float = 0.0
     price_vs_cpe_pct: float
     cpe_conc_available: int
     cpe_avail_6mo: float
+    # v5 new features (optional — computed or defaulted if not supplied)
+    bsn_same_section_conc_count: int = 0
+    drug_on_ssp: int = 0
+    drug_age_years: float = 5.0
+    ni_india_pharma_stress: int = 0
+    best_historic_price: float = 0.0
+    price_vs_best_pct: float = 0.0
+    wholesale_margin_pct: float = 0.0
+    pca_items: float = 0.0
+    pca_items_mom_pct: float = 0.0
+    pca_demand_spike: int = 0
+    pca_demand_trend_6mo: float = 0.0
+    pca_nic_gbp: float = 0.0
+    # Legacy fields kept for backward compatibility (mapped to pca equivalents)
+    items_mom_pct: float = 0.0
+    demand_spike: int = 0
+    demand_trend_6mo: float = 0.0
 
 
 class PredictionResponse(BaseModel):
@@ -567,8 +580,20 @@ async def predict_concession(request: PredictionRequest):
 
     try:
         # ── STEP 1: MODEL PREDICTION (70% weight) ─────────────────────────────
-        # All 28 features in exact training order
+        # All 39 features in exact training order (v5 model)
+        import math
+        now_month = datetime.now().month
+        month_sin = math.sin(2 * math.pi * now_month / 12)
+        month_cos = math.cos(2 * math.pi * now_month / 12)
+        is_winter = 1 if now_month in [11, 12, 1, 2] else 0
+
+        # Map legacy PCA fields to new names (backward compat)
+        pca_items_mom = request.pca_items_mom_pct or request.items_mom_pct
+        pca_spike = request.pca_demand_spike or request.demand_spike
+        pca_trend = request.pca_demand_trend_6mo or request.demand_trend_6mo
+
         features = np.array([[
+            # 0-7: core pricing
             request.price_gbp,
             request.floor_price_gbp,
             request.floor_proximity,
@@ -577,6 +602,7 @@ async def predict_concession(request: PredictionRequest):
             request.price_6mo_avg,
             request.price_yoy_pct,
             request.on_concession,
+            # 8-14: market signals
             request.gbp_inr,
             request.fx_stress_score,
             request.boe_bank_rate,
@@ -584,19 +610,35 @@ async def predict_concession(request: PredictionRequest):
             request.us_shortage_flag,
             request.concession_streak,
             request.conc_last_6mo,
+            # 15-17: pharmacy pricing
             request.pharmacy_over_tariff,
             request.pharmacy_unit_price,
             request.pharmacy_qty_ordered,
-            request.items_mom_pct,
-            request.demand_spike,
-            request.demand_trend_6mo,
-            request.avg_items_3mo,
+            # 18-23: CPE features
             request.cpe_price_pence,
             request.cpe_price_gbp,
             request.ni_price_gbp,
             request.price_vs_cpe_pct,
             request.cpe_conc_available,
             request.cpe_avail_6mo,
+            # 24-30: v5 new features
+            request.bsn_same_section_conc_count,
+            month_sin,
+            month_cos,
+            is_winter,
+            request.drug_on_ssp,
+            request.drug_age_years,
+            request.ni_india_pharma_stress,
+            # 31-33: wholesale price features
+            request.best_historic_price,
+            request.price_vs_best_pct,
+            request.wholesale_margin_pct,
+            # 34-38: PCA demand features (fixed BNF mapping)
+            request.pca_items,
+            pca_items_mom,
+            pca_spike,
+            pca_trend,
+            request.pca_nic_gbp,
         ]])
 
         model_proba = ml_model.predict_proba(features)[0][1]  # Probability of concession
@@ -624,7 +666,7 @@ async def predict_concession(request: PredictionRequest):
             signals_applied.append(f"Trend (6mo avg: {request.cpe_avail_6mo:.2f})")
 
         # Signal 4: High demand spike (indicates shortage risk)
-        if request.demand_spike == 1:
+        if pca_spike == 1:
             demand_boost = 0.12
             api_score += demand_boost
             signals_applied.append(f"Demand spike detected (0.12)")

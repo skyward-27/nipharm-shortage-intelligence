@@ -142,11 +142,6 @@ export default function DrugSearch() {
     }
   };
 
-  // Fetch predictions for all visible drugs on mount
-  useEffect(() => {
-    filtered.forEach((drug) => getPrediction(drug));
-  }, [filtered]);
-
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
     return DRUG_DATABASE
@@ -158,6 +153,11 @@ export default function DrugSearch() {
       })
       .sort((a, b) => riskOrder[a.risk] - riskOrder[b.risk]);
   }, [query, filterRisk, filterBNF]);
+
+  // Fetch predictions for all visible drugs on mount
+  useEffect(() => {
+    filtered.forEach((drug) => getPrediction(drug));
+  }, [filtered]);
 
   const riskStyle = (risk: RiskLevel) => {
     if (risk === "HIGH")   return { background: "#ffebee", color: "#c62828", border: "1px solid #ef9a9a" };
