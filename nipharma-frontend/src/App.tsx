@@ -56,11 +56,11 @@ export default function App() {
               <NavLink to="/" end className={({ isActive }) => isActive ? "nav-link nav-link-active" : "nav-link"} onClick={() => setNavOpen(false)}>
                 Dashboard
               </NavLink>
-              <NavLink to="/recommendations" className={({ isActive }) => isActive ? "nav-link nav-link-active" : "nav-link"} onClick={() => setNavOpen(false)}>
-                Buying Recs
-              </NavLink>
               <NavLink to="/drugs" className={({ isActive }) => isActive ? "nav-link nav-link-active" : "nav-link"} onClick={() => setNavOpen(false)}>
                 Risk Finder
+              </NavLink>
+              <NavLink to="/recommendations" className={({ isActive }) => isActive ? "nav-link nav-link-active" : "nav-link"} onClick={() => setNavOpen(false)}>
+                Buying Recs
               </NavLink>
               <NavLink to="/alerts" className={({ isActive }) => isActive ? "nav-link nav-link-alerts nav-link-active" : "nav-link nav-link-alerts"} onClick={() => setNavOpen(false)}>
                 🚨 Alerts
