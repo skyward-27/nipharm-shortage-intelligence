@@ -33,6 +33,8 @@ Thumbs.db
 !nipharma-backend/model/panel_model.pkl
 !nipharma-backend/model/panel_model_xgb.pkl
 !nipharma-backend/model/buying_recommendations.csv
+!nipharma-backend/model/mhra_alerts.csv
+!nipharma-backend/model/panel_feature_cols.json
 !scrapers/data/model/panel_predictions.csv
 !scrapers/data/model/panel_feature_importance.csv
 !scrapers/data/model/panel_cv_metrics.txt

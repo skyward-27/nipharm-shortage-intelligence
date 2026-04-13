@@ -55,9 +55,11 @@ MODEL_OUT      = f"{DATA_ROOT}/model/panel_model.pkl"
 MODEL_OUT_XGB  = f"{DATA_ROOT}/model/panel_model_xgb.pkl"
 BACKEND_MODEL  = f"{BASE_DIR}/nipharma-backend/model/panel_model.pkl"
 BACKEND_MODEL_XGB = f"{BASE_DIR}/nipharma-backend/model/panel_model_xgb.pkl"
-IMPORTANCE_OUT = f"{DATA_ROOT}/model/panel_feature_importance.csv"
-SHAP_OUT       = f"{DATA_ROOT}/model/shap_importance.csv"
-METRICS_OUT    = f"{DATA_ROOT}/model/panel_cv_metrics.txt"
+IMPORTANCE_OUT   = f"{DATA_ROOT}/model/panel_feature_importance.csv"
+SHAP_OUT         = f"{DATA_ROOT}/model/shap_importance.csv"
+METRICS_OUT      = f"{DATA_ROOT}/model/panel_cv_metrics.txt"
+FEATURE_COLS_OUT = f"{DATA_ROOT}/model/panel_feature_cols.json"
+BACKEND_FEATURE_COLS = f"{BASE_DIR}/nipharma-backend/model/panel_feature_cols.json"
 
 # ── BANNER ────────────────────────────────────────────────────────────────────
 print("=" * 70)
@@ -453,7 +455,18 @@ print(f"\n{'='*70}")
 print("SAVING ARTIFACTS")
 print(f"{'='*70}")
 
+import json
 os.makedirs(os.path.dirname(MODEL_OUT), exist_ok=True)
+
+# ── CRITICAL: Save feature column order to JSON ───────────────────────────────
+# The /predict endpoint in main.py loads this to build the feature vector
+# dynamically — prevents silent mismatch bugs if features are reordered/added.
+with open(FEATURE_COLS_OUT, 'w') as f:
+    json.dump(feature_cols, f, indent=2)
+os.makedirs(os.path.dirname(BACKEND_FEATURE_COLS), exist_ok=True)
+shutil.copy2(FEATURE_COLS_OUT, BACKEND_FEATURE_COLS)
+print(f"  Feature cols JSON:  {FEATURE_COLS_OUT}  ({len(feature_cols)} features)")
+print(f"  Copied to backend:  {BACKEND_FEATURE_COLS}")
 
 # Save calibrated model (this is what the API uses)
 with open(MODEL_OUT, 'wb') as f:

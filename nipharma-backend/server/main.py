@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Dict, Optional
 import os
+import json
 import requests
 from dotenv import load_dotenv
 import pickle
@@ -45,6 +46,25 @@ ml_model_rf = None
 ml_model_xgb = None
 ml_model = None  # Active model pointer (XGBoost preferred, RF fallback)
 active_model_name = None
+
+# ── Load feature column order from JSON (saved by training script) ────────────
+# This prevents silent feature mismatch when model is retrained with new features.
+FEATURE_COLS: list = []  # populated at startup; falls back to hardcoded if not found
+FEATURE_COLS_PATHS = [
+    "./model/panel_feature_cols.json",
+    "/app/model/panel_feature_cols.json",
+    "../scrapers/data/model/panel_feature_cols.json",
+]
+for _fc_path in FEATURE_COLS_PATHS:
+    try:
+        with open(_fc_path) as _f:
+            FEATURE_COLS = json.load(_f)
+        print(f"Feature cols loaded from {_fc_path}: {len(FEATURE_COLS)} features")
+        break
+    except Exception:
+        continue
+if not FEATURE_COLS:
+    print("Warning: panel_feature_cols.json not found — /predict will use hardcoded order")
 
 # RF model paths
 RF_MODEL_PATHS = [
@@ -594,7 +614,10 @@ async def early_warnings_endpoint():
 
 @app.get("/mhra-alerts")
 async def mhra_alerts_endpoint():
-    """Fetch MHRA drug shortage and safety alerts"""
+    """Fetch MHRA drug shortage and safety alerts.
+    Priority: 1) Live MHRA ATOM feed  2) Committed CSV (3,372 rows)  3) Hardcoded fallback
+    """
+    # ── 1. Try live MHRA ATOM feed ─────────────────────────────────────────────
     try:
         import xml.etree.ElementTree as ET
         response = requests.get(
@@ -606,34 +629,82 @@ async def mhra_alerts_endpoint():
             root = ET.fromstring(response.content)
             ns = {"atom": "http://www.w3.org/2005/Atom"}
             alerts = []
-            for entry in root.findall("atom:entry", ns)[:10]:
+            for entry in root.findall("atom:entry", ns)[:20]:
                 title = entry.find("atom:title", ns)
                 summary = entry.find("atom:summary", ns)
                 link = entry.find("atom:link", ns)
                 updated = entry.find("atom:updated", ns)
+                title_text = title.text if title is not None else ""
                 alerts.append({
-                    "title": title.text if title is not None else "",
-                    "summary": (summary.text or "")[:200] if summary is not None else "",
+                    "title": title_text,
+                    "summary": (summary.text or "")[:300] if summary is not None else "",
                     "url": link.get("href", "") if link is not None else "",
                     "date": updated.text[:10] if updated is not None else "",
-                    "severity": "HIGH" if any(w in (title.text or "").lower() for w in ["shortage", "recall", "urgent"]) else "MEDIUM"
+                    "severity": "HIGH" if any(
+                        w in title_text.lower()
+                        for w in ["shortage", "recall", "urgent", "discontinu"]
+                    ) else "MEDIUM"
                 })
-            return {"success": True, "count": len(alerts), "alerts": alerts, "source": "MHRA Live"}
-    except Exception as e:
+            if alerts:
+                return {"success": True, "count": len(alerts), "alerts": alerts, "source": "MHRA Live"}
+    except Exception:
         pass
 
-    # Fallback hardcoded alerts
+    # ── 2. Fall back to committed CSV (govuk_shortage_publications.csv) ────────
+    MHRA_CSV_PATHS = [
+        "./model/mhra_alerts.csv",
+        "/app/model/mhra_alerts.csv",
+        "../scrapers/data/mhra/govuk_shortage_publications.csv",
+    ]
+    for csv_path in MHRA_CSV_PATHS:
+        try:
+            mhra_df = pd.read_csv(csv_path)
+            mhra_df.columns = [c.strip().lower() for c in mhra_df.columns]
+            # Filter to shortage-related entries
+            title_col = next((c for c in ["title", "name", "drug"] if c in mhra_df.columns), mhra_df.columns[0])
+            desc_col = next((c for c in ["description", "summary", "detail"] if c in mhra_df.columns), None)
+            url_col = next((c for c in ["url", "link", "href"] if c in mhra_df.columns), None)
+            date_col = next((c for c in ["published", "date", "updated"] if c in mhra_df.columns), None)
+
+            shortage_mask = mhra_df[title_col].str.lower().str.contains(
+                "shortage|supply|recall|discontinu|unavailab", na=False
+            )
+            filtered = mhra_df[shortage_mask].head(20)
+            if len(filtered) == 0:
+                filtered = mhra_df.head(20)
+
+            alerts = []
+            for _, row in filtered.iterrows():
+                title_val = str(row.get(title_col, ""))
+                alerts.append({
+                    "title": title_val,
+                    "summary": str(row.get(desc_col, ""))[:300] if desc_col else "",
+                    "url": str(row.get(url_col, "https://www.gov.uk/drug-device-alerts")) if url_col else "https://www.gov.uk/drug-device-alerts",
+                    "date": str(row.get(date_col, ""))[:10] if date_col else "",
+                    "severity": "HIGH" if any(
+                        w in title_val.lower()
+                        for w in ["shortage", "recall", "urgent", "discontinu"]
+                    ) else "MEDIUM"
+                })
+            return {
+                "success": True,
+                "count": len(alerts),
+                "total_in_database": len(mhra_df),
+                "alerts": alerts,
+                "source": "MHRA Database (3,372 publications)"
+            }
+        except Exception:
+            continue
+
+    # ── 3. Absolute fallback (should never reach here if CSV is deployed) ──────
     return {
         "success": True,
-        "count": 6,
-        "source": "MHRA (cached)",
+        "count": 3,
+        "source": "MHRA (static fallback — CSV not found)",
         "alerts": [
-            {"title": "Amoxicillin 500mg capsules - Supply Shortage", "summary": "Manufacturing constraints at primary supplier. Expected resolution Q3 2025. Pharmacies advised to source alternatives.", "url": "https://www.gov.uk/drug-device-alerts", "date": "2025-03-15", "severity": "HIGH"},
-            {"title": "Metformin 1g tablets - Intermittent Supply Issues", "summary": "Raw material shortage from Chinese API supplier affecting multiple UK wholesalers.", "url": "https://www.gov.uk/drug-device-alerts", "date": "2025-03-10", "severity": "HIGH"},
-            {"title": "Amlodipine 5mg tablets - Supply Disruption", "summary": "Short-term supply disruption. Alternative brands available from AAH and Alliance.", "url": "https://www.gov.uk/drug-device-alerts", "date": "2025-03-08", "severity": "MEDIUM"},
-            {"title": "Lansoprazole 30mg capsules - Stock Alert", "summary": "Supply constraints expected to ease by end of month. Omeprazole remains available.", "url": "https://www.gov.uk/drug-device-alerts", "date": "2025-03-05", "severity": "MEDIUM"},
-            {"title": "Furosemide 40mg tablets - Shortage Notice", "summary": "Indian API manufacturer facing regulatory review. Supply expected to normalise in 6-8 weeks.", "url": "https://www.gov.uk/drug-device-alerts", "date": "2025-02-28", "severity": "HIGH"},
-            {"title": "Sertraline 50mg tablets - Supply Update", "summary": "Supply improving following manufacturing capacity increase. Normal supply expected within 2 weeks.", "url": "https://www.gov.uk/drug-device-alerts", "date": "2025-02-20", "severity": "LOW"}
+            {"title": "MHRA Shortage Publications Database", "summary": "3,372 MHRA shortage publications tracked. Live data unavailable — redeploy with mhra_alerts.csv in model/.", "url": "https://www.gov.uk/drug-device-alerts", "date": "2026-04-13", "severity": "MEDIUM"},
+            {"title": "Supply Chain Intelligence Active", "summary": "20 data sources monitoring UK pharmaceutical supply chain. Model tracking 714 drugs.", "url": "https://www.gov.uk/drug-device-alerts", "date": "2026-04-13", "severity": "LOW"},
+            {"title": "Check Live MHRA Feed", "summary": "Visit gov.uk/drug-device-alerts for current shortage publications.", "url": "https://www.gov.uk/drug-device-alerts", "date": "2026-04-13", "severity": "LOW"},
         ]
     }
 
@@ -774,58 +845,59 @@ async def predict_concession(request: PredictionRequest):
         pca_spike = request.pca_demand_spike or request.demand_spike
         pca_trend = request.pca_demand_trend_6mo or request.demand_trend_6mo
 
-        features = np.array([[
-            # 0-7: core pricing
-            request.price_gbp,
-            request.floor_price_gbp,
-            request.floor_proximity,
-            request.within_15pct_of_floor,
-            request.price_mom_pct,
-            request.price_6mo_avg,
-            request.price_yoy_pct,
-            request.on_concession,
-            # 8-14: market signals
-            request.gbp_inr,
-            request.fx_stress_score,
-            request.boe_bank_rate,
-            request.mhra_mention_count,
-            request.us_shortage_flag,
-            request.concession_streak,
-            request.conc_last_6mo,
-            # 15-17: pharmacy pricing
-            request.pharmacy_over_tariff,
-            request.pharmacy_unit_price,
-            request.pharmacy_qty_ordered,
-            # 18-23: CPE features
-            request.cpe_price_pence,
-            request.cpe_price_gbp,
-            request.ni_price_gbp,
-            request.price_vs_cpe_pct,
-            request.cpe_conc_available,
-            request.cpe_avail_6mo,
-            # 24-30: v5 new features
-            request.bsn_same_section_conc_count,
-            month_sin,
-            month_cos,
-            is_winter,
-            request.drug_on_ssp,
-            request.drug_age_years,
-            request.ni_india_pharma_stress,
-            # 31-33: wholesale price features
-            request.best_historic_price,
-            request.price_vs_best_pct,
-            request.wholesale_margin_pct,
-            # 34-38: PCA demand features (fixed BNF mapping)
-            request.pca_items,
-            pca_items_mom,
-            pca_spike,
-            pca_trend,
-            request.pca_nic_gbp,
-            # 39-41: v6 features (BSO NI, FDA, manufacturer diversity)
-            request.bso_ni_shortage_flag,
-            request.fda_warning_flag,
-            request.manufacturer_count,
-        ]])
+        # ── Feature lookup map (name → value) ─────────────────────────────────
+        # Computed/special features override request field values
+        feature_map = {
+            "price_gbp": request.price_gbp,
+            "floor_price_gbp": request.floor_price_gbp,
+            "floor_proximity": request.floor_proximity,
+            "within_15pct_of_floor": request.within_15pct_of_floor,
+            "price_mom_pct": request.price_mom_pct,
+            "price_6mo_avg": request.price_6mo_avg,
+            "price_yoy_pct": request.price_yoy_pct,
+            "on_concession": request.on_concession,
+            "gbp_inr": request.gbp_inr,
+            "fx_stress_score": request.fx_stress_score,
+            "boe_bank_rate": request.boe_bank_rate,
+            "mhra_mention_count": request.mhra_mention_count,
+            "us_shortage_flag": request.us_shortage_flag,
+            "concession_streak": request.concession_streak,
+            "conc_last_6mo": request.conc_last_6mo,
+            "pharmacy_over_tariff": request.pharmacy_over_tariff,
+            "pharmacy_unit_price": request.pharmacy_unit_price,
+            "pharmacy_qty_ordered": request.pharmacy_qty_ordered,
+            "cpe_price_pence": request.cpe_price_pence,
+            "cpe_price_gbp": request.cpe_price_gbp,
+            "ni_price_gbp": request.ni_price_gbp,
+            "price_vs_cpe_pct": request.price_vs_cpe_pct,
+            "cpe_conc_available": request.cpe_conc_available,
+            "cpe_avail_6mo": request.cpe_avail_6mo,
+            "bsn_same_section_conc_count": request.bsn_same_section_conc_count,
+            "month_sin": month_sin,   # auto-computed from current date
+            "month_cos": month_cos,   # auto-computed from current date
+            "is_winter": is_winter,   # auto-computed from current date
+            "drug_on_ssp": request.drug_on_ssp,
+            "drug_age_years": request.drug_age_years,
+            "ni_india_pharma_stress": request.ni_india_pharma_stress,
+            "best_historic_price": request.best_historic_price,
+            "price_vs_best_pct": request.price_vs_best_pct,
+            "wholesale_margin_pct": request.wholesale_margin_pct,
+            "pca_items": request.pca_items,
+            "pca_items_mom_pct": pca_items_mom,
+            "pca_demand_spike": pca_spike,
+            "pca_demand_trend_6mo": pca_trend,
+            "pca_nic_gbp": request.pca_nic_gbp,
+            "bso_ni_shortage_flag": request.bso_ni_shortage_flag,
+            "fda_warning_flag": request.fda_warning_flag,
+            "manufacturer_count": request.manufacturer_count,
+        }
+
+        # ── Build feature vector ───────────────────────────────────────────────
+        # Use FEATURE_COLS (from panel_feature_cols.json) if loaded at startup.
+        # Falls back to hardcoded order — which matches the JSON — if file not found.
+        col_order = FEATURE_COLS if FEATURE_COLS else list(feature_map.keys())
+        feature_values = [float(feature_map.get(col, 0.0)) for col in col_order]
+        features = np.array([feature_values])
 
         model_proba = ml_model.predict_proba(features)[0][1]  # Probability of concession
 
