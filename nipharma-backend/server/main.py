@@ -428,94 +428,157 @@ async def concessions_endpoint():
     }
 
 
+def _safe_serialize(records: list) -> list:
+    """
+    Convert a list of dicts (from df.to_dict('records')) to JSON-safe Python types.
+    Handles pd.NA, np.nan, np.int64, np.float64, np.bool_ across all pandas versions.
+    """
+    import math
+    safe = []
+    for row in records:
+        clean = {}
+        for k, v in row.items():
+            # pd.NA, np.nan, float nan → None
+            try:
+                if pd.isna(v):
+                    clean[k] = None
+                    continue
+            except (TypeError, ValueError):
+                pass
+            # numpy scalar types → native Python
+            if hasattr(v, "item"):
+                try:
+                    v = v.item()
+                except Exception:
+                    v = str(v)
+            # float inf / -inf → None
+            if isinstance(v, float) and (math.isinf(v) or math.isnan(v)):
+                clean[k] = None
+            else:
+                clean[k] = v
+        safe.append(clean)
+    return safe
+
+
 @app.get("/recommendations")
 async def recommendations_endpoint():
     """
     Get wholesale buying recommendations for pharmacists.
     Reads from buying_recommendations.csv and returns structured recommendations.
     """
-    REC_PATHS = [
-        "./model/buying_recommendations.csv",           # Railway (committed)
-        "/app/model/buying_recommendations.csv",        # Railway alternate
-        "../scrapers/data/pharmacy_invoices/buying_recommendations.csv",  # Local dev (full)
-    ]
-    for path in REC_PATHS:
-        try:
-            df = pd.read_csv(path)
-            break
-        except Exception:
-            continue
-    else:
+    try:
+        REC_PATHS = [
+            "./model/buying_recommendations.csv",           # Railway (committed)
+            "/app/model/buying_recommendations.csv",        # Railway alternate
+            "../scrapers/data/pharmacy_invoices/buying_recommendations.csv",  # Local dev (full)
+        ]
+        df = None
+        loaded_path = None
+        for path in REC_PATHS:
+            try:
+                df = pd.read_csv(path)
+                loaded_path = path
+                break
+            except Exception:
+                continue
+
+        if df is None:
+            return {
+                "success": False,
+                "summary": {
+                    "total_drugs": 0,
+                    "bulk_buy_count": 0,
+                    "buy_as_you_go_count": 0,
+                    "hold_buying_count": 0,
+                    "avg_margin_gbp": 0.0,
+                },
+                "top_opportunities": [],
+                "hold_warnings": [],
+                "recommendations": [],
+                "message": "Recommendations data file not available",
+            }
+
+        # Normalise column names to lowercase for safety
+        df.columns = [c.strip().lower() for c in df.columns]
+
+        # Determine recommendation column name
+        rec_col = None
+        for candidate in ["recommendation", "action", "rec", "buying_recommendation"]:
+            if candidate in df.columns:
+                rec_col = candidate
+                break
+        if rec_col is None:
+            rec_col = df.columns[0]  # fallback to first column
+
+        # Determine margin column name
+        margin_col = None
+        for candidate in ["margin_gbp", "margin", "saving_gbp", "savings_gbp"]:
+            if candidate in df.columns:
+                margin_col = candidate
+                break
+
+        # Build summary — all counts use Python int, margin uses pd.isna()
+        total = int(len(df))
+        if rec_col in df.columns:
+            rec_upper = df[rec_col].astype(str).str.strip().str.upper()
+            bulk = int((rec_upper == "BULK BUY").sum())
+            buy_go = int((rec_upper == "BUY AS YOU GO").sum())
+            hold = int((rec_upper == "HOLD BUYING").sum())
+        else:
+            bulk = buy_go = hold = 0
+
+        if margin_col and margin_col in df.columns:
+            _margin_series = pd.to_numeric(df[margin_col], errors="coerce").dropna()
+            _margin_mean = _margin_series.mean() if len(_margin_series) > 0 else 0.0
+            avg_margin = round(float(_margin_mean), 2) if not pd.isna(_margin_mean) else 0.0
+        else:
+            avg_margin = 0.0
+
+        # Top 20 BULK BUY opportunities by margin
+        top_opps = []
+        if rec_col in df.columns and margin_col and margin_col in df.columns:
+            bulk_mask = df[rec_col].astype(str).str.strip().str.upper() == "BULK BUY"
+            bulk_df = df[bulk_mask].copy()
+            bulk_df[margin_col] = pd.to_numeric(bulk_df[margin_col], errors="coerce")
+            bulk_df = bulk_df.nlargest(20, margin_col)
+            top_opps = _safe_serialize(bulk_df.to_dict("records"))
+
+        # Hold warnings
+        hold_warnings = []
+        if rec_col in df.columns:
+            hold_mask = df[rec_col].astype(str).str.strip().str.upper() == "HOLD BUYING"
+            hold_df = df[hold_mask].copy()
+            hold_warnings = _safe_serialize(hold_df.to_dict("records"))
+
+        # Full list (first 50)
+        recs = _safe_serialize(df.head(50).to_dict("records"))
+
+        return {
+            "success": True,
+            "loaded_from": loaded_path,
+            "summary": {
+                "total_drugs": total,
+                "bulk_buy_count": bulk,
+                "buy_as_you_go_count": buy_go,
+                "hold_buying_count": hold,
+                "avg_margin_gbp": avg_margin,
+            },
+            "top_opportunities": top_opps,
+            "hold_warnings": hold_warnings,
+            "recommendations": recs,
+        }
+
+    except Exception as e:
+        import traceback
         return {
             "success": False,
-            "summary": {
-                "total_drugs": 0,
-                "bulk_buy_count": 0,
-                "buy_as_you_go_count": 0,
-                "hold_buying_count": 0,
-                "avg_margin_gbp": 0.0,
-            },
+            "error": str(e),
+            "traceback": traceback.format_exc(),
+            "summary": {"total_drugs": 0, "bulk_buy_count": 0, "buy_as_you_go_count": 0, "hold_buying_count": 0, "avg_margin_gbp": 0.0},
             "top_opportunities": [],
             "hold_warnings": [],
             "recommendations": [],
-            "message": "Recommendations data file not available",
         }
-
-    # Normalise column names to lowercase for safety
-    df.columns = [c.strip().lower() for c in df.columns]
-
-    # Determine recommendation column name
-    rec_col = None
-    for candidate in ["recommendation", "action", "rec", "buying_recommendation"]:
-        if candidate in df.columns:
-            rec_col = candidate
-            break
-    if rec_col is None:
-        rec_col = "recommendation"  # fallback
-
-    # Determine margin column name
-    margin_col = None
-    for candidate in ["margin_gbp", "margin", "saving_gbp", "savings_gbp"]:
-        if candidate in df.columns:
-            margin_col = candidate
-            break
-
-    # Build summary
-    total = len(df)
-    bulk = int((df[rec_col].str.upper() == "BULK BUY").sum()) if rec_col in df.columns else 0
-    buy_go = int((df[rec_col].str.upper() == "BUY AS YOU GO").sum()) if rec_col in df.columns else 0
-    hold = int((df[rec_col].str.upper() == "HOLD BUYING").sum()) if rec_col in df.columns else 0
-    _margin_mean = df[margin_col].dropna().mean() if margin_col and margin_col in df.columns else 0.0
-    avg_margin = round(float(_margin_mean), 2) if _margin_mean == _margin_mean else 0.0  # NaN-safe
-
-    # Top 20 BULK BUY opportunities by margin
-    top_opps = []
-    if rec_col in df.columns and margin_col and margin_col in df.columns:
-        bulk_df = df[df[rec_col].str.upper() == "BULK BUY"].nlargest(20, margin_col)
-        top_opps = bulk_df.where(bulk_df.notna(), None).to_dict("records")
-
-    # Hold warnings
-    hold_warnings = []
-    if rec_col in df.columns:
-        hold_df = df[df[rec_col].str.upper() == "HOLD BUYING"]
-        hold_warnings = hold_df.where(hold_df.notna(), None).to_dict("records")
-
-    # Full list (first 50)
-    recs = df.head(50).where(df.head(50).notna(), None).to_dict("records")
-
-    return {
-        "success": True,
-        "summary": {
-            "total_drugs": total,
-            "bulk_buy_count": bulk,
-            "buy_as_you_go_count": buy_go,
-            "hold_buying_count": hold,
-            "avg_margin_gbp": avg_margin,
-        },
-        "top_opportunities": top_opps,
-        "hold_warnings": hold_warnings,
-        "recommendations": recs,
-    }
 
 
 @app.get("/top-drugs")
