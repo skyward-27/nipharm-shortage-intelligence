@@ -100,34 +100,55 @@ export default function DrugSearch() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           drug_name: drug.name,
-          price_gbp: 2.0,                      // Default estimate
-          floor_price_gbp: 1.5,                // Default estimate
-          floor_proximity: 0.75,               // Default estimate
+          // Price signals
+          price_gbp: 2.0,
+          floor_price_gbp: 1.5,
+          floor_proximity: 0.75,
           within_15pct_of_floor: 0,
-          price_mom_pct: 5.0,                  // Default estimate
-          price_6mo_avg: 2.1,                  // Default estimate
-          price_yoy_pct: drug.priceTrend === "stable" ? 0 : 5,
+          price_mom_pct: drug.priceTrend === "stable" ? 0 : 5.0,
+          price_6mo_avg: 2.1,
+          price_yoy_pct: drug.priceTrend === "stable" ? 0 : 8,
           on_concession: 0,
-          gbp_inr: 106.8,                      // Current rate estimate
-          fx_stress_score: 1.2,                // Default estimate
-          boe_bank_rate: 5.25,                 // Current rate
+          // Market signals
+          gbp_inr: 106.8,
+          fx_stress_score: 1.2,
+          boe_bank_rate: 5.25,
           mhra_mention_count: drug.risk === "HIGH" ? 2 : drug.risk === "MEDIUM" ? 1 : 0,
           us_shortage_flag: 0,
-          concession_streak: drug.risk === "HIGH" ? 3 : 1,
-          conc_last_6mo: Math.floor(drug.shortageProbability / 20),
+          // Concession history (proxied from risk tier)
+          concession_streak: drug.risk === "HIGH" ? 3 : drug.risk === "MEDIUM" ? 1 : 0,
+          conc_last_6mo: drug.risk === "HIGH" ? 4 : drug.risk === "MEDIUM" ? 2 : 0,
+          // Pharmacy signals
           pharmacy_over_tariff: 0.15,
           pharmacy_unit_price: 2.0,
           pharmacy_qty_ordered: 100,
-          items_mom_pct: drug.priceTrend === "stable" ? 0 : 8,
-          demand_spike: drug.risk === "HIGH" ? 1 : 0,
-          demand_trend_6mo: 2.5,
-          avg_items_3mo: 95,
+          // CPE signals
           cpe_price_pence: 200,
           cpe_price_gbp: 2.0,
           ni_price_gbp: 0.0,
           price_vs_cpe_pct: 25,
           cpe_conc_available: drug.risk === "HIGH" ? 1 : 0,
-          cpe_avail_6mo: drug.shortageProbability / 100,
+          cpe_avail_6mo: drug.risk === "HIGH" ? 4 : drug.risk === "MEDIUM" ? 2 : 0,
+          // BSN neighbouring drug cascade
+          bsn_same_section_conc_count: drug.risk === "HIGH" ? 2 : 0,
+          // Drug metadata
+          drug_on_ssp: 0,
+          drug_age_years: 10,
+          ni_india_pharma_stress: drug.source === "India" ? 0.6 : 0.2,
+          // Historic price
+          best_historic_price: 1.8,
+          price_vs_best_pct: 10,
+          wholesale_margin_pct: 0,
+          // PCA demand (correct field names for v6 model)
+          pca_items: 5000,
+          pca_items_mom_pct: drug.priceTrend === "stable" ? 0 : 5,
+          pca_demand_spike: drug.risk === "HIGH" ? 1 : 0,
+          pca_demand_trend_6mo: drug.risk === "HIGH" ? 0.05 : 0.01,
+          pca_nic_gbp: 8000,
+          // v6 new features
+          bso_ni_shortage_flag: 0,
+          fda_warning_flag: drug.source === "India" || drug.source === "China" ? 0 : 0,
+          manufacturer_count: drug.risk === "HIGH" ? 2 : 4,
         }),
       });
 
