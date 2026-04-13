@@ -1,6 +1,6 @@
-# Nipharma — Stock Intelligence Platform
+# NiPharma — Stock Intelligence Platform
 
-A real-time pharmaceutical shortage prediction platform for UK community pharmacies. Uses ensemble ML (Random Forest + XGBoost, AUC 0.9983) combined with live market signals to predict NHS drug concessions before they happen — enabling pharmacists to stock at tariff price before prices surge.
+A real-time pharmaceutical shortage prediction platform for UK community pharmacies. Uses ensemble ML (Random Forest + XGBoost, AUC 0.9986) combined with live market signals to predict NHS drug concessions before they happen — enabling pharmacists to stock at tariff price before prices surge.
 
 **Live Site:** https://nipharm-shortage-intelligence.vercel.app
 
@@ -8,11 +8,13 @@ A real-time pharmaceutical shortage prediction platform for UK community pharmac
 
 ## Key Features
 
-- **Drug Search** — 26 essential medicines with BUY NOW/BUFFER/MONITOR recommendations
-- **Shortage Intelligence** — ML predictions updated monthly + real-time signal boosting
-- **Market News** — Curated pharmaceutical industry updates
-- **Chatbot** — AI-powered Q&A with local CPE concession lookup, MHRA cross-reference, NI context, and live web search (Groq llama-3.3-70b-versatile + Tavily)
-- **Analytics Dashboard** — Supply chain trends, MHRA alerts, top shortage risks
+- **Dashboard** — Bloomberg-style two-column layout: top 6 bulk-buy opportunities (ranked by margin vs NHS Tariff) + live KPIs, pharma news, and quick actions
+- **Risk Finder** — ML-powered shortage risk predictions for 758 drugs (renamed from "Drug Search")
+- **Buying Recs** — Top 5 premium ranked cards with colour-coded savings badges + hold warnings
+- **AI Chat** — Floating popup (💬 bottom-right), available on every page — Groq llama-3.3-70b + Tavily + local CPE/MHRA lookup
+- **Shortage Intelligence** — ML predictions updated monthly + real-time signal boosting (70% ML + 30% live signals)
+- **Market News** — Live RSS feeds from MHRA, NHS England, BBC Health, PharmaTimes (no API key)
+- **Alerts** — MHRA shortage publications with real-time scraping
 - **Weekly Report** — Newspaper-style intelligence brief (printable)
 - **Tariff Calculator** — NHS price lookup + bulk discount estimator
 
@@ -45,59 +47,61 @@ POST   /contact              # Contact form
 
 ## ML Model
 
-### v4 (Deployed)
+### v5 — DEPLOYED ✅ (April 2026)
 
-**Random Forest Classification**
-- Training data: 44,074 rows (758 drugs x 60 months historical)
-- Performance: AUC 0.9983, 5-fold stratified cross-validation
-- Features: 28 (pricing, concessions, FX/commodity signals, MHRA mentions, demand spikes)
-- Note: v4 uses StratifiedKFold with shuffle, which introduces temporal data leakage. True AUC is likely 0.92-0.96.
+**Calibrated Random Forest + XGBoost Ensemble**
+- Training data: 44,074 rows (758 drugs × 60 months, Jan 2021 – Dec 2025)
+- Features: **42** (removed 2 constant columns from 44)
+- Positive label rate: 14.7% (drug goes on concession next month)
 
-### v5 (Ready to Train)
+**Validation (temporal walk-forward, no leakage):**
+| Metric | Score |
+|--------|-------|
+| Walk-forward CV AUC (5 folds, 1-month gap) | **0.9972 ± 0.0008** |
+| Hold-out test AUC — RF calibrated (Jul–Dec 2025) | **0.9986** |
+| Hold-out test AUC — XGBoost (Jul–Dec 2025) | **0.9987** |
+| XGBoost CV mean AUC | 0.9977 ± 0.0008 |
+
+**Top Features (permutation importance on hold-out test):**
+1. `concession_streak` — consecutive months on concession (0.0184 AUC drop)
+2. `cpe_avail_6mo` — CPE concession availability last 6 months (0.0129)
+3. `conc_last_6mo` — concession events last 6 months (0.0109)
+4. `floor_proximity` — price distance from tariff floor (0.0002)
+5. `pca_items_mom_pct` — prescribing demand MoM change (0.0001)
+
+**Top Features (Gini, Random Forest):**
+1. `cpe_avail_6mo` — 23.2%
+2. `conc_last_6mo` — 20.8%
+3. `cpe_conc_available` — 10.3%
+4. `concession_streak` — 9.5%
+5. `on_concession` — 9.3%
 
 **Key upgrades over v4:**
 
-| Improvement | v4 | v5 |
+| Improvement | v4 | v5 (deployed) |
 |-------------|----|----|
-| Cross-validation | StratifiedKFold (shuffle=True, data leakage) | **TimeSeriesSplit** (no leakage) |
-| Algorithms | Random Forest only | **Random Forest + XGBoost** benchmark |
-| Explainability | Feature importance only | **SHAP** per-drug explainability |
-| Calibration | Raw probabilities | **Isotonic calibration** (trustworthy confidence scores) |
-| Test set | None (all data in CV) | **Hold-out test set** (last 6 months) |
-| Features | 28 | **43** (15 new features) |
+| Cross-validation | StratifiedKFold (temporal leakage ⚠️) | **TimeSeriesSplit + 1-month gap** (clean) |
+| Algorithms | Random Forest only | **RF (deployed) + XGBoost (benchmark)** |
+| Calibration | Raw probabilities | **CalibratedClassifierCV (isotonic)** |
+| Test set | None | **Hold-out: last 6 months, never in CV** |
+| Features | 28 | **42** |
+| New signals | — | Cascade, seasonal, SSP, drug age, India pharma stress |
 
-**7 New Feature Groups (v5):**
-
-1. **Neighbouring drug cascade** (`bsn_same_section_conc_count`) — If drugs in the same BNF class go on concession, risk rises for related drugs
-2. **Seasonal encoding** (`month_sin`, `month_cos`) — Cyclical month features capturing winter shortage patterns
-3. **Winter flag** (`is_winter`) — Nov-Feb respiratory drug demand spike signal
-4. **SSP integration** (`drug_on_ssp`) — Serious Shortage Protocol status from NHSBSA SSP register
-5. **Drug age** (`drug_age_years`) — Older generics carry higher shortage risk
-6. **Indian pharma stress** (`ni_india_pharma_stress`) — Composite stress score from 10 NSE pharma stock tickers
-7. **Wholesale price intelligence** (`best_historic_price`, `price_vs_best_pct`, `wholesale_margin_pct`) — Real pharmacy invoice-derived price signals
-
-**Hybrid Prediction Scoring**
+**Hybrid Prediction Scoring (unchanged)**
 - 70% ML probability + 30% real-time signal boost
-- Real-time signals: MHRA alerts, CPE availability, demand spikes, price stress, stock shortages
-
-**Top Features by Importance (v4)**
-1. CPE availability 6mo (29.6%)
-2. Concession history last 6mo (18.7%)
-3. Concession streak (12.1%)
-4. On concession (9.9%)
-5. Price change MoM (5.8%)
+- Real-time signals: MHRA alerts, CPE availability, demand spikes, price stress
 
 ### Model Version History
 
-| Version | AUC | Rows | Key Change |
-|---------|-----|------|------------|
-| v1 (flat) | 0.891 | 758 | One row per drug |
-| v2 (panel) | 0.971 | 14,764 | Added streak + time series |
-| v3 | 0.982 | 14,764 | Added Brent crude + Sun Pharma |
-| v4 (deployed) | 0.9983* | 44,074 | Added CPE price features + hybrid /predict |
-| **v5 (ready)** | **TBD** | **44,074+** | **Temporal CV fix + XGBoost + SHAP + 15 new features** |
+| Version | CV AUC | Hold-out AUC | Rows | Key Change |
+|---------|--------|--------------|------|------------|
+| v1 (flat) | 0.891 | — | 758 | One row per drug |
+| v2 (panel) | 0.971 | — | 14,764 | Added streak + time series |
+| v3 | 0.982 | — | 14,764 | Added Brent crude + Sun Pharma |
+| v4 | 0.9983* | — | 44,074 | CPE price features + hybrid /predict |
+| **v5 ✅ LIVE** | **0.9972** | **0.9986** | **44,074** | **TimeSeriesSplit + calibration + 42 features** |
 
-*v4 AUC inflated by temporal leakage in StratifiedKFold
+*v4 AUC inflated by temporal leakage in StratifiedKFold. v5 CV is clean.
 
 ---
 
@@ -228,27 +232,35 @@ TAVILY_API_KEY=xxx
 ## Project Structure
 
 ```
-nipharma-frontend/          React app (8 pages, TypeScript)
+nipharma-frontend/          React 18 app (TypeScript, Vercel)
   src/pages/
-    Dashboard.tsx           5 KPI cards + news feed
-    DrugSearch.tsx          26 drugs + ML predictions
-    Analytics.tsx           Supply chain charts + top 10 risks
-    Chat.tsx                Groq LLM + Tavily search + local CPE/MHRA lookup
+    Dashboard.tsx           Bloomberg two-column: bulk buy cards + KPIs/news sidebar
+    DrugSearch.tsx          Risk Finder — 758 drugs + ML shortage predictions
+    Recommendations.tsx     Top 5 premium buying recs cards
+    Analytics.tsx           Supply chain charts + top 10 shortage risks
+    Chat.tsx                Groq LLM + Tavily + local CPE/MHRA lookup
     Alerts.tsx              MHRA shortage publications
-    MarketNews.tsx          Pharmaceutical news aggregator
+    MarketNews.tsx          Live RSS pharma news (MHRA, NHS, BBC, PharmaTimes)
     WeeklyReport.tsx        Intelligence brief (printable)
-    Contact.tsx             Contact form
+    Calculator.tsx          NHS tariff + bulk discount estimator
+    Contact.tsx             Contact / demo booking form
+  src/components/
+    ChatWidget.tsx          Floating AI chat popup (FAB, site-wide)
   vercel.json               SPA rewrite catch-all
 
-nipharma-backend/           FastAPI backend (v5)
-  server/main.py            9 endpoints (health, predict, signals, concessions, chat, news, alerts, report, contact)
-  requirements.txt          FastAPI, Pydantic, scikit-learn, pandas, numpy
-  model/panel_model.pkl     Trained ML model (5.0 MB)
+nipharma-backend/           FastAPI backend (Railway)
+  server/main.py            9 endpoints (health, predict, top-drugs, recommendations,
+                            signals, concessions, chat, news, alerts, report, contact)
+  server/news.py            Free RSS aggregator (no API key — MHRA, NHS, BBC, PharmaTimes)
+  requirements.txt          FastAPI, scikit-learn, xgboost, pandas, numpy, cachetools
+  model/panel_model.pkl     v5 RF calibrated (27 MB, AUC 0.9986)
+  model/panel_model_xgb.pkl v5 XGBoost calibrated (1.4 MB, AUC 0.9987)
+  model/panel_feature_cols.json  42-feature schema (auto-loaded by /predict)
 
-scrapers/                   Data collection scripts (local only, 20+ scripts)
-  11_feature_store_builder.py  v5 feature store (43 features)
-  12_ml_model_panel.py         RF + XGBoost + SHAP training
-  data/                        Feature store + model artifacts (not on GitHub)
+scrapers/                   Data collection (local only, not on GitHub)
+  11_feature_store_builder.py  v5 feature store builder (42 features)
+  12_ml_model_panel.py         RF + XGBoost + calibration training (v5)
+  data/                        All CSVs — feature store, model artifacts (not pushed)
 ```
 
 ---
@@ -266,27 +278,37 @@ scrapers/                   Data collection scripts (local only, 20+ scripts)
 
 ## Roadmap
 
-### v4 (Deployed)
+### v4 (Superseded)
 - ML model with 28 features (added CPE prices)
 - Hybrid /predict endpoint (70% ML + 30% signals)
 - Full frontend + backend integration
 
-### v5 (Ready to Train)
-- TimeSeriesSplit cross-validation (fixes temporal data leakage)
-- XGBoost benchmark alongside Random Forest
-- SHAP per-drug explainability
-- Isotonic probability calibration
-- 15 new features (43 total): seasonal patterns, drug cascade, SSP, manufacturer count, Indian pharma stress, wholesale price intelligence
-- 6 new data scrapers: MHRA manufacturers, NI prescribing, NI shortages, FDA warning letters, wholesale prices, expanded Indian pharma tickers
-- Chatbot upgrade: llama-3.3-70b-versatile + local CPE/MHRA lookup + NI context
-- New endpoints: /signals (FX rates), /concessions (CPE data)
-- 6-hour TTL caching on /predict
+### v5 ✅ DEPLOYED — April 2026
+- **TimeSeriesSplit CV** with 1-month gap (fixes temporal data leakage from v4)
+- **XGBoost benchmark** trained alongside Random Forest — XGB wins by 0.0001 AUC
+- **Isotonic probability calibration** via CalibratedClassifierCV
+- **Hold-out test set** (last 6 months, Jul–Dec 2025) — never seen in CV
+- **42 features** (up from 28): added cascade, seasonal sin/cos, SSP flag, drug age, India pharma composite
+- CV AUC 0.9972 ± 0.0008 | Hold-out AUC 0.9986 (RF) / 0.9987 (XGB)
+- Models deployed: `panel_model.pkl` (RF calibrated) + `panel_model_xgb.pkl` (XGBoost)
+- Feature schema: `panel_feature_cols.json` (42 features, backend auto-loads)
+
+### Frontend — April 2026
+- Bloomberg-style two-column dashboard (bulk buy left, KPIs + news right)
+- "Drug Search" renamed to **Risk Finder**, moved to 2nd position in nav
+- Active nav link highlighting (blue underline)
+- Top 5 premium ranked Buying Recs cards with savings badges
+- AI Chat as floating popup (💬 FAB), available site-wide
+- News: switched from NewsAPI (expired 401) to free RSS feeds — MHRA, NHS, BBC, PharmaTimes
+- Fixed `/recommendations` HTTP 500 (JSON serialisation of pd.NA / np.nan)
+- Fixed blank NHS Tariff + Our Price columns in Recs and Dashboard cards
 
 ### v6 (Planned)
-- Deploy v5 model to Railway
-- Fix vmpp-to-BNF mapping (improve PCA demand signal quality)
+- Swap deployed model from RF to XGBoost (0.0001 AUC gain)
+- Fix vmpp-to-BNF mapping (improve PCA demand signal — currently 1.4% importance)
 - Real-time AAH Hub wholesale price integration
 - Automated monthly retraining pipeline
+- SHAP per-drug explainability (blocked by numba 0.53 / llvmlite incompatibility)
 
 ---
 
@@ -319,4 +341,4 @@ scrapers/                   Data collection scripts (local only, 20+ scripts)
 
 ---
 
-**Last Updated:** April 2026 | **Model:** v4 deployed (AUC 0.9983), v5 ready to train | **Status:** Production
+**Last Updated:** April 2026 | **Model:** v5 deployed — RF AUC 0.9986, XGB AUC 0.9987 (hold-out, temporal CV) | **Status:** Production
