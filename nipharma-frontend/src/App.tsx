@@ -9,6 +9,7 @@ import Calculator from "./pages/Calculator";
 import DrugSearch from "./pages/DrugSearch";
 import Alerts from "./pages/Alerts";
 import WeeklyReport from "./pages/WeeklyReport";
+import Recommendations from "./pages/Recommendations";
 import { healthCheck } from "./api";
 
 export default function App() {
@@ -63,6 +64,9 @@ export default function App() {
               <Link to="/analytics" className="nav-link" onClick={() => setNavOpen(false)}>
                 Analytics
               </Link>
+              <Link to="/recommendations" className="nav-link" onClick={() => setNavOpen(false)}>
+                Recommendations
+              </Link>
               <Link to="/calculator" className="nav-link" onClick={() => setNavOpen(false)}>
                 💰 Calculator
               </Link>
@@ -111,6 +115,7 @@ export default function App() {
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/calculator" element={<Calculator />} />
             <Route path="/drugs" element={<DrugSearch />} />
+            <Route path="/recommendations" element={<Recommendations />} />
             <Route path="/alerts" element={<Alerts />} />
             <Route path="/report" element={<WeeklyReport />} />
             <Route path="*" element={<NotFound />} />

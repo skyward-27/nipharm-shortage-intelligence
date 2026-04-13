@@ -28,10 +28,11 @@ RUN:
 
 OUTPUT:
   data/model/panel_model.pkl         <- CalibratedClassifierCV(RF) — DEPLOYED
+  data/model/panel_model_xgb.pkl     <- CalibratedClassifierCV(XGB) — DEPLOYED
   data/model/panel_feature_importance.csv
   data/model/panel_cv_metrics.txt
   data/model/shap_importance.csv
-  (also copied to nipharma-backend/model/panel_model.pkl)
+  (also copied to nipharma-backend/model/)
 """
 
 import pandas as pd
@@ -51,7 +52,9 @@ BASE_DIR  = "/Users/chaitanyawarhade/Documents/NPT Stock Inteligance Unit"
 DATA_ROOT = f"{BASE_DIR}/scrapers/data"
 TRAIN_FILE     = f"{DATA_ROOT}/features/panel_feature_store_train.csv"
 MODEL_OUT      = f"{DATA_ROOT}/model/panel_model.pkl"
+MODEL_OUT_XGB  = f"{DATA_ROOT}/model/panel_model_xgb.pkl"
 BACKEND_MODEL  = f"{BASE_DIR}/nipharma-backend/model/panel_model.pkl"
+BACKEND_MODEL_XGB = f"{BASE_DIR}/nipharma-backend/model/panel_model_xgb.pkl"
 IMPORTANCE_OUT = f"{DATA_ROOT}/model/panel_feature_importance.csv"
 SHAP_OUT       = f"{DATA_ROOT}/model/shap_importance.csv"
 METRICS_OUT    = f"{DATA_ROOT}/model/panel_cv_metrics.txt"
@@ -363,14 +366,29 @@ try:
     idx     = rng.choice(len(X_trainval), size=n_shap, replace=False)
     X_shap  = X_trainval.iloc[idx]
 
-    explainer   = shap.TreeExplainer(rf_base)
-    shap_values = explainer.shap_values(X_shap)
+    # FIX: CalibratedClassifierCV wraps the RF and causes SHAP TreeExplainer
+    # to fail with "Per-column arrays must each be 1-dimensional".
+    # Solution: run SHAP on the base (uncalibrated) RF estimator directly.
+    shap_model = rf_base  # Use the base RF, not calibrated_rf
+    print(f"  Using base RF for SHAP (not calibrated wrapper)")
 
-    # For binary classification shap_values may be list [neg, pos]; take pos class
-    if isinstance(shap_values, list):
-        shap_vals_pos = shap_values[1]
-    else:
-        shap_vals_pos = shap_values
+    try:
+        # Primary method: TreeExplainer on base RF
+        explainer   = shap.TreeExplainer(shap_model)
+        shap_values = explainer.shap_values(X_shap)
+
+        # For binary classification shap_values may be list [neg, pos]; take pos class
+        if isinstance(shap_values, list):
+            shap_vals_pos = shap_values[1]
+        else:
+            shap_vals_pos = shap_values
+
+    except Exception as e_tree:
+        # Fallback: use shap.Explainer with predict function (model-agnostic)
+        print(f"  TreeExplainer failed ({e_tree}), falling back to Explainer...")
+        explainer   = shap.Explainer(shap_model.predict, X_shap)
+        shap_obj    = explainer(X_shap)
+        shap_vals_pos = shap_obj.values
 
     mean_abs_shap = np.abs(shap_vals_pos).mean(axis=0)
     shap_df = pd.DataFrame({
@@ -407,6 +425,37 @@ print(f"  Model saved:        {MODEL_OUT}")
 os.makedirs(os.path.dirname(BACKEND_MODEL), exist_ok=True)
 shutil.copy2(MODEL_OUT, BACKEND_MODEL)
 print(f"  Copied to backend:  {BACKEND_MODEL}")
+
+# Save calibrated XGBoost model (if available)
+if xgb_available and xgb_cv_aucs:
+    print(f"\n  Training calibrated XGBoost for deployment...")
+    # xgb_final was already trained on full train+val above (hold-out eval section)
+    calibrated_xgb = CalibratedClassifierCV(
+        estimator=xgb_final,
+        method='isotonic',
+        cv=5
+    )
+    calibrated_xgb.fit(X_trainval, y_trainval)
+
+    with open(MODEL_OUT_XGB, 'wb') as f:
+        pickle.dump(calibrated_xgb, f)
+    print(f"  XGB model saved:    {MODEL_OUT_XGB}")
+
+    os.makedirs(os.path.dirname(BACKEND_MODEL_XGB), exist_ok=True)
+    shutil.copy2(MODEL_OUT_XGB, BACKEND_MODEL_XGB)
+    print(f"  Copied to backend:  {BACKEND_MODEL_XGB}")
+
+    # Print head-to-head comparison on test set
+    xgb_test_proba_cal = calibrated_xgb.predict_proba(X_test)[:, 1]
+    xgb_test_auc_cal = roc_auc_score(y_test, xgb_test_proba_cal)
+    print(f"\n  === MODEL COMPARISON (hold-out test) ===")
+    print(f"  RF  (calibrated) AUC: {test_auc_cal:.4f}")
+    print(f"  XGB (calibrated) AUC: {xgb_test_auc_cal:.4f}")
+    print(f"  XGB (raw)        AUC: {xgb_test_auc:.4f}")
+    if xgb_test_auc_cal > test_auc_cal:
+        print(f"  --> XGBoost wins by {xgb_test_auc_cal - test_auc_cal:.4f}")
+    else:
+        print(f"  --> Random Forest wins by {test_auc_cal - xgb_test_auc_cal:.4f}")
 
 # Save feature importance (Gini + SHAP if available)
 importance_df.to_csv(IMPORTANCE_OUT, index=False)
@@ -445,8 +494,13 @@ with open(METRICS_OUT, 'w') as f:
     f.write(f"  RF (raw) AUC:    {test_auc_raw:.4f}\n")
     f.write(f"  RF (calib) AUC:  {test_auc_cal:.4f}\n")
     if xgb_available and xgb_cv_aucs:
-        f.write(f"  XGB AUC:         {xgb_test_auc:.4f}\n")
-    f.write(f"\nSaved Model: CalibratedClassifierCV(RandomForest, isotonic)\n\n")
+        f.write(f"  XGB (raw) AUC:   {xgb_test_auc:.4f}\n")
+        f.write(f"  XGB (calib) AUC: {xgb_test_auc_cal:.4f}\n")
+    f.write(f"\nSaved Models:\n")
+    f.write(f"  RF:  CalibratedClassifierCV(RandomForest, isotonic) -> panel_model.pkl\n")
+    if xgb_available and xgb_cv_aucs:
+        f.write(f"  XGB: CalibratedClassifierCV(XGBoost, isotonic)    -> panel_model_xgb.pkl\n")
+    f.write(f"\n")
     f.write(f"Top 20 Features (Gini importance):\n")
     for _, row in importance_df.head(20).iterrows():
         f.write(f"  {row['feature']:35s}  {row['gini_importance']:.4f}\n")
@@ -471,14 +525,17 @@ print(f"  Hold-out AUC:     {test_auc_cal:.4f}  (last 6 months, never seen in CV
 if xgb_available and xgb_cv_aucs:
     print(f"  XGB benchmark:    {xgb_mean:.4f} (CV)  /  {xgb_test_auc:.4f} (test)")
 print(f"\nOUTPUT FILES:")
-print(f"  Model:            {MODEL_OUT}")
-print(f"  Backend copy:     {BACKEND_MODEL}")
+print(f"  RF Model:         {MODEL_OUT}")
+print(f"  RF Backend copy:  {BACKEND_MODEL}")
+if xgb_available and xgb_cv_aucs:
+    print(f"  XGB Model:        {MODEL_OUT_XGB}")
+    print(f"  XGB Backend copy: {BACKEND_MODEL_XGB}")
 print(f"  Feature imports:  {IMPORTANCE_OUT}")
 if shap_df is not None:
     print(f"  SHAP values:      {SHAP_OUT}")
 print(f"  Metrics:          {METRICS_OUT}")
 print(f"\nNEXT STEPS:")
-print(f"  1. git add nipharma-backend/model/panel_model.pkl && git push")
-print(f"  2. Railway will auto-deploy the updated pkl")
-print(f"  3. Verify /predict endpoint returns sensible risk scores")
+print(f"  1. git add nipharma-backend/model/panel_model.pkl nipharma-backend/model/panel_model_xgb.pkl && git push")
+print(f"  2. Railway will auto-deploy — backend uses XGBoost if available, RF fallback")
+print(f"  3. Verify /predict endpoint returns sensible risk scores + model_used field")
 print(f"\n{'='*70}")

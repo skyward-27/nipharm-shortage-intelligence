@@ -40,28 +40,63 @@ from news import get_pharma_news, get_supply_chain_news, search_news
 # Load environment variables
 load_dotenv()
 
-# Load ML model at startup (try multiple paths)
-ml_model = None
-MODEL_PATHS = [
+# Load ML models at startup (try multiple paths)
+ml_model_rf = None
+ml_model_xgb = None
+ml_model = None  # Active model pointer (XGBoost preferred, RF fallback)
+active_model_name = None
+
+# RF model paths
+RF_MODEL_PATHS = [
     "../scrapers/data/model/panel_model.pkl",  # Local dev
     "./model/panel_model.pkl",                  # Railway deployment
     "/app/model/panel_model.pkl",               # Railway alternate
 ]
 
-for MODEL_PATH in MODEL_PATHS:
+# XGBoost model paths
+XGB_MODEL_PATHS = [
+    "../scrapers/data/model/panel_model_xgb.pkl",  # Local dev
+    "./model/panel_model_xgb.pkl",                  # Railway deployment
+    "/app/model/panel_model_xgb.pkl",               # Railway alternate
+]
+
+# Load RF model
+for path in RF_MODEL_PATHS:
     try:
-        with open(MODEL_PATH, 'rb') as f:
-            ml_model = pickle.load(f)
-        print(f"✅ ML Model v4 loaded from {MODEL_PATH}")
+        with open(path, 'rb') as f:
+            ml_model_rf = pickle.load(f)
+        print(f"RF model loaded from {path}")
         break
     except FileNotFoundError:
         continue
     except Exception as e:
-        print(f"⚠️ Error loading from {MODEL_PATH}: {e}")
+        print(f"Error loading RF from {path}: {e}")
         continue
 
-if ml_model is None:
-    print("⚠️ Warning: ML model not found. /predict endpoint will return error until model is deployed.")
+# Load XGBoost model
+for path in XGB_MODEL_PATHS:
+    try:
+        with open(path, 'rb') as f:
+            ml_model_xgb = pickle.load(f)
+        print(f"XGBoost model loaded from {path}")
+        break
+    except FileNotFoundError:
+        continue
+    except Exception as e:
+        print(f"Error loading XGBoost from {path}: {e}")
+        continue
+
+# Select active model: prefer XGBoost, fall back to RF
+if ml_model_xgb is not None:
+    ml_model = ml_model_xgb
+    active_model_name = "xgboost_v6"
+    print(f"Active model: XGBoost (xgboost_v6)")
+elif ml_model_rf is not None:
+    ml_model = ml_model_rf
+    active_model_name = "random_forest_v5"
+    print(f"Active model: Random Forest (random_forest_v5)")
+else:
+    print("Warning: No ML model found. /predict endpoint will return error until model is deployed.")
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -170,6 +205,7 @@ class PredictionResponse(BaseModel):
     action: str
     confidence: str
     explanation: str
+    model_used: str = "random_forest_v5"
 
 
 # Health check endpoint
@@ -368,6 +404,95 @@ async def concessions_endpoint():
     }
 
 
+@app.get("/recommendations")
+async def recommendations_endpoint():
+    """
+    Get wholesale buying recommendations for pharmacists.
+    Reads from buying_recommendations.csv and returns structured recommendations.
+    """
+    REC_PATHS = [
+        "../scrapers/data/pharmacy_invoices/buying_recommendations.csv",
+        "./model/buying_recommendations.csv",
+        "/app/model/buying_recommendations.csv",
+    ]
+    for path in REC_PATHS:
+        try:
+            df = pd.read_csv(path)
+            break
+        except Exception:
+            continue
+    else:
+        return {
+            "success": False,
+            "summary": {
+                "total_drugs": 0,
+                "bulk_buy_count": 0,
+                "buy_as_you_go_count": 0,
+                "hold_buying_count": 0,
+                "avg_margin_gbp": 0.0,
+            },
+            "top_opportunities": [],
+            "hold_warnings": [],
+            "recommendations": [],
+            "message": "Recommendations data file not available",
+        }
+
+    # Normalise column names to lowercase for safety
+    df.columns = [c.strip().lower() for c in df.columns]
+
+    # Determine recommendation column name
+    rec_col = None
+    for candidate in ["recommendation", "action", "rec", "buying_recommendation"]:
+        if candidate in df.columns:
+            rec_col = candidate
+            break
+    if rec_col is None:
+        rec_col = "recommendation"  # fallback
+
+    # Determine margin column name
+    margin_col = None
+    for candidate in ["margin_gbp", "margin", "saving_gbp", "savings_gbp"]:
+        if candidate in df.columns:
+            margin_col = candidate
+            break
+
+    # Build summary
+    total = len(df)
+    bulk = int((df[rec_col].str.upper() == "BULK BUY").sum()) if rec_col in df.columns else 0
+    buy_go = int((df[rec_col].str.upper() == "BUY AS YOU GO").sum()) if rec_col in df.columns else 0
+    hold = int((df[rec_col].str.upper() == "HOLD BUYING").sum()) if rec_col in df.columns else 0
+    avg_margin = round(float(df[margin_col].mean()), 2) if margin_col and margin_col in df.columns else 0.0
+
+    # Top 20 BULK BUY opportunities by margin
+    top_opps = []
+    if rec_col in df.columns and margin_col and margin_col in df.columns:
+        bulk_df = df[df[rec_col].str.upper() == "BULK BUY"].nlargest(20, margin_col)
+        top_opps = bulk_df.where(bulk_df.notna(), None).to_dict("records")
+
+    # Hold warnings
+    hold_warnings = []
+    if rec_col in df.columns:
+        hold_df = df[df[rec_col].str.upper() == "HOLD BUYING"]
+        hold_warnings = hold_df.where(hold_df.notna(), None).to_dict("records")
+
+    # Full list (first 50)
+    recs = df.head(50).where(df.head(50).notna(), None).to_dict("records")
+
+    return {
+        "success": True,
+        "summary": {
+            "total_drugs": total,
+            "bulk_buy_count": bulk,
+            "buy_as_you_go_count": buy_go,
+            "hold_buying_count": hold,
+            "avg_margin_gbp": avg_margin,
+        },
+        "top_opportunities": top_opps,
+        "hold_warnings": hold_warnings,
+        "recommendations": recs,
+    }
+
+
 @app.get("/signals")
 async def signals_endpoint():
     """Get live market signals including GBP/INR, GBP/CNY, GBP/USD, and BoE rate."""
@@ -543,10 +668,10 @@ async def weekly_report():
 @app.post("/predict", response_model=PredictionResponse)
 async def predict_concession(request: PredictionRequest):
     """
-    Predict if a drug will go on NHS concession next month using HYBRID approach (model v5).
+    Predict if a drug will go on NHS concession next month using HYBRID approach.
 
     Combines:
-    1. ML Model Prediction (70%) — Random Forest trained on 44,074 rows, AUC 0.9983
+    1. ML Model Prediction (70%) — XGBoost (preferred) or Random Forest fallback
     2. Real-Time API Signals (30%) — MHRA alerts, CPE concessions, market stress
 
     **Request body (28 features):**
@@ -714,7 +839,8 @@ async def predict_concession(request: PredictionRequest):
             final_probability=final_probability,
             action=action,
             confidence=confidence,
-            explanation=explanation
+            explanation=explanation,
+            model_used=active_model_name or "unknown"
         )
         set_cached_prediction(cache_key, result)
         return result
