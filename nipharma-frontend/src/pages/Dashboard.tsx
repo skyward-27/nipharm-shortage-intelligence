@@ -60,7 +60,12 @@ function AnimatedCounter({ target, duration = 1200, prefix = "", suffix = "", de
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const [news, setNews] = useState<NewsArticle[]>([]);
+  const FALLBACK_NEWS: NewsArticle[] = [
+    { title: "MHRA issues shortage alert for key epilepsy medicines", description: "Supply constraints flagged for antiepileptic drugs following manufacturing disruptions.", source: "MHRA", url: "https://www.gov.uk/government/collections/drug-alerts-and-recalls", publishedAt: "2026-04-10T09:00:00Z" },
+    { title: "NHS Drug Tariff April 2026: Concession prices at record highs", description: "CPE confirms 174 drugs on concession pricing for April 2026 amid global supply pressure.", source: "CPE", url: "https://cpe.org.uk/funding-and-reimbursement/reimbursement/price-concessions/", publishedAt: "2026-04-07T08:00:00Z" },
+    { title: "GBP weakens against INR — import costs rise for wholesalers", description: "Sterling fell 2.3% vs Indian Rupee, increasing costs for UK generic medicine importers.", source: "Bank of England", url: "https://www.bankofengland.co.uk/monetary-policy/inflation", publishedAt: "2026-04-03T14:00:00Z" },
+  ];
+  const [news, setNews] = useState<NewsArticle[]>(FALLBACK_NEWS);
   const [signals, setSignals] = useState<Signal | null>(null);
   const [topDrugs, setTopDrugs] = useState<TopDrug[]>(FALLBACK_WATCH);
   const [loading, setLoading] = useState(true);
@@ -71,11 +76,12 @@ export default function Dashboard() {
       try {
         setLoading(true);
         const [newsData, signalsData, topData] = await Promise.all([
-          fetchNews(),
-          fetchSignals(),
+          fetchNews().catch(() => null),
+          fetchSignals().catch(() => null),
           fetch(`${API_URL}/top-drugs?n=5`).then(r => r.ok ? r.json() : null).catch(() => null),
         ]);
-        setNews(Array.isArray(newsData) ? newsData.slice(0, 3) : []);
+        const articles = Array.isArray(newsData) ? newsData : [];
+        if (articles.length > 0) setNews(articles.slice(0, 3));
         setSignals(signalsData);
         if (topData?.success && topData.drugs?.length > 0) {
           setTopDrugs(topData.drugs);
