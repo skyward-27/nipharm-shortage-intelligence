@@ -156,8 +156,10 @@ export default function Dashboard() {
 
       {/* ── MAIN CONTENT ── */}
       <div className="db-body">
+        <div className="db-two-col">
 
-        {/* ── WATCH CARDS — bulk buy opportunities ── */}
+        {/* ══ LEFT — bulk buy (dominant) ══ */}
+        <div className="db-col-left">
         <div className="watch-section">
           <div className="watch-header-row">
             <div>
@@ -229,140 +231,81 @@ export default function Dashboard() {
                 </div>
               );
             })}
-          </div>
-        </div>
+          </div>{/* end watch-grid */}
+        </div>{/* end watch-section */}
+        </div>{/* end db-col-left */}
 
-        {/* ── KPI ROW ── */}
-        <div className="kpi-row">
-          <button className="kpi-card" onClick={() => navigate("/analytics")}>
-            <div className="kpi-accent" style={{ background: "#ef5350" }} />
-            <div className="kpi-body">
-              <div className="kpi-icon-lg">⚠️</div>
-              <div className="kpi-label">Drugs at Risk</div>
-              <div className="kpi-number" style={{ color: "#ef5350" }}>{signals?.drugs_at_risk ?? "12"}</div>
-              <div className="kpi-sub">Tap to view shortage forecast →</div>
-            </div>
-          </button>
+        {/* ══ RIGHT — KPIs + News (context panel) ══ */}
+        <div className="db-col-right">
 
-          <button className="kpi-card" onClick={() => navigate("/recommendations")}>
-            <div className="kpi-accent" style={{ background: "#1976d2" }} />
-            <div className="kpi-body">
-              <div className="kpi-icon-lg">🎯</div>
-              <div className="kpi-label">Best Opportunity</div>
-              <div className="kpi-number kpi-number-sm" style={{ color: "#1976d2" }}>
-                {signals?.best_opportunity ?? "Primidone 250mg"}
-              </div>
-              <div className="kpi-sub">{signals?.best_discount ? `${signals.best_discount}% below tariff` : "69% below tariff"}</div>
-            </div>
-          </button>
-
-          <button className="kpi-card" onClick={() => navigate("/alerts")}>
-            <div className="kpi-accent" style={{ background: "#ffa726" }} />
-            <div className="kpi-body">
-              <div className="kpi-icon-lg">📍</div>
-              <div className="kpi-label">Market Alert</div>
-              <div className="kpi-number kpi-number-sm" style={{ color: "#ffa726" }}>
-                {signals?.market_alert ?? "GBP/INR ↑2.3%"}
-              </div>
-              <div className="kpi-sub">Tap to view all alerts →</div>
-            </div>
-          </button>
-
-          <button className="kpi-card" onClick={() => navigate("/calculator")}>
-            <div className="kpi-accent" style={{ background: "#66bb6a" }} />
-            <div className="kpi-body">
-              <div className="kpi-icon-lg">💰</div>
-              <div className="kpi-label">Savings Potential</div>
-              <div className="kpi-number" style={{ color: "#66bb6a" }}>
-                {signals?.total_savings_potential ? `£${(signals.total_savings_potential / 1000).toFixed(0)}k` : "£45k"}
-              </div>
-              <div className="kpi-sub">Per pharmacy per year</div>
-            </div>
-          </button>
-        </div>
-
-        {/* ── WEEKLY REPORT BANNER ── */}
-        <div className="report-banner">
-          <div className="report-banner-inner">
-            <div className="report-banner-left">
-              <span style={{ fontSize: "2.2rem" }}>📊</span>
-              <div>
-                <div className="report-title">Your Weekly Intelligence Report is Ready</div>
-                <div className="report-sub">
-                  Shortage alerts · NHS concessions · Market signals · AI forecast — delivered every Monday
-                </div>
-              </div>
-            </div>
-            <Link to="/report" className="report-btn">View Report →</Link>
-          </div>
-        </div>
-
-        {/* ── LATEST PHARMA INTEL ── */}
-        <section className="section">
-          <div className="section-header-row">
-            <div>
-              <h2 className="section-title">Latest Pharma Intel</h2>
-              <p className="section-sub">Real-time news from NHS, MHRA, and supply chain sources</p>
-            </div>
-            <Link to="/news" className="section-view-all">All news →</Link>
+          {/* KPI tiles — compact 2x2 */}
+          <div className="side-section-title">Market Overview</div>
+          <div className="kpi-grid-2x2">
+            <button className="kpi-tile" onClick={() => navigate("/analytics")}>
+              <div className="kpi-tile-icon" style={{ background: "#fff0f0" }}>⚠️</div>
+              <div className="kpi-tile-num" style={{ color: "#c62828" }}>{signals?.drugs_at_risk ?? "12"}</div>
+              <div className="kpi-tile-lbl">Drugs at Risk</div>
+            </button>
+            <button className="kpi-tile" onClick={() => navigate("/recommendations")}>
+              <div className="kpi-tile-icon" style={{ background: "#e3f2fd" }}>🎯</div>
+              <div className="kpi-tile-num" style={{ color: "#1565c0" }}>1,035</div>
+              <div className="kpi-tile-lbl">Buy Signals</div>
+            </button>
+            <button className="kpi-tile" onClick={() => navigate("/alerts")}>
+              <div className="kpi-tile-icon" style={{ background: "#fff8e1" }}>📍</div>
+              <div className="kpi-tile-num kpi-tile-sm" style={{ color: "#e65100" }}>{signals?.market_alert ?? "GBP↑2.3%"}</div>
+              <div className="kpi-tile-lbl">Market Alert</div>
+            </button>
+            <button className="kpi-tile" onClick={() => navigate("/calculator")}>
+              <div className="kpi-tile-icon" style={{ background: "#e8f5e9" }}>💰</div>
+              <div className="kpi-tile-num" style={{ color: "#2e7d32" }}>£45k</div>
+              <div className="kpi-tile-lbl">Savings / yr</div>
+            </button>
           </div>
 
-          <div className="news-grid">
+          {/* Latest Intel — compact list */}
+          <div className="side-section-title" style={{ marginTop: 24 }}>
+            Latest Pharma Intel
+            <Link to="/news" className="side-view-all">All →</Link>
+          </div>
+          <div className="news-list">
             {news.length > 0 ? news.map((article) => (
-              <a
-                key={article.url}
-                href={article.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="news-card"
-              >
-                <div className="news-img-wrap">
-                  {article.image ? (
-                    <img src={article.image} alt={article.title} className="news-img" />
-                  ) : (
-                    <div className="news-img-placeholder">
-                      <span>📰</span>
-                    </div>
-                  )}
-                  <span className="news-source-badge">{article.source}</span>
-                </div>
-                <div className="news-body">
-                  <h4 className="news-headline">{article.title}</h4>
-                  <p className="news-desc">{article.description}</p>
-                  <div className="news-footer">
-                    <span className="news-date">
-                      {new Date(article.publishedAt).toLocaleDateString("en-GB")}
-                    </span>
-                    <span className="news-read">Read →</span>
-                  </div>
-                </div>
+              <a key={article.url} href={article.url} target="_blank" rel="noopener noreferrer" className="news-list-item">
+                <div className="news-list-source">{article.source}</div>
+                <div className="news-list-title">{article.title}</div>
+                <div className="news-list-date">{new Date(article.publishedAt).toLocaleDateString("en-GB")}</div>
               </a>
             )) : (
-              [1, 2, 3].map((n) => (
-                <div key={n} className="news-card news-card-placeholder">
-                  <div className="news-img-placeholder"><span>📰</span></div>
-                  <div className="news-body">
-                    <div style={{ height: 14, background: "#e8ecf0", borderRadius: 4, marginBottom: 8 }} />
-                    <div style={{ height: 14, background: "#e8ecf0", borderRadius: 4, width: "70%", marginBottom: 8 }} />
-                    <div style={{ height: 12, background: "#f0f4f8", borderRadius: 4, width: "50%" }} />
-                  </div>
+              [1,2,3].map(n => (
+                <div key={n} className="news-list-item">
+                  <div style={{ height: 10, background: "#e8ecf0", borderRadius: 4, marginBottom: 6, width: "40%" }} />
+                  <div style={{ height: 13, background: "#e8ecf0", borderRadius: 4, marginBottom: 4 }} />
+                  <div style={{ height: 10, background: "#f0f4f8", borderRadius: 4, width: "30%" }} />
                 </div>
               ))
             )}
           </div>
-        </section>
 
-        {/* ── CTA ROW ── */}
-        <div className="cta-row">
-          <button className="cta-btn cta-primary" onClick={() => navigate("/calculator")}>
-            📊 Calculate Bulk Savings
-          </button>
-          <button className="cta-btn cta-secondary" onClick={() => navigate("/contact")}>
-            📅 Book Demo
-          </button>
-        </div>
+          {/* Report banner — in right column */}
+          <div className="side-report-banner" onClick={() => navigate("/report")} role="button">
+            <div className="side-report-icon">📊</div>
+            <div>
+              <div className="side-report-title">Weekly Report Ready</div>
+              <div className="side-report-sub">Shortages · concessions · signals</div>
+            </div>
+            <span className="side-report-arr">→</span>
+          </div>
 
-      </div>
+          {/* Quick actions */}
+          <div className="quick-actions">
+            <button className="qa-btn qa-primary" onClick={() => navigate("/calculator")}>🧮 Calculate Savings</button>
+            <button className="qa-btn qa-secondary" onClick={() => navigate("/contact")}>📅 Book Demo</button>
+          </div>
+
+        </div>{/* end db-col-right */}
+        </div>{/* end db-two-col */}
+
+      </div>{/* end db-body */}
 
       {/* ── STYLES ── */}
       <style>{`
@@ -1133,19 +1076,235 @@ export default function Dashboard() {
           background: #c8e6c9;
         }
 
-        @media (max-width: 768px) {
-          .hero { padding: 48px 16px 40px; }
-          .db-body { padding: 24px 16px 40px; }
-          .kpi-row { grid-template-columns: 1fr 1fr; }
-          .bulk-rank { min-width: 44px; font-size: 1.3rem; }
-          .news-grid { grid-template-columns: 1fr; }
-          .report-banner-inner { padding: 20px; }
-          .signals-inner { padding: 8px 16px; }
+        /* TWO-COLUMN LAYOUT */
+        .db-two-col {
+          display: grid;
+          grid-template-columns: 1fr 340px;
+          gap: 24px;
+          align-items: start;
         }
 
-        @media (max-width: 480px) {
-          .kpi-row { grid-template-columns: 1fr; }
-          .hero-stats { flex-direction: column; align-items: center; }
+        .db-col-left { min-width: 0; }
+        .db-col-left .watch-section { margin-bottom: 0; }
+
+        .db-col-right {
+          display: flex;
+          flex-direction: column;
+          gap: 0;
+        }
+
+        /* SIDE PANEL */
+        .side-section-title {
+          font-size: 0.72rem;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 1.2px;
+          color: #90a4ae;
+          margin-bottom: 10px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .side-view-all {
+          color: #1976d2;
+          text-decoration: none;
+          font-size: 0.75rem;
+          font-weight: 700;
+          letter-spacing: 0;
+          text-transform: none;
+        }
+        .side-view-all:hover { text-decoration: underline; }
+
+        /* KPI 2x2 GRID */
+        .kpi-grid-2x2 {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+          margin-bottom: 0;
+        }
+
+        .kpi-tile {
+          background: white;
+          border: 1px solid #e8ecf0;
+          border-radius: 12px;
+          padding: 14px 12px 12px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 4px;
+          cursor: pointer;
+          transition: box-shadow 0.18s, transform 0.15s;
+          text-align: center;
+        }
+
+        .kpi-tile:hover {
+          box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+          transform: translateY(-2px);
+        }
+
+        .kpi-tile-icon {
+          width: 36px;
+          height: 36px;
+          border-radius: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.1rem;
+          margin-bottom: 4px;
+        }
+
+        .kpi-tile-num {
+          font-size: 1.55rem;
+          font-weight: 800;
+          line-height: 1;
+          font-variant-numeric: tabular-nums;
+        }
+
+        .kpi-tile-sm { font-size: 0.95rem !important; }
+
+        .kpi-tile-lbl {
+          font-size: 0.68rem;
+          color: #90a4ae;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.4px;
+        }
+
+        /* NEWS LIST (compact) */
+        .news-list {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+        }
+
+        .news-list-item {
+          display: block;
+          padding: 12px 14px;
+          background: white;
+          border: 1px solid #e8ecf0;
+          border-radius: 10px;
+          text-decoration: none;
+          transition: box-shadow 0.15s, background 0.15s;
+          margin-bottom: 8px;
+        }
+
+        .news-list-item:hover {
+          background: #f0f7ff;
+          box-shadow: 0 2px 10px rgba(25,118,210,0.1);
+        }
+
+        .news-list-source {
+          font-size: 0.65rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.8px;
+          color: #1976d2;
+          margin-bottom: 4px;
+        }
+
+        .news-list-title {
+          font-size: 0.84rem;
+          font-weight: 600;
+          color: #1a1a1a;
+          line-height: 1.4;
+          margin-bottom: 4px;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        .news-list-date {
+          font-size: 0.7rem;
+          color: #90a4ae;
+        }
+
+        /* SIDE REPORT BANNER */
+        .side-report-banner {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          background: linear-gradient(135deg, #0d2137 0%, #1565c0 100%);
+          border-radius: 12px;
+          padding: 16px;
+          cursor: pointer;
+          margin-top: 16px;
+          transition: opacity 0.2s, transform 0.15s;
+        }
+
+        .side-report-banner:hover { opacity: 0.92; transform: translateY(-1px); }
+
+        .side-report-icon { font-size: 1.6rem; flex-shrink: 0; }
+
+        .side-report-title {
+          font-size: 0.9rem;
+          font-weight: 700;
+          color: white;
+          margin-bottom: 2px;
+        }
+
+        .side-report-sub {
+          font-size: 0.72rem;
+          color: rgba(255,255,255,0.6);
+        }
+
+        .side-report-arr {
+          color: white;
+          font-size: 1.2rem;
+          margin-left: auto;
+          flex-shrink: 0;
+        }
+
+        /* QUICK ACTIONS */
+        .quick-actions {
+          display: flex;
+          gap: 8px;
+          margin-top: 12px;
+        }
+
+        .qa-btn {
+          flex: 1;
+          padding: 11px 8px;
+          border-radius: 10px;
+          font-size: 0.78rem;
+          font-weight: 700;
+          cursor: pointer;
+          border: none;
+          transition: background 0.18s, box-shadow 0.18s;
+        }
+
+        .qa-primary {
+          background: #1976d2;
+          color: white;
+        }
+        .qa-primary:hover { background: #1565c0; box-shadow: 0 3px 10px rgba(25,118,210,0.35); }
+
+        .qa-secondary {
+          background: #f0f4f8;
+          color: #546e7a;
+          border: 1px solid #e0e8f0;
+        }
+        .qa-secondary:hover { background: #e3eaf0; }
+
+        @media (max-width: 1024px) {
+          .db-two-col { grid-template-columns: 1fr; }
+          .db-col-right { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+          .side-report-banner { margin-top: 0; }
+        }
+
+        @media (max-width: 768px) {
+          .db-body { padding: 16px 16px 40px; }
+          .db-two-col { gap: 16px; }
+          .db-col-right { grid-template-columns: 1fr; }
+          .watch-grid { grid-template-columns: repeat(2, 1fr); }
+          .signals-inner { padding: 8px 16px; }
+          .db-header-inner { flex-direction: column; align-items: flex-start; }
+        }
+
+        @media (max-width: 560px) {
+          .watch-grid { grid-template-columns: 1fr; }
+          .kpi-grid-2x2 { grid-template-columns: 1fr 1fr; }
         }
       `}</style>
     </div>
