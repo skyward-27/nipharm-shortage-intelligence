@@ -12,112 +12,7 @@ import WeeklyReport from "./pages/WeeklyReport";
 import Recommendations from "./pages/Recommendations";
 import { healthCheck } from "./api";
 
-// ── PIN Gate ───────────────────────────────────────────────────────────────────
-const CORRECT_PIN = "NPT2026";
-const SESSION_KEY = "nipharm_auth";
-
-function PinGate({ onAuth }: { onAuth: () => void }) {
-  const [pin, setPin] = useState("");
-  const [error, setError] = useState(false);
-  const [shake, setShake] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (pin === CORRECT_PIN) {
-      sessionStorage.setItem(SESSION_KEY, "1");
-      onAuth();
-    } else {
-      setError(true);
-      setShake(true);
-      setPin("");
-      setTimeout(() => setShake(false), 600);
-    }
-  };
-
-  return (
-    <div style={{
-      minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
-      background: "linear-gradient(135deg, #0d1b2a 0%, #1a3a5c 50%, #0d1b2a 100%)",
-      fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-    }}>
-      <div style={{
-        background: "white", borderRadius: 20, padding: "48px 40px", width: "100%", maxWidth: 400,
-        boxShadow: "0 32px 80px rgba(0,0,0,0.5)", textAlign: "center",
-        animation: shake ? "shake 0.5s ease" : "none",
-      }}>
-        {/* Logo */}
-        <div style={{ marginBottom: 8 }}>
-          <div style={{
-            display: "inline-flex", alignItems: "center", justifyContent: "center",
-            width: 64, height: 64, background: "#1976d2", borderRadius: 16,
-            fontSize: "1.8rem", marginBottom: 16,
-          }}>💊</div>
-        </div>
-        <h1 style={{ fontSize: "1.8rem", fontWeight: 800, color: "#0d1b2a", marginBottom: 4 }}>
-          NiPharm
-        </h1>
-        <p style={{ color: "#888", fontSize: "0.9rem", marginBottom: 32 }}>
-          Stock Intelligence Platform — NPT Internal
-        </p>
-
-        <form onSubmit={handleSubmit}>
-          <input
-            type="password"
-            value={pin}
-            onChange={(e) => { setPin(e.target.value); setError(false); }}
-            placeholder="Enter access PIN"
-            autoFocus
-            style={{
-              width: "100%", padding: "14px 18px", fontSize: "1.1rem",
-              border: `2px solid ${error ? "#c62828" : "#e0e0e0"}`,
-              borderRadius: 10, outline: "none", textAlign: "center",
-              letterSpacing: "0.3em", fontWeight: 700, marginBottom: 12,
-              transition: "border-color 0.2s",
-              boxSizing: "border-box",
-            }}
-            onFocus={(e) => { if (!error) e.currentTarget.style.borderColor = "#1976d2"; }}
-            onBlur={(e) => { if (!error) e.currentTarget.style.borderColor = "#e0e0e0"; }}
-          />
-          {error && (
-            <p style={{ color: "#c62828", fontSize: "0.85rem", marginBottom: 12, fontWeight: 600 }}>
-              ❌ Incorrect PIN. Try again.
-            </p>
-          )}
-          <button
-            type="submit"
-            style={{
-              width: "100%", padding: "14px", fontSize: "1rem", fontWeight: 700,
-              background: "#1976d2", color: "white", border: "none", borderRadius: 10,
-              cursor: "pointer", transition: "background 0.2s",
-            }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "#1565c0")}
-            onMouseLeave={(e) => (e.currentTarget.style.background = "#1976d2")}
-          >
-            Access Platform →
-          </button>
-        </form>
-
-        <p style={{ color: "#bbb", fontSize: "0.75rem", marginTop: 24 }}>
-          Authorised NPT personnel only
-        </p>
-      </div>
-
-      <style>{`
-        @keyframes shake {
-          0%, 100% { transform: translateX(0); }
-          20%       { transform: translateX(-10px); }
-          40%       { transform: translateX(10px); }
-          60%       { transform: translateX(-8px); }
-          80%       { transform: translateX(8px); }
-        }
-      `}</style>
-    </div>
-  );
-}
-// ──────────────────────────────────────────────────────────────────────────────
-
 export default function App() {
-  const [authed, setAuthed] = useState(() => sessionStorage.getItem(SESSION_KEY) === "1");
   const [apiHealthy, setApiHealthy] = useState<boolean | null>(null);
   const [navOpen, setNavOpen] = useState(false);
 
@@ -137,8 +32,6 @@ export default function App() {
     const interval = setInterval(checkHealth, 30000);
     return () => clearInterval(interval);
   }, []);
-
-  if (!authed) return <PinGate onAuth={() => setAuthed(true)} />;
 
   return (
     <Router>
