@@ -152,46 +152,71 @@ export default function Dashboard() {
       {/* ── MAIN CONTENT ── */}
       <div className="db-body">
 
-        {/* ── WATCH CARDS — bulk buy opportunities (original layout) ── */}
+        {/* ── WATCH CARDS — bulk buy opportunities ── */}
         <div className="watch-section">
           <div className="watch-header-row">
-            <div className="watch-header-left">
-              <span className="watch-icon">💊</span>
-              <div>
-                <h2 className="watch-title">Top Bulk Buy Opportunities</h2>
-                <p className="watch-sub">{new Date().toLocaleDateString("en-GB", { month: "long", year: "numeric" })} · Invoice-verified pricing · NHS Drug Tariff analysis</p>
-              </div>
+            <div>
+              <h2 className="watch-title">🔥 Top Bulk Buy Opportunities</h2>
+              <p className="watch-sub">{new Date().toLocaleDateString("en-GB", { month: "long", year: "numeric" })} &nbsp;·&nbsp; Invoice-verified &nbsp;·&nbsp; Ranked by saving vs NHS Drug Tariff</p>
             </div>
-            <Link to="/recommendations" className="watch-view-all">View all opportunities →</Link>
+            <Link to="/recommendations" className="watch-view-all">View all 1,035 →</Link>
           </div>
 
           <div className="watch-grid">
-            {topDrugs.slice(0, 5).map((drug) => {
+            {topDrugs.slice(0, 6).map((drug, i) => {
               const marginPct = drug.margin_pct ?? 0;
               const marginGbp = drug.margin_gbp;
               const tariff = drug.tariff_price_gbp;
+              const ourPrice = tariff != null && marginGbp != null ? tariff - marginGbp : null;
+              const rankColors = ["#c62828","#e65100","#f57f17","#2e7d32","#1565c0","#4a148c"];
               return (
                 <div key={drug.name} className="watch-card">
-                  <div className="watch-card-top">
-                    <span className="watch-tag">BULK BUY</span>
-                    {marginPct > 0 && <span className="watch-prob">{marginPct.toFixed(0)}% below tariff</span>}
+                  {/* Rank strip */}
+                  <div className="watch-rank" style={{ background: rankColors[i] ?? "#1976d2" }}>
+                    #{i + 1}
                   </div>
-                  <div className="watch-name" style={{ textTransform: "capitalize" }}>{drug.name}</div>
-                  <div className="watch-reason">
-                    NHS Tariff: <strong>{tariff != null ? `£${tariff.toFixed(2)}` : "—"}</strong>
-                    {drug.observation_count > 1 ? ` · ${drug.observation_count} data points` : " · invoice verified"}
-                  </div>
-                  {/* Margin bar */}
-                  {marginPct > 0 && (
-                    <div className="watch-bar-track">
-                      <div className="watch-bar-fill" style={{ width: `${Math.min(marginPct, 100)}%` }} />
+                  <div className="watch-card-body">
+                    <div className="watch-card-top">
+                      <span className="watch-tag">BULK BUY</span>
+                      {marginPct > 0 && <span className="watch-prob">{marginPct.toFixed(0)}% below tariff</span>}
                     </div>
-                  )}
-                  <div className="watch-footer">
-                    <span className="watch-savings">
-                      {marginGbp != null ? `Save £${marginGbp.toFixed(2)} per pack` : "Strong margin"}
-                    </span>
-                    <Link to="/calculator" className="watch-calc-btn">Calculate savings →</Link>
+                    <div className="watch-name" style={{ textTransform: "capitalize" }}>{drug.name}</div>
+
+                    {/* Price comparison row */}
+                    <div className="watch-price-row">
+                      {ourPrice != null && (
+                        <div className="watch-price-box watch-price-ours">
+                          <div className="watch-price-lbl">Our Price</div>
+                          <div className="watch-price-val">£{ourPrice.toFixed(2)}</div>
+                        </div>
+                      )}
+                      {tariff != null && (
+                        <div className="watch-price-box watch-price-tariff">
+                          <div className="watch-price-lbl">NHS Tariff</div>
+                          <div className="watch-price-val">£{tariff.toFixed(2)}</div>
+                        </div>
+                      )}
+                      {marginGbp != null && (
+                        <div className="watch-price-box watch-price-saving">
+                          <div className="watch-price-lbl">You Save</div>
+                          <div className="watch-price-val watch-save-big">£{marginGbp.toFixed(2)}</div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Margin bar */}
+                    {marginPct > 0 && (
+                      <div className="watch-bar-track">
+                        <div className="watch-bar-fill" style={{ width: `${Math.min(marginPct, 100)}%`, background: rankColors[i] ?? "#2e7d32" }} />
+                      </div>
+                    )}
+
+                    <div className="watch-footer">
+                      <span className="watch-datapts">
+                        {drug.observation_count > 1 ? `${drug.observation_count} invoice records` : "Invoice verified"}
+                      </span>
+                      <Link to="/calculator" className="watch-calc-btn">Calculate →</Link>
+                    </div>
                   </div>
                 </div>
               );
@@ -410,12 +435,12 @@ export default function Dashboard() {
           margin-top: 5px;
         }
 
-        /* WATCH SECTION (original-style bulk buy cards) */
+        /* WATCH SECTION */
         .watch-section {
           background: white;
           border-radius: 16px;
           border: 1px solid #e8ecf0;
-          box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+          box-shadow: 0 2px 16px rgba(0,0,0,0.06);
           padding: 28px;
           margin-bottom: 28px;
         }
@@ -429,27 +454,16 @@ export default function Dashboard() {
           gap: 12px;
         }
 
-        .watch-header-left {
-          display: flex;
-          align-items: flex-start;
-          gap: 14px;
-        }
-
-        .watch-icon {
-          font-size: 2rem;
-          line-height: 1;
-        }
-
         .watch-title {
-          font-size: 1.4rem;
+          font-size: 1.45rem;
           font-weight: 800;
           color: #1a1a1a;
-          margin: 0 0 4px;
+          margin: 0 0 5px;
         }
 
         .watch-sub {
           font-size: 0.82rem;
-          color: #78909c;
+          color: #90a4ae;
           margin: 0;
         }
 
@@ -461,36 +475,55 @@ export default function Dashboard() {
           white-space: nowrap;
           margin-top: 4px;
         }
-
         .watch-view-all:hover { color: #1565c0; text-decoration: underline; }
 
+        /* 3-col grid → 3+3 layout, no orphans */
         .watch-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          grid-template-columns: repeat(3, 1fr);
           gap: 16px;
         }
+
+        @media (max-width: 900px) { .watch-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 580px) { .watch-grid { grid-template-columns: 1fr; } }
 
         .watch-card {
           background: #f8fafc;
           border: 1px solid #e0e8f0;
-          border-radius: 12px;
-          padding: 18px;
+          border-radius: 14px;
+          overflow: hidden;
           display: flex;
           flex-direction: column;
-          gap: 10px;
-          border-left: 4px solid #2e7d32;
           transition: box-shadow 0.2s, transform 0.15s;
         }
 
         .watch-card:hover {
-          box-shadow: 0 6px 20px rgba(0,0,0,0.09);
-          transform: translateY(-2px);
+          box-shadow: 0 8px 24px rgba(0,0,0,0.11);
+          transform: translateY(-3px);
+        }
+
+        /* Coloured rank strip across the top of each card */
+        .watch-rank {
+          color: white;
+          font-size: 0.7rem;
+          font-weight: 800;
+          letter-spacing: 1px;
+          text-align: right;
+          padding: 4px 12px;
+        }
+
+        .watch-card-body {
+          padding: 16px 18px 18px;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          flex: 1;
         }
 
         .watch-card-top {
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: 8px;
           flex-wrap: wrap;
         }
 
@@ -499,8 +532,8 @@ export default function Dashboard() {
           color: #2e7d32;
           border: 1px solid #a5d6a7;
           border-radius: 20px;
-          padding: 3px 12px;
-          font-size: 0.72rem;
+          padding: 3px 10px;
+          font-size: 0.7rem;
           font-weight: 800;
           letter-spacing: 0.5px;
         }
@@ -508,28 +541,60 @@ export default function Dashboard() {
         .watch-prob {
           background: #fff8e1;
           color: #e65100;
-          border: 1px solid #ffcc02;
+          border: 1px solid #ffe082;
           border-radius: 20px;
           padding: 3px 10px;
-          font-size: 0.72rem;
+          font-size: 0.7rem;
           font-weight: 700;
         }
 
         .watch-name {
-          font-size: 1.05rem;
+          font-size: 1rem;
           font-weight: 700;
           color: #1a1a1a;
-          line-height: 1.35;
+          line-height: 1.4;
         }
 
-        .watch-reason {
-          font-size: 0.82rem;
-          color: #546e7a;
-          line-height: 1.5;
+        /* Price comparison: Our Price | NHS Tariff | You Save */
+        .watch-price-row {
+          display: flex;
+          gap: 8px;
+        }
+
+        .watch-price-box {
+          flex: 1;
+          border-radius: 8px;
+          padding: 8px 10px;
+          text-align: center;
+        }
+
+        .watch-price-ours  { background: #e3f2fd; }
+        .watch-price-tariff { background: #f5f5f5; }
+        .watch-price-saving { background: #e8f5e9; }
+
+        .watch-price-lbl {
+          font-size: 0.65rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          color: #90a4ae;
+          margin-bottom: 3px;
+        }
+
+        .watch-price-val {
+          font-size: 0.95rem;
+          font-weight: 700;
+          color: #1a1a1a;
+        }
+
+        .watch-save-big {
+          color: #2e7d32 !important;
+          font-size: 1.1rem !important;
+          font-weight: 800 !important;
         }
 
         .watch-bar-track {
-          height: 6px;
+          height: 5px;
           background: #e8ecf0;
           border-radius: 99px;
           overflow: hidden;
@@ -537,33 +602,28 @@ export default function Dashboard() {
 
         .watch-bar-fill {
           height: 100%;
-          background: linear-gradient(90deg, #43a047, #2e7d32);
           border-radius: 99px;
-          transition: width 0.8s ease;
+          transition: width 1s ease;
         }
 
         .watch-footer {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          flex-wrap: wrap;
-          gap: 8px;
         }
 
-        .watch-savings {
-          font-size: 0.88rem;
-          font-weight: 700;
-          color: #2e7d32;
+        .watch-datapts {
+          font-size: 0.75rem;
+          color: #90a4ae;
         }
 
         .watch-calc-btn {
           color: #1976d2;
           font-size: 0.82rem;
-          font-weight: 600;
+          font-weight: 700;
           text-decoration: none;
           white-space: nowrap;
         }
-
         .watch-calc-btn:hover { color: #1565c0; text-decoration: underline; }
 
         /* SIGNALS STRIP */
