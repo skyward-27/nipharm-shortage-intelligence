@@ -1,0 +1,79 @@
+Nipharma ML Model Training Metrics
+===================================
+
+Date:              2026-04-13 12:31:00
+Script:            12_ml_model_panel.py v5 (temporal CV)
+
+Dataset
+-------
+  Train+Val rows:  39,258
+  Test rows:       4,816
+  Features:        42
+  Positive labels: 5,956 (15.2%)
+
+Temporal Split
+--------------
+  Train+Val:       2021-01 -> 2025-06
+  Test (hold-out): 2025-07 -> 2025-12
+
+Walk-Forward CV Results (5 folds, 1-month gap)
+----------------------------------------------
+  RF AUCs:         ['0.9965', '0.9986', '0.9963', '0.9968', '0.9976']
+  RF Mean AUC:     0.9972  Std: 0.0008
+  XGB AUCs:        ['0.9964', '0.9989', '0.9975', '0.9978', '0.9979']
+  XGB Mean AUC:    0.9977  Std: 0.0008
+
+Hold-Out Test Results
+---------------------
+  RF (raw) AUC:    0.9983
+  RF (calib) AUC:  0.9986
+  XGB (raw) AUC:   0.9987
+  XGB (calib) AUC: 0.9988
+
+Saved Models:
+  RF:  CalibratedClassifierCV(RandomForest, isotonic) -> panel_model.pkl
+  XGB: CalibratedClassifierCV(XGBoost, isotonic)    -> panel_model_xgb.pkl
+
+Top 20 Features (Gini importance):
+  cpe_avail_6mo                        0.2317
+  conc_last_6mo                        0.2083
+  cpe_conc_available                   0.1032
+  concession_streak                    0.0947
+  on_concession                        0.0925
+  price_vs_cpe_pct                     0.0841
+  cpe_price_gbp                        0.0531
+  cpe_price_pence                      0.0237
+  price_mom_pct                        0.0195
+  bsn_same_section_conc_count          0.0107
+  floor_proximity                      0.0105
+  price_yoy_pct                        0.0078
+  drug_age_years                       0.0056
+  within_15pct_of_floor                0.0052
+  boe_bank_rate                        0.0046
+  ni_price_gbp                         0.0041
+  pca_items_mom_pct                    0.0040
+  price_gbp                            0.0039
+  pca_nic_gbp                          0.0039
+  price_6mo_avg                        0.0037
+
+Top 20 Features (SHAP mean |value|):
+  concession_streak                    0.0184
+  cpe_avail_6mo                        0.0129
+  conc_last_6mo                        0.0109
+  floor_proximity                      0.0002
+  pca_items_mom_pct                    0.0001
+  month_cos                            0.0001
+  price_yoy_pct                        0.0001
+  drug_age_years                       0.0001
+  on_concession                        0.0001
+  cpe_conc_available                   0.0001
+  pca_nic_gbp                          0.0000
+  price_vs_cpe_pct                     0.0000
+  cpe_price_gbp                        0.0000
+  cpe_price_pence                      0.0000
+  fda_warning_flag                     0.0000
+  boe_bank_rate                        0.0000
+  ni_india_pharma_stress               0.0000
+  pharmacy_over_tariff                 0.0000
+  month_sin                            0.0000
+  price_vs_best_pct                    0.0000

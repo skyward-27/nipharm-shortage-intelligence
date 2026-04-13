@@ -353,6 +353,8 @@ for _, row in importance_df.head(15).iterrows():
 
 # ── SHAP FEATURE IMPORTANCE ───────────────────────────────────────────────────
 shap_df = None
+shap_succeeded = False
+
 try:
     import shap
     print(f"\n{'='*70}")
@@ -366,28 +368,28 @@ try:
     idx     = rng.choice(len(X_trainval), size=n_shap, replace=False)
     X_shap  = X_trainval.iloc[idx]
 
-    # FIX: CalibratedClassifierCV wraps the RF and causes SHAP TreeExplainer
-    # to fail with "Per-column arrays must each be 1-dimensional".
-    # Solution: run SHAP on the base (uncalibrated) RF estimator directly.
-    shap_model = rf_base  # Use the base RF, not calibrated_rf
+    # Use base RF (not CalibratedClassifierCV wrapper)
+    shap_model = rf_base
     print(f"  Using base RF for SHAP (not calibrated wrapper)")
 
-    try:
-        # Primary method: TreeExplainer on base RF
-        explainer   = shap.TreeExplainer(shap_model)
-        shap_values = explainer.shap_values(X_shap)
+    # Convert to numpy to avoid SHAP/pandas/numpy version conflicts
+    X_shap_np = X_shap.values.astype(np.float64)
 
-        # For binary classification shap_values may be list [neg, pos]; take pos class
+    try:
+        # Primary: TreeExplainer on numpy array
+        explainer   = shap.TreeExplainer(shap_model)
+        shap_values = explainer.shap_values(X_shap_np)
+
         if isinstance(shap_values, list):
             shap_vals_pos = shap_values[1]
         else:
             shap_vals_pos = shap_values
 
     except Exception as e_tree:
-        # Fallback: use shap.Explainer with predict function (model-agnostic)
+        # Fallback: model-agnostic Explainer
         print(f"  TreeExplainer failed ({e_tree}), falling back to Explainer...")
-        explainer   = shap.Explainer(shap_model.predict, X_shap)
-        shap_obj    = explainer(X_shap)
+        explainer   = shap.Explainer(shap_model.predict, X_shap_np)
+        shap_obj    = explainer(X_shap_np)
         shap_vals_pos = shap_obj.values
 
     mean_abs_shap = np.abs(shap_vals_pos).mean(axis=0)
@@ -401,13 +403,50 @@ try:
         bar = '#' * int(row['mean_abs_shap'] / shap_df['mean_abs_shap'].max() * 40)
         print(f"  {row['feature']:35s}  {row['mean_abs_shap']:.4f}  {bar}")
 
-    # Merge Gini + SHAP into one importance table
     importance_df = importance_df.merge(shap_df, on='feature', how='left')
+    shap_succeeded = True
 
 except ImportError:
     print("\n  SHAP not installed — skipping (pip install shap>=0.42.0)")
 except Exception as e:
-    print(f"\n  SHAP failed: {e} — skipping")
+    print(f"\n  SHAP failed: {e}")
+
+# ── PERMUTATION IMPORTANCE (fallback if SHAP fails) ──────────────────────────
+if not shap_succeeded:
+    try:
+        from sklearn.inspection import permutation_importance
+        print(f"\n{'='*70}")
+        print("FEATURE IMPORTANCE — PERMUTATION (sklearn, SHAP fallback)")
+        print(f"{'='*70}")
+        print("Computing permutation importance on test set (10 repeats)...")
+
+        perm_result = permutation_importance(
+            rf_base, X_test, y_test,
+            n_repeats=10, random_state=42, scoring='roc_auc', n_jobs=-1
+        )
+
+        perm_df = pd.DataFrame({
+            'feature':             feature_cols,
+            'perm_importance_mean': perm_result.importances_mean,
+            'perm_importance_std':  perm_result.importances_std
+        }).sort_values('perm_importance_mean', ascending=False).reset_index(drop=True)
+
+        print(f"\nTop 15 features (permutation importance, AUC drop):")
+        for _, row in perm_df.head(15).iterrows():
+            bar = '#' * int(row['perm_importance_mean'] / max(perm_df['perm_importance_mean'].max(), 1e-9) * 40)
+            print(f"  {row['feature']:35s}  {row['perm_importance_mean']:.4f} ± {row['perm_importance_std']:.4f}  {bar}")
+
+        # Merge permutation importance into Gini table
+        importance_df = importance_df.merge(
+            perm_df[['feature', 'perm_importance_mean', 'perm_importance_std']],
+            on='feature', how='left'
+        )
+
+        # Also save as shap_df substitute for downstream code
+        shap_df = perm_df.rename(columns={'perm_importance_mean': 'mean_abs_shap'})
+
+    except Exception as e_perm:
+        print(f"\n  Permutation importance also failed: {e_perm} — skipping")
 
 # ── SAVE MODEL & ARTIFACTS ────────────────────────────────────────────────────
 print(f"\n{'='*70}")
