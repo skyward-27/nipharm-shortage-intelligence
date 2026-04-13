@@ -42,16 +42,16 @@ const getMargin = (row: RecommendationRow) =>
   getField(row, "margin_gbp", "margin", "saving_gbp", "savings_gbp");
 
 const getCurrentPrice = (row: RecommendationRow) =>
-  getField(row, "current_price", "price", "unit_price", "our_price");
+  getField(row, "our_price_gbp", "current_price", "price", "unit_price", "our_price");
 
 const getBestPrice = (row: RecommendationRow) =>
   getField(row, "best_price", "lowest_price", "best_historic_price", "min_price");
 
 const getTariff = (row: RecommendationRow) =>
-  getField(row, "nhs_tariff", "tariff", "tariff_price", "drug_tariff_price");
+  getField(row, "tariff_price_gbp", "nhs_tariff", "tariff", "tariff_price", "drug_tariff_price");
 
 const getMarginPct = (row: RecommendationRow) =>
-  getField(row, "margin_pct", "margin_percent", "pct_below_tariff");
+  getField(row, "price_vs_tariff_pct", "margin_pct", "margin_percent", "pct_below_tariff");
 
 const getObsCount = (row: RecommendationRow) =>
   getField(row, "observation_count", "obs_count", "count");

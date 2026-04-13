@@ -617,17 +617,31 @@ async def top_drugs_endpoint(n: int = 3):
     else:
         top = df.head(n)
 
+    price_col = next((c for c in ["current_price", "avg_price_3mo", "our_price"] if c in df.columns), None)
     drugs = []
     for _, row in top.iterrows():
         margin = row.get(margin_col) if margin_col else None
         tariff = row.get(tariff_col) if tariff_col else None
+        price  = row.get(price_col)  if price_col  else None
+        # current_price in CSV is per-unit; tariff is per-pack. Derive pack price from tariff-margin.
+        our_pack_price = None
+        try:
+            if tariff is not None and margin is not None and not pd.isna(tariff) and not pd.isna(margin):
+                our_pack_price = round(float(tariff) - float(margin), 2)
+        except Exception:
+            pass
         drugs.append({
             "name": str(row.get("drug_name", "Unknown")),
             "recommendation": str(row.get(rec_col, "BULK BUY")) if rec_col else "BULK BUY",
             "margin_gbp": round(float(margin), 2) if margin is not None and not pd.isna(margin) else None,
             "tariff_price_gbp": round(float(tariff), 2) if tariff is not None and not pd.isna(tariff) else None,
+            "our_price_gbp": our_pack_price,
+            "current_price_raw": round(float(price), 4) if price is not None and not pd.isna(price) else None,
             "margin_pct": round(float(row.get("price_vs_tariff_pct", 0)) * -1, 1) if "price_vs_tariff_pct" in row else None,
             "observation_count": int(row.get("observation_count", 1)) if "observation_count" in row else 1,
+            "first_seen": str(row.get("first_seen", "")) if "first_seen" in row else "",
+            "last_seen":  str(row.get("last_seen",  "")) if "last_seen"  in row else "",
+            "supplier": str(row.get("current_supplier", "")) if "current_supplier" in row else "",
         })
 
     return {"success": True, "drugs": drugs, "count": len(drugs)}

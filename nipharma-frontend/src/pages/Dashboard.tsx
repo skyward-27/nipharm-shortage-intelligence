@@ -9,16 +9,21 @@ interface TopDrug {
   recommendation: string;
   margin_gbp: number | null;
   tariff_price_gbp: number | null;
+  our_price_gbp: number | null;
   margin_pct: number | null;
   observation_count: number;
+  first_seen?: string;
+  last_seen?: string;
+  supplier?: string;
 }
 
 const FALLBACK_WATCH: TopDrug[] = [
-  { name: "Primidone 250mg tablets (100)", recommendation: "BULK BUY", margin_gbp: 55.80, tariff_price_gbp: 80.79, margin_pct: 69.1, observation_count: 2 },
-  { name: "Famotidine 20mg tablets (28)", recommendation: "BULK BUY", margin_gbp: 19.60, tariff_price_gbp: 20.46, margin_pct: 95.8, observation_count: 13 },
-  { name: "Famotidine 40mg tablets (28)", recommendation: "BULK BUY", margin_gbp: 19.15, tariff_price_gbp: 20.46, margin_pct: 93.6, observation_count: 6 },
-  { name: "Amoxicillin 500mg capsules (21)", recommendation: "BULK BUY", margin_gbp: 12.40, tariff_price_gbp: 18.20, margin_pct: 68.1, observation_count: 7 },
-  { name: "Metformin 500mg tablets (28)", recommendation: "BULK BUY", margin_gbp: 8.90, tariff_price_gbp: 14.10, margin_pct: 63.1, observation_count: 11 },
+  { name: "Primidone 250mg tablets (100)", recommendation: "BULK BUY", margin_gbp: 55.80, tariff_price_gbp: 80.79, our_price_gbp: 24.99, margin_pct: 69.1, observation_count: 2 },
+  { name: "Clonazepam 0.5mg tablets (100)", recommendation: "BULK BUY", margin_gbp: 16.92, tariff_price_gbp: 18.53, our_price_gbp: 1.61, margin_pct: 91.3, observation_count: 6 },
+  { name: "Zonisamide 25mg capsules (14)", recommendation: "BULK BUY", margin_gbp: 16.31, tariff_price_gbp: 17.46, our_price_gbp: 1.15, margin_pct: 93.4, observation_count: 1 },
+  { name: "Acamprosate 333mg tablets (168)", recommendation: "BULK BUY", margin_gbp: 3.51, tariff_price_gbp: 22.68, our_price_gbp: 19.17, margin_pct: 15.5, observation_count: 3 },
+  { name: "Amoxicillin 500mg capsules (21)", recommendation: "BULK BUY", margin_gbp: 12.40, tariff_price_gbp: 18.20, our_price_gbp: 5.80, margin_pct: 68.1, observation_count: 7 },
+  { name: "Metformin 500mg tablets (28)", recommendation: "BULK BUY", margin_gbp: 8.90, tariff_price_gbp: 14.10, our_price_gbp: 5.20, margin_pct: 63.1, observation_count: 11 },
 ];
 
 interface AnimatedCounterProps {
@@ -164,10 +169,10 @@ export default function Dashboard() {
 
           <div className="watch-grid">
             {topDrugs.slice(0, 6).map((drug, i) => {
-              const marginPct = drug.margin_pct ?? 0;
+              const marginPct = Math.abs(drug.margin_pct ?? 0);
               const marginGbp = drug.margin_gbp;
               const tariff = drug.tariff_price_gbp;
-              const ourPrice = tariff != null && marginGbp != null ? tariff - marginGbp : null;
+              const ourPrice = drug.our_price_gbp ?? (tariff != null && marginGbp != null ? Math.max(0, tariff - marginGbp) : null);
               const rankColors = ["#c62828","#e65100","#f57f17","#2e7d32","#1565c0","#4a148c"];
               return (
                 <div key={drug.name} className="watch-card">
@@ -212,9 +217,12 @@ export default function Dashboard() {
                     )}
 
                     <div className="watch-footer">
-                      <span className="watch-datapts">
-                        {drug.observation_count > 1 ? `${drug.observation_count} invoice records` : "Invoice verified"}
-                      </span>
+                      <div>
+                        <span className="watch-datapts">
+                          {drug.observation_count > 1 ? `${drug.observation_count} records` : "Verified"}
+                        </span>
+                        {drug.supplier && <span className="watch-supplier"> · {drug.supplier}</span>}
+                      </div>
                       <Link to="/calculator" className="watch-calc-btn">Calculate →</Link>
                     </div>
                   </div>
@@ -615,6 +623,11 @@ export default function Dashboard() {
         .watch-datapts {
           font-size: 0.75rem;
           color: #90a4ae;
+        }
+
+        .watch-supplier {
+          font-size: 0.72rem;
+          color: #b0bec5;
         }
 
         .watch-calc-btn {
