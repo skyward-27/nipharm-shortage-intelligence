@@ -465,7 +465,8 @@ async def recommendations_endpoint():
     bulk = int((df[rec_col].str.upper() == "BULK BUY").sum()) if rec_col in df.columns else 0
     buy_go = int((df[rec_col].str.upper() == "BUY AS YOU GO").sum()) if rec_col in df.columns else 0
     hold = int((df[rec_col].str.upper() == "HOLD BUYING").sum()) if rec_col in df.columns else 0
-    avg_margin = round(float(df[margin_col].mean()), 2) if margin_col and margin_col in df.columns else 0.0
+    _margin_mean = df[margin_col].dropna().mean() if margin_col and margin_col in df.columns else 0.0
+    avg_margin = round(float(_margin_mean), 2) if _margin_mean == _margin_mean else 0.0  # NaN-safe
 
     # Top 20 BULK BUY opportunities by margin
     top_opps = []
