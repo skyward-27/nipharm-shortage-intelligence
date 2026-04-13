@@ -358,6 +358,11 @@ shap_df = None
 shap_succeeded = False
 
 try:
+    # Disable numba JIT before importing SHAP — avoids "_internal failed" error
+    # when numba version is incompatible (0.53.1 vs required >=0.54)
+    import os as _os
+    _os.environ.setdefault("NUMBA_DISABLE_JIT", "1")
+
     import shap
     print(f"\n{'='*70}")
     print("FEATURE IMPORTANCE — SHAP (TreeExplainer)")
