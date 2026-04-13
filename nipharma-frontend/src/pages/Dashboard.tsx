@@ -110,34 +110,25 @@ export default function Dashboard() {
   return (
     <div className="db-root">
 
-      {/* ── COMPACT HEADER ── */}
-      <div className="page-header">
-        <div className="page-header-inner">
-          <div className="page-header-left">
-            <div className="page-eyebrow">LIVE · NHS DRUG INTELLIGENCE</div>
-            <h1 className="page-title">NiPharm Intelligence</h1>
-            <p className="page-tagline">
-              NHS shortage prediction &nbsp;·&nbsp; 1,137 drugs tracked &nbsp;·&nbsp; XGBoost v6 · AUC 0.9988
-            </p>
+      {/* ── DASHBOARD HEADER ── */}
+      <div className="db-header">
+        <div className="db-header-inner">
+          <div>
+            <h1 className="db-title">📈 NPT Stock Intelligence</h1>
+            <p className="db-tagline">Save 15–25% on pharmaceutical costs through intelligent bulk procurement</p>
           </div>
-          <div className="page-header-right">
-            <div className="header-stat-pill" style={{ borderColor: "#ef5350" }}>
-              <span style={{ color: "#ef5350", fontWeight: 800, fontSize: "1.5rem" }}>
-                <AnimatedCounter target={12} />
-              </span>
-              <span className="header-stat-label">Drugs at Risk</span>
+          <div className="db-header-stats">
+            <div className="db-stat" onClick={() => navigate("/analytics")} style={{ cursor: "pointer", borderColor: "#ef5350" }}>
+              <span className="db-stat-num" style={{ color: "#ef5350" }}><AnimatedCounter target={12} /></span>
+              <span className="db-stat-lbl">Drugs at Risk</span>
             </div>
-            <div className="header-stat-pill" style={{ borderColor: "#2e7d32" }}>
-              <span style={{ color: "#2e7d32", fontWeight: 800, fontSize: "1.5rem" }}>
-                £<AnimatedCounter target={45} />k
-              </span>
-              <span className="header-stat-label">Savings / yr</span>
+            <div className="db-stat" style={{ borderColor: "#2e7d32" }}>
+              <span className="db-stat-num" style={{ color: "#2e7d32" }}>£<AnimatedCounter target={45} />k</span>
+              <span className="db-stat-lbl">Savings / yr</span>
             </div>
-            <div className="header-stat-pill" style={{ borderColor: "#1976d2" }}>
-              <span style={{ color: "#1976d2", fontWeight: 800, fontSize: "1.5rem" }}>
-                <AnimatedCounter target={1035} />
-              </span>
-              <span className="header-stat-label">Bulk Buy Signals</span>
+            <div className="db-stat" onClick={() => navigate("/recommendations")} style={{ cursor: "pointer", borderColor: "#1976d2" }}>
+              <span className="db-stat-num" style={{ color: "#1976d2" }}><AnimatedCounter target={1035} /></span>
+              <span className="db-stat-lbl">Bulk Buy Signals</span>
             </div>
           </div>
         </div>
@@ -146,159 +137,115 @@ export default function Dashboard() {
       {/* ── MARKET SIGNALS STRIP ── */}
       <div className="signals-strip">
         <div className="signals-inner">
-          <span className="signal-pill">
-            <span className="signal-dot green" />GBP/INR <strong>106.8</strong>
-          </span>
+          <span className="signal-pill"><span className="signal-dot green" />GBP/INR <strong>106.8</strong></span>
           <span className="signal-sep">|</span>
-          <span className="signal-pill">
-            <span className="signal-dot yellow" />BoE Rate <strong>5.25%</strong>
-          </span>
+          <span className="signal-pill"><span className="signal-dot yellow" />BoE Rate <strong>5.25%</strong></span>
           <span className="signal-sep">|</span>
-          <span className="signal-pill">
-            <span className="signal-dot red" />MHRA Alerts <strong>Live</strong>
-          </span>
+          <span className="signal-pill"><span className="signal-dot red" />MHRA Alerts <strong>Live</strong></span>
           <span className="signal-sep">|</span>
-          <span className="signal-pill">
-            <span className="signal-dot blue" />Model AUC <strong>99.88%</strong>
-          </span>
+          <span className="signal-pill"><span className="signal-dot blue" />Shortage Model <strong>Active</strong></span>
           <span className="signal-sep">|</span>
-          <span className="signal-pill">
-            <span className="signal-dot grey" />Updated <strong>{today}</strong>
-          </span>
+          <span className="signal-pill"><span className="signal-dot grey" />Updated <strong>{today}</strong></span>
         </div>
       </div>
 
-      {/* ── MAIN CONTENT AREA ── */}
+      {/* ── MAIN CONTENT ── */}
       <div className="db-body">
 
-        {/* ── TOP BULK BUY — first thing you see ── */}
-        <section className="section">
-          <div className="section-header-row">
-            <div>
-              <h2 className="section-title">🔥 Top Bulk Buy Opportunities</h2>
-              <p className="section-sub">
-                {new Date().toLocaleDateString("en-GB", { month: "long", year: "numeric" })} · ranked by margin vs NHS Drug Tariff · invoice-verified
-              </p>
+        {/* ── WATCH CARDS — bulk buy opportunities (original layout) ── */}
+        <div className="watch-section">
+          <div className="watch-header-row">
+            <div className="watch-header-left">
+              <span className="watch-icon">💊</span>
+              <div>
+                <h2 className="watch-title">Top Bulk Buy Opportunities</h2>
+                <p className="watch-sub">{new Date().toLocaleDateString("en-GB", { month: "long", year: "numeric" })} · Invoice-verified pricing · NHS Drug Tariff analysis</p>
+              </div>
             </div>
-            <Link to="/recommendations" className="section-view-all">View all 1,035 →</Link>
+            <Link to="/recommendations" className="watch-view-all">View all opportunities →</Link>
           </div>
 
-          <div className="bulk-cards">
-            {topDrugs.slice(0, 5).map((drug, i) => {
+          <div className="watch-grid">
+            {topDrugs.slice(0, 5).map((drug) => {
               const marginPct = drug.margin_pct ?? 0;
               const marginGbp = drug.margin_gbp;
               const tariff = drug.tariff_price_gbp;
               return (
-                <div key={drug.name} className="bulk-card">
-                  <div className="bulk-rank">#{i + 1}</div>
-                  <div className="bulk-main">
-                    <div className="bulk-top-row">
-                      <span className="bulk-badge">BULK BUY</span>
-                      {marginPct > 0 && (
-                        <span className="bulk-pct">{marginPct.toFixed(0)}% below tariff</span>
-                      )}
+                <div key={drug.name} className="watch-card">
+                  <div className="watch-card-top">
+                    <span className="watch-tag">BULK BUY</span>
+                    {marginPct > 0 && <span className="watch-prob">{marginPct.toFixed(0)}% below tariff</span>}
+                  </div>
+                  <div className="watch-name" style={{ textTransform: "capitalize" }}>{drug.name}</div>
+                  <div className="watch-reason">
+                    NHS Tariff: <strong>{tariff != null ? `£${tariff.toFixed(2)}` : "—"}</strong>
+                    {drug.observation_count > 1 ? ` · ${drug.observation_count} data points` : " · invoice verified"}
+                  </div>
+                  {/* Margin bar */}
+                  {marginPct > 0 && (
+                    <div className="watch-bar-track">
+                      <div className="watch-bar-fill" style={{ width: `${Math.min(marginPct, 100)}%` }} />
                     </div>
-                    <div className="bulk-name" style={{ textTransform: "capitalize" }}>
-                      {drug.name}
-                    </div>
-                    <div className="bulk-meta">
-                      NHS Tariff: <strong>{tariff != null ? `£${tariff.toFixed(2)}` : "—"}</strong>
-                      {drug.observation_count > 1
-                        ? ` · ${drug.observation_count} invoice data points`
-                        : " · invoice verified"}
-                      {marginGbp != null && (
-                        <span style={{ color: "#2e7d32", fontWeight: 700, marginLeft: 12 }}>
-                          Save £{marginGbp.toFixed(2)} / pack
-                        </span>
-                      )}
-                    </div>
-                    {/* Margin bar */}
-                    <div className="margin-bar-track">
-                      <div
-                        className="margin-bar-fill"
-                        style={{ width: `${Math.min(Math.max(marginPct, 0), 100)}%` }}
-                      />
-                    </div>
-                    <div className="bulk-footer-row">
-                      <span className="bulk-saving" style={{ color: "#546e7a", fontSize: "0.8rem" }}>
-                        {marginPct > 0 ? `${marginPct.toFixed(1)}% margin below NHS tariff` : "Competitive pricing"}
-                      </span>
-                      <Link to="/calculator" className="bulk-calc-link">→ Calculate savings</Link>
-                    </div>
+                  )}
+                  <div className="watch-footer">
+                    <span className="watch-savings">
+                      {marginGbp != null ? `Save £${marginGbp.toFixed(2)} per pack` : "Strong margin"}
+                    </span>
+                    <Link to="/calculator" className="watch-calc-btn">Calculate savings →</Link>
                   </div>
                 </div>
               );
             })}
           </div>
-        </section>
+        </div>
 
         {/* ── KPI ROW ── */}
         <div className="kpi-row">
-          <div
-            className="kpi-card kpi-risk"
-            onClick={() => navigate("/analytics")}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => e.key === "Enter" && navigate("/analytics")}
-          >
+          <button className="kpi-card" onClick={() => navigate("/analytics")}>
             <div className="kpi-accent" style={{ background: "#ef5350" }} />
             <div className="kpi-body">
+              <div className="kpi-icon-lg">⚠️</div>
               <div className="kpi-label">Drugs at Risk</div>
-              <div className="kpi-number" style={{ color: "#ef5350" }}>
-                {signals?.drugs_at_risk ?? "12"}
-              </div>
-              <div className="kpi-sub">Active shortage alerts →</div>
+              <div className="kpi-number" style={{ color: "#ef5350" }}>{signals?.drugs_at_risk ?? "12"}</div>
+              <div className="kpi-sub">Tap to view shortage forecast →</div>
             </div>
-          </div>
+          </button>
 
-          <div
-            className="kpi-card"
-            onClick={() => navigate("/recommendations")}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => e.key === "Enter" && navigate("/recommendations")}
-          >
-            <div className="kpi-accent" style={{ background: "#42a5f5" }} />
+          <button className="kpi-card" onClick={() => navigate("/recommendations")}>
+            <div className="kpi-accent" style={{ background: "#1976d2" }} />
             <div className="kpi-body">
+              <div className="kpi-icon-lg">🎯</div>
               <div className="kpi-label">Best Opportunity</div>
-              <div className="kpi-number kpi-number-sm" style={{ color: "#42a5f5" }}>
+              <div className="kpi-number kpi-number-sm" style={{ color: "#1976d2" }}>
                 {signals?.best_opportunity ?? "Primidone 250mg"}
               </div>
-              <div className="kpi-sub">
-                {signals?.best_discount ? `${signals.best_discount}% below tariff` : "69% below tariff"}
-              </div>
+              <div className="kpi-sub">{signals?.best_discount ? `${signals.best_discount}% below tariff` : "69% below tariff"}</div>
             </div>
-          </div>
+          </button>
 
-          <div
-            className="kpi-card"
-            onClick={() => navigate("/alerts")}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => e.key === "Enter" && navigate("/alerts")}
-          >
+          <button className="kpi-card" onClick={() => navigate("/alerts")}>
             <div className="kpi-accent" style={{ background: "#ffa726" }} />
             <div className="kpi-body">
+              <div className="kpi-icon-lg">📍</div>
               <div className="kpi-label">Market Alert</div>
               <div className="kpi-number kpi-number-sm" style={{ color: "#ffa726" }}>
                 {signals?.market_alert ?? "GBP/INR ↑2.3%"}
               </div>
-              <div className="kpi-sub">View all alerts →</div>
+              <div className="kpi-sub">Tap to view all alerts →</div>
             </div>
-          </div>
+          </button>
 
-          <div className="kpi-card">
+          <button className="kpi-card" onClick={() => navigate("/calculator")}>
             <div className="kpi-accent" style={{ background: "#66bb6a" }} />
             <div className="kpi-body">
+              <div className="kpi-icon-lg">💰</div>
               <div className="kpi-label">Savings Potential</div>
               <div className="kpi-number" style={{ color: "#66bb6a" }}>
-                {signals?.total_savings_potential
-                  ? `£${((signals.total_savings_potential) / 1000).toFixed(0)}k`
-                  : "£45k"}
+                {signals?.total_savings_potential ? `£${(signals.total_savings_potential / 1000).toFixed(0)}k` : "£45k"}
               </div>
               <div className="kpi-sub">Per pharmacy per year</div>
             </div>
-          </div>
+          </button>
         </div>
 
         {/* ── WEEKLY REPORT BANNER ── */}
@@ -392,14 +339,14 @@ export default function Dashboard() {
           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
-        /* COMPACT PAGE HEADER */
-        .page-header {
+        /* DASHBOARD HEADER */
+        .db-header {
           background: white;
           border-bottom: 1px solid #e8ecf0;
           padding: 28px 0 24px;
         }
 
-        .page-header-inner {
+        .db-header-inner {
           max-width: 1400px;
           margin: 0 auto;
           padding: 0 24px;
@@ -410,58 +357,214 @@ export default function Dashboard() {
           flex-wrap: wrap;
         }
 
-        .page-header-left { flex: 1; min-width: 260px; }
-
-        .page-eyebrow {
-          color: #1976d2;
-          font-size: 0.7rem;
-          font-weight: 700;
-          letter-spacing: 2px;
-          text-transform: uppercase;
-          font-family: monospace;
-          margin-bottom: 8px;
-        }
-
-        .page-title {
-          font-size: clamp(1.6rem, 3vw, 2.2rem);
+        .db-title {
+          font-size: clamp(1.5rem, 3vw, 2rem);
           font-weight: 800;
-          color: #0d1b2a;
+          color: #1a1a1a;
           margin: 0 0 6px;
-          letter-spacing: -0.3px;
         }
 
-        .page-tagline {
-          font-size: 0.88rem;
-          color: #78909c;
+        .db-tagline {
+          font-size: 0.9rem;
+          color: #666;
           margin: 0;
         }
 
-        .page-header-right {
+        .db-header-stats {
           display: flex;
           gap: 12px;
           flex-wrap: wrap;
         }
 
-        .header-stat-pill {
+        .db-stat {
           display: flex;
           flex-direction: column;
           align-items: center;
           background: #f8fafc;
           border: 2px solid #e0e0e0;
           border-radius: 12px;
-          padding: 12px 20px;
-          min-width: 100px;
+          padding: 12px 18px;
+          min-width: 90px;
           text-align: center;
+          transition: box-shadow 0.2s, transform 0.15s;
         }
 
-        .header-stat-label {
-          font-size: 0.72rem;
+        .db-stat:hover {
+          box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+          transform: translateY(-1px);
+        }
+
+        .db-stat-num {
+          font-size: 1.6rem;
+          font-weight: 800;
+          line-height: 1;
+          font-variant-numeric: tabular-nums;
+        }
+
+        .db-stat-lbl {
+          font-size: 0.7rem;
           color: #78909c;
           font-weight: 600;
           text-transform: uppercase;
           letter-spacing: 0.5px;
+          margin-top: 5px;
+        }
+
+        /* WATCH SECTION (original-style bulk buy cards) */
+        .watch-section {
+          background: white;
+          border-radius: 16px;
+          border: 1px solid #e8ecf0;
+          box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+          padding: 28px;
+          margin-bottom: 28px;
+        }
+
+        .watch-header-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 24px;
+          flex-wrap: wrap;
+          gap: 12px;
+        }
+
+        .watch-header-left {
+          display: flex;
+          align-items: flex-start;
+          gap: 14px;
+        }
+
+        .watch-icon {
+          font-size: 2rem;
+          line-height: 1;
+        }
+
+        .watch-title {
+          font-size: 1.4rem;
+          font-weight: 800;
+          color: #1a1a1a;
+          margin: 0 0 4px;
+        }
+
+        .watch-sub {
+          font-size: 0.82rem;
+          color: #78909c;
+          margin: 0;
+        }
+
+        .watch-view-all {
+          color: #1976d2;
+          font-weight: 600;
+          font-size: 0.88rem;
+          text-decoration: none;
+          white-space: nowrap;
           margin-top: 4px;
         }
+
+        .watch-view-all:hover { color: #1565c0; text-decoration: underline; }
+
+        .watch-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          gap: 16px;
+        }
+
+        .watch-card {
+          background: #f8fafc;
+          border: 1px solid #e0e8f0;
+          border-radius: 12px;
+          padding: 18px;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          border-left: 4px solid #2e7d32;
+          transition: box-shadow 0.2s, transform 0.15s;
+        }
+
+        .watch-card:hover {
+          box-shadow: 0 6px 20px rgba(0,0,0,0.09);
+          transform: translateY(-2px);
+        }
+
+        .watch-card-top {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          flex-wrap: wrap;
+        }
+
+        .watch-tag {
+          background: #e8f5e9;
+          color: #2e7d32;
+          border: 1px solid #a5d6a7;
+          border-radius: 20px;
+          padding: 3px 12px;
+          font-size: 0.72rem;
+          font-weight: 800;
+          letter-spacing: 0.5px;
+        }
+
+        .watch-prob {
+          background: #fff8e1;
+          color: #e65100;
+          border: 1px solid #ffcc02;
+          border-radius: 20px;
+          padding: 3px 10px;
+          font-size: 0.72rem;
+          font-weight: 700;
+        }
+
+        .watch-name {
+          font-size: 1.05rem;
+          font-weight: 700;
+          color: #1a1a1a;
+          line-height: 1.35;
+        }
+
+        .watch-reason {
+          font-size: 0.82rem;
+          color: #546e7a;
+          line-height: 1.5;
+        }
+
+        .watch-bar-track {
+          height: 6px;
+          background: #e8ecf0;
+          border-radius: 99px;
+          overflow: hidden;
+        }
+
+        .watch-bar-fill {
+          height: 100%;
+          background: linear-gradient(90deg, #43a047, #2e7d32);
+          border-radius: 99px;
+          transition: width 0.8s ease;
+        }
+
+        .watch-footer {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+
+        .watch-savings {
+          font-size: 0.88rem;
+          font-weight: 700;
+          color: #2e7d32;
+        }
+
+        .watch-calc-btn {
+          color: #1976d2;
+          font-size: 0.82rem;
+          font-weight: 600;
+          text-decoration: none;
+          white-space: nowrap;
+        }
+
+        .watch-calc-btn:hover { color: #1565c0; text-decoration: underline; }
 
         /* SIGNALS STRIP */
         .signals-strip {
@@ -543,15 +646,24 @@ export default function Dashboard() {
           background: white;
           border-radius: 14px;
           box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+          border: none;
           cursor: pointer;
           display: flex;
           overflow: hidden;
           transition: box-shadow 0.2s, transform 0.2s;
+          text-align: left;
+          padding: 0;
+          width: 100%;
         }
 
         .kpi-card:hover {
-          box-shadow: 0 6px 24px rgba(0,0,0,0.12);
-          transform: translateY(-2px);
+          box-shadow: 0 6px 24px rgba(0,0,0,0.14);
+          transform: translateY(-3px);
+        }
+
+        .kpi-icon-lg {
+          font-size: 1.6rem;
+          margin-bottom: 8px;
         }
 
         .kpi-accent {

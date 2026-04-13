@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link, NavLink } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import MarketNews from "./pages/MarketNews";
 import Chat from "./pages/Chat";
@@ -53,41 +53,33 @@ export default function App() {
             </button>
 
             <nav className={`navbar-menu ${navOpen ? "active" : ""}`}>
-              <Link to="/" className="nav-link" onClick={() => setNavOpen(false)}>
+              <NavLink to="/" end className={({ isActive }) => isActive ? "nav-link nav-link-active" : "nav-link"} onClick={() => setNavOpen(false)}>
                 Dashboard
-              </Link>
-              <Link to="/recommendations" className="nav-link" onClick={() => setNavOpen(false)}>
+              </NavLink>
+              <NavLink to="/recommendations" className={({ isActive }) => isActive ? "nav-link nav-link-active" : "nav-link"} onClick={() => setNavOpen(false)}>
                 Buying Recs
-              </Link>
-              <Link to="/drugs" className="nav-link" onClick={() => setNavOpen(false)}>
+              </NavLink>
+              <NavLink to="/drugs" className={({ isActive }) => isActive ? "nav-link nav-link-active" : "nav-link"} onClick={() => setNavOpen(false)}>
                 Drug Search
-              </Link>
-              <Link
-                to="/alerts"
-                className="nav-link nav-link-alerts"
-                onClick={() => setNavOpen(false)}
-              >
+              </NavLink>
+              <NavLink to="/alerts" className={({ isActive }) => isActive ? "nav-link nav-link-alerts nav-link-active" : "nav-link nav-link-alerts"} onClick={() => setNavOpen(false)}>
                 🚨 Alerts
-              </Link>
-              <Link to="/analytics" className="nav-link" onClick={() => setNavOpen(false)}>
+              </NavLink>
+              <NavLink to="/analytics" className={({ isActive }) => isActive ? "nav-link nav-link-active" : "nav-link"} onClick={() => setNavOpen(false)}>
                 Analytics
-              </Link>
-              <Link to="/news" className="nav-link" onClick={() => setNavOpen(false)}>
+              </NavLink>
+              <NavLink to="/news" className={({ isActive }) => isActive ? "nav-link nav-link-active" : "nav-link"} onClick={() => setNavOpen(false)}>
                 Market News
-              </Link>
-              <Link
-                to="/report"
-                className="nav-link nav-link-report"
-                onClick={() => setNavOpen(false)}
-              >
+              </NavLink>
+              <NavLink to="/report" className={({ isActive }) => isActive ? "nav-link nav-link-report nav-link-report-active" : "nav-link nav-link-report"} onClick={() => setNavOpen(false)}>
                 📊 Report
-              </Link>
-              <Link to="/calculator" className="nav-link" onClick={() => setNavOpen(false)}>
+              </NavLink>
+              <NavLink to="/calculator" className={({ isActive }) => isActive ? "nav-link nav-link-active" : "nav-link"} onClick={() => setNavOpen(false)}>
                 Calculator
-              </Link>
-              <Link to="/contact" className="nav-link" onClick={() => setNavOpen(false)}>
+              </NavLink>
+              <NavLink to="/contact" className={({ isActive }) => isActive ? "nav-link nav-link-active" : "nav-link"} onClick={() => setNavOpen(false)}>
                 Contact
-              </Link>
+              </NavLink>
             </nav>
 
             {/* Health Status Indicator */}
@@ -227,8 +219,16 @@ export default function App() {
             color: #1976d2;
           }
 
-          .nav-link:active {
-            color: #1565c0;
+          .nav-link-active {
+            color: #1976d2 !important;
+            font-weight: 700 !important;
+            border-bottom: 2px solid #1976d2;
+            padding-bottom: 2px;
+          }
+
+          .nav-link-report-active {
+            background: #1565c0 !important;
+            box-shadow: 0 2px 8px rgba(25,118,210,0.45);
           }
 
           .nav-link-alerts {
