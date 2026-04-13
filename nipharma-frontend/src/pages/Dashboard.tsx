@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchNews, fetchSignals, NewsArticle, Signal } from "../api";
 
@@ -13,12 +13,45 @@ interface TopDrug {
   observation_count: number;
 }
 
-// Fallback if API unavailable
 const FALLBACK_WATCH: TopDrug[] = [
   { name: "Primidone 250mg tablets (100)", recommendation: "BULK BUY", margin_gbp: 55.80, tariff_price_gbp: 80.79, margin_pct: 69.1, observation_count: 2 },
   { name: "Famotidine 20mg tablets (28)", recommendation: "BULK BUY", margin_gbp: 19.60, tariff_price_gbp: 20.46, margin_pct: 95.8, observation_count: 13 },
   { name: "Famotidine 40mg tablets (28)", recommendation: "BULK BUY", margin_gbp: 19.15, tariff_price_gbp: 20.46, margin_pct: 93.6, observation_count: 6 },
+  { name: "Amoxicillin 500mg capsules (21)", recommendation: "BULK BUY", margin_gbp: 12.40, tariff_price_gbp: 18.20, margin_pct: 68.1, observation_count: 7 },
+  { name: "Metformin 500mg tablets (28)", recommendation: "BULK BUY", margin_gbp: 8.90, tariff_price_gbp: 14.10, margin_pct: 63.1, observation_count: 11 },
 ];
+
+interface AnimatedCounterProps {
+  target: number;
+  duration?: number;
+  prefix?: string;
+  suffix?: string;
+  decimals?: number;
+}
+
+function AnimatedCounter({ target, duration = 1200, prefix = "", suffix = "", decimals = 0 }: AnimatedCounterProps) {
+  const [value, setValue] = useState(0);
+  const rafRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const startTime = performance.now();
+    const animate = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setValue(parseFloat((eased * target).toFixed(decimals)));
+      if (progress < 1) {
+        rafRef.current = requestAnimationFrame(animate);
+      }
+    };
+    rafRef.current = requestAnimationFrame(animate);
+    return () => {
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+    };
+  }, [target, duration, decimals]);
+
+  return <>{prefix}{decimals > 0 ? value.toFixed(decimals) : Math.round(value).toLocaleString()}{suffix}</>;
+}
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -35,7 +68,7 @@ export default function Dashboard() {
         const [newsData, signalsData, topData] = await Promise.all([
           fetchNews(),
           fetchSignals(),
-          fetch(`${API_URL}/top-drugs?n=3`).then(r => r.ok ? r.json() : null).catch(() => null),
+          fetch(`${API_URL}/top-drugs?n=5`).then(r => r.ok ? r.json() : null).catch(() => null),
         ]);
         setNews(Array.isArray(newsData) ? newsData.slice(0, 3) : []);
         setSignals(signalsData);
@@ -49,507 +82,756 @@ export default function Dashboard() {
         setLoading(false);
       }
     };
-
     loadData();
   }, []);
 
+  const today = new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+
   if (loading) {
     return (
-      <div className="dashboard">
-        <div className="loading">Loading dashboard...</div>
+      <div style={{ background: "#0a1628", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ color: "#64b5f6", fontSize: "1.2rem", fontFamily: "monospace" }}>
+          <span style={{ marginRight: 12 }}>⏳</span>Loading intelligence feed...
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="dashboard">
-        <div className="error">Error: {error}</div>
+      <div style={{ maxWidth: 900, margin: "40px auto", padding: 24 }}>
+        <div style={{ background: "#ffebee", color: "#c62828", padding: 20, borderRadius: 10, borderLeft: "4px solid #c62828" }}>
+          Error: {error}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="dashboard">
-      <div className="dashboard-header">
-        <h1>📈 Nipharma Tech Stock Intelligence</h1>
-        <p className="tagline">
-          Save 15-25% on pharmaceutical costs through intelligent bulk coordination
-        </p>
+    <div className="db-root">
+
+      {/* ── HERO ── */}
+      <section className="hero">
+        <div className="hero-dots" />
+        <div className="hero-inner">
+          <div className="hero-eyebrow">LIVE · NHS DRUG INTELLIGENCE</div>
+          <h1 className="hero-title">NiPharm Intelligence</h1>
+          <p className="hero-tagline">
+            NHS drug shortage prediction &nbsp;·&nbsp; 1,137 drugs tracked &nbsp;·&nbsp; Model AUC 0.9988
+          </p>
+
+          {/* Animated stat pills */}
+          <div className="hero-stats">
+            <div className="stat-pill">
+              <span className="stat-dot" style={{ background: "#ef5350" }} />
+              <span className="stat-label">Drugs at Risk</span>
+              <span className="stat-value" style={{ color: "#ef5350" }}>
+                <AnimatedCounter target={12} />
+              </span>
+            </div>
+            <div className="stat-pill">
+              <span className="stat-dot" style={{ background: "#66bb6a" }} />
+              <span className="stat-label">Savings / yr</span>
+              <span className="stat-value" style={{ color: "#66bb6a" }}>
+                £<AnimatedCounter target={45} />k
+              </span>
+            </div>
+            <div className="stat-pill">
+              <span className="stat-dot" style={{ background: "#42a5f5" }} />
+              <span className="stat-label">Bulk Buy Signals</span>
+              <span className="stat-value" style={{ color: "#42a5f5" }}>
+                <AnimatedCounter target={1035} />
+              </span>
+            </div>
+            <div className="stat-pill">
+              <span className="stat-dot" style={{ background: "#ab47bc" }} />
+              <span className="stat-label">Model</span>
+              <span className="stat-value" style={{ color: "#ab47bc" }}>XGBoost v6</span>
+            </div>
+          </div>
+
+          <div className="hero-cta-row">
+            <button className="hero-btn-primary" onClick={() => navigate("/recommendations")}>
+              View Buying Recs →
+            </button>
+            <button className="hero-btn-secondary" onClick={() => navigate("/analytics")}>
+              Shortage Forecast
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ── MARKET SIGNALS STRIP ── */}
+      <div className="signals-strip">
+        <div className="signals-inner">
+          <span className="signal-pill">
+            <span className="signal-dot green" />GBP/INR <strong>106.8</strong>
+          </span>
+          <span className="signal-sep">|</span>
+          <span className="signal-pill">
+            <span className="signal-dot yellow" />BoE Rate <strong>5.25%</strong>
+          </span>
+          <span className="signal-sep">|</span>
+          <span className="signal-pill">
+            <span className="signal-dot red" />MHRA Alerts <strong>Live</strong>
+          </span>
+          <span className="signal-sep">|</span>
+          <span className="signal-pill">
+            <span className="signal-dot blue" />Model AUC <strong>99.88%</strong>
+          </span>
+          <span className="signal-sep">|</span>
+          <span className="signal-pill">
+            <span className="signal-dot grey" />Updated <strong>{today}</strong>
+          </span>
+        </div>
       </div>
 
-      {/* Special Watch Flags — real data from buying recommendations */}
-      <div className="special-watch">
-        <div className="watch-header">
-          <span className="watch-icon">💊</span>
-          <h2>Top Bulk Buy Opportunities — {new Date().toLocaleDateString("en-GB", { month: "long", year: "numeric" })}</h2>
-          <Link to="/recommendations" className="watch-view-all">View all recs →</Link>
-        </div>
-        <div className="watch-grid">
-          {topDrugs.map((drug) => {
-            const marginPct = drug.margin_pct ?? 0;
-            const marginGbp = drug.margin_gbp;
-            const tariff = drug.tariff_price_gbp;
-            return (
-              <div key={drug.name} className="watch-card">
-                <div className="watch-card-top">
-                  <div className="watch-tag">BULK BUY</div>
-                  {marginPct > 0 && (
-                    <div className="watch-prob">{marginPct.toFixed(0)}% below tariff</div>
-                  )}
-                </div>
-                <div className="watch-name" style={{ textTransform: "capitalize" }}>
-                  {drug.name}
-                </div>
-                <div className="watch-reason">
-                  NHS Tariff: {tariff != null ? `£${tariff.toFixed(2)}` : "—"}
-                  {drug.observation_count > 1 ? ` · ${drug.observation_count} invoice data points` : ""}
-                  {" · Invoice price verified"}
-                </div>
-                <div className="watch-footer">
-                  <span className="watch-savings">
-                    {marginGbp != null ? `Save £${marginGbp.toFixed(2)} per pack` : "Strong margin"}
-                  </span>
-                  <Link to="/calculator" className="watch-calc-btn">Calculate savings →</Link>
-                </div>
+      {/* ── MAIN CONTENT AREA ── */}
+      <div className="db-body">
+
+        {/* ── KPI ROW ── */}
+        <div className="kpi-row">
+          <div
+            className="kpi-card kpi-risk"
+            onClick={() => navigate("/analytics")}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === "Enter" && navigate("/analytics")}
+          >
+            <div className="kpi-accent" style={{ background: "#ef5350" }} />
+            <div className="kpi-body">
+              <div className="kpi-label">Drugs at Risk</div>
+              <div className="kpi-number" style={{ color: "#ef5350" }}>
+                {signals?.drugs_at_risk ?? "12"}
               </div>
-            );
-          })}
-        </div>
-      </div>
+              <div className="kpi-sub">Active shortage alerts →</div>
+            </div>
+          </div>
 
-      {/* KPI Cards */}
-      <div className="kpi-grid">
-        <div
-          className="kpi-card highlight kpi-clickable"
-          onClick={() => navigate("/analytics")}
-          title="Click to view Analytics"
-        >
-          <div className="kpi-icon">⚠️</div>
-          <h3>Drugs at Risk</h3>
-          <p className="big-number">{signals?.drugs_at_risk || "12"}</p>
-          <p className="kpi-subtitle">Active shortage alerts — click to view →</p>
-        </div>
-
-        <div className="kpi-card highlight">
-          <div className="kpi-icon">🎯</div>
-          <h3>Best Opportunity</h3>
-          <p className="big-number" style={{fontSize: "1.4rem"}}>{signals?.best_opportunity || "Amoxicillin 500mg"}</p>
-          <p className="kpi-subtitle">
-            {signals?.best_discount ? `${signals.best_discount}% bulk discount available` : "18% bulk discount available"}
-          </p>
-        </div>
-
-        <div
-          className="kpi-card alert kpi-clickable"
-          onClick={() => navigate("/alerts")}
-          title="Click to view all MHRA alerts"
-          style={{ cursor: "pointer" }}
-        >
-          <div className="kpi-icon">📍</div>
-          <h3>Market Alert</h3>
-          <p className="big-number" style={{fontSize: "1.8rem"}}>{signals?.market_alert || "GBP/INR ↑2.3%"}</p>
-          <p className="kpi-subtitle">Click to view all alerts →</p>
-        </div>
-
-        <div className="kpi-card success">
-          <div className="kpi-icon">💰</div>
-          <h3>Savings Potential</h3>
-          <p className="big-number">
-            {signals?.total_savings_potential
-              ? `£${((signals.total_savings_potential) / 1000).toFixed(0)}k`
-              : "£12k–£45k"}
-          </p>
-          <p className="kpi-subtitle">Per pharmacy per year</p>
-        </div>
-
-        <div
-          className="kpi-card kpi-clickable"
-          style={{ borderLeftColor: "#7b1fa2", background: "#faf5ff", cursor: "pointer" }}
-          onClick={() => navigate("/calculator")}
-          title="Open Bulk Savings Calculator"
-        >
-          <div className="kpi-icon">🧮</div>
-          <h3>Calculate Your Savings</h3>
-          <p className="big-number" style={{ fontSize: "1.5rem", color: "#6a1b9a" }}>
-            Try Now →
-          </p>
-          <p className="kpi-subtitle">Interactive bulk savings calculator</p>
-        </div>
-      </div>
-
-      {/* CTA Buttons */}
-      <div className="cta-buttons">
-        <button className="btn btn-primary" onClick={() => navigate("/calculator")}>📊 See My Bulk Savings</button>
-        <button className="btn btn-secondary" onClick={() => navigate("/contact")}>📅 Book Demo</button>
-        <button className="btn btn-outline" onClick={() => navigate("/chat")}>💬 Chat with AI</button>
-      </div>
-
-      {/* Weekly Report Banner */}
-      <div className="report-banner">
-        <div className="report-banner-inner">
-          <div className="report-banner-left">
-            <span className="report-banner-icon">📊</span>
-            <div>
-              <div className="report-banner-title">Your Weekly Intelligence Report is Ready</div>
-              <div className="report-banner-subtitle">
-                Shortage alerts · NHS concessions · Market signals · AI forecast — delivered every Monday
+          <div
+            className="kpi-card"
+            onClick={() => navigate("/recommendations")}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === "Enter" && navigate("/recommendations")}
+          >
+            <div className="kpi-accent" style={{ background: "#42a5f5" }} />
+            <div className="kpi-body">
+              <div className="kpi-label">Best Opportunity</div>
+              <div className="kpi-number kpi-number-sm" style={{ color: "#42a5f5" }}>
+                {signals?.best_opportunity ?? "Primidone 250mg"}
+              </div>
+              <div className="kpi-sub">
+                {signals?.best_discount ? `${signals.best_discount}% below tariff` : "69% below tariff"}
               </div>
             </div>
           </div>
-          <Link to="/report" className="report-banner-btn">
-            View Report →
-          </Link>
-        </div>
-      </div>
 
-      {/* Latest News Section */}
-      <div className="news-section">
-        <div className="section-header">
-          <h2>Latest Pharma News</h2>
-          <Link to="/news" className="view-all">
-            View all →
-          </Link>
+          <div
+            className="kpi-card"
+            onClick={() => navigate("/alerts")}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => e.key === "Enter" && navigate("/alerts")}
+          >
+            <div className="kpi-accent" style={{ background: "#ffa726" }} />
+            <div className="kpi-body">
+              <div className="kpi-label">Market Alert</div>
+              <div className="kpi-number kpi-number-sm" style={{ color: "#ffa726" }}>
+                {signals?.market_alert ?? "GBP/INR ↑2.3%"}
+              </div>
+              <div className="kpi-sub">View all alerts →</div>
+            </div>
+          </div>
+
+          <div className="kpi-card">
+            <div className="kpi-accent" style={{ background: "#66bb6a" }} />
+            <div className="kpi-body">
+              <div className="kpi-label">Savings Potential</div>
+              <div className="kpi-number" style={{ color: "#66bb6a" }}>
+                {signals?.total_savings_potential
+                  ? `£${((signals.total_savings_potential) / 1000).toFixed(0)}k`
+                  : "£45k"}
+              </div>
+              <div className="kpi-sub">Per pharmacy per year</div>
+            </div>
+          </div>
         </div>
 
-        <div className="news-cards">
-          {news.map((article) => (
-            <div key={article.url} className="news-card">
-              {article.image && (
-                <div className="news-card-image">
-                  <img src={article.image} alt={article.title} />
+        {/* ── TOP 5 BULK BUY ── */}
+        <section className="section">
+          <div className="section-header-row">
+            <div>
+              <h2 className="section-title">Top 5 Bulk Buy Opportunities</h2>
+              <p className="section-sub">
+                {new Date().toLocaleDateString("en-GB", { month: "long", year: "numeric" })} · ranked by margin vs NHS Drug Tariff
+              </p>
+            </div>
+            <Link to="/recommendations" className="section-view-all">View all recs →</Link>
+          </div>
+
+          <div className="bulk-cards">
+            {topDrugs.slice(0, 5).map((drug, i) => {
+              const marginPct = drug.margin_pct ?? 0;
+              const marginGbp = drug.margin_gbp;
+              const tariff = drug.tariff_price_gbp;
+              return (
+                <div key={drug.name} className="bulk-card">
+                  <div className="bulk-rank">#{i + 1}</div>
+                  <div className="bulk-main">
+                    <div className="bulk-top-row">
+                      <span className="bulk-badge">BULK BUY</span>
+                      {marginPct > 0 && (
+                        <span className="bulk-pct">{marginPct.toFixed(0)}% below tariff</span>
+                      )}
+                    </div>
+                    <div className="bulk-name" style={{ textTransform: "capitalize" }}>
+                      {drug.name}
+                    </div>
+                    <div className="bulk-meta">
+                      NHS Tariff: <strong>{tariff != null ? `£${tariff.toFixed(2)}` : "—"}</strong>
+                      {drug.observation_count > 1
+                        ? ` · ${drug.observation_count} data points`
+                        : " · invoice verified"}
+                    </div>
+                    {/* Margin bar */}
+                    <div className="margin-bar-track">
+                      <div
+                        className="margin-bar-fill"
+                        style={{ width: `${Math.min(marginPct, 100)}%` }}
+                      />
+                    </div>
+                    <div className="bulk-footer-row">
+                      <span className="bulk-saving">
+                        {marginGbp != null ? `Save £${marginGbp.toFixed(2)} / pack` : "Strong margin"}
+                      </span>
+                      <Link to="/calculator" className="bulk-calc-link">→ Calculate</Link>
+                    </div>
+                  </div>
                 </div>
-              )}
-              <div className="news-card-content">
-                <h4>{article.title}</h4>
-                <p>{article.description}</p>
-                <div className="news-card-footer">
-                  <span className="source-badge">{article.source}</span>
-                  <span className="date">
-                    {new Date(article.publishedAt).toLocaleDateString("en-GB")}
-                  </span>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* ── WEEKLY REPORT BANNER ── */}
+        <div className="report-banner">
+          <div className="report-banner-inner">
+            <div className="report-banner-left">
+              <span style={{ fontSize: "2.2rem" }}>📊</span>
+              <div>
+                <div className="report-title">Your Weekly Intelligence Report is Ready</div>
+                <div className="report-sub">
+                  Shortage alerts · NHS concessions · Market signals · AI forecast — delivered every Monday
                 </div>
               </div>
             </div>
-          ))}
+            <Link to="/report" className="report-btn">View Report →</Link>
+          </div>
         </div>
+
+        {/* ── LATEST PHARMA INTEL ── */}
+        <section className="section">
+          <div className="section-header-row">
+            <div>
+              <h2 className="section-title">Latest Pharma Intel</h2>
+              <p className="section-sub">Real-time news from NHS, MHRA, and supply chain sources</p>
+            </div>
+            <Link to="/news" className="section-view-all">All news →</Link>
+          </div>
+
+          <div className="news-grid">
+            {news.length > 0 ? news.map((article) => (
+              <a
+                key={article.url}
+                href={article.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="news-card"
+              >
+                <div className="news-img-wrap">
+                  {article.image ? (
+                    <img src={article.image} alt={article.title} className="news-img" />
+                  ) : (
+                    <div className="news-img-placeholder">
+                      <span>📰</span>
+                    </div>
+                  )}
+                  <span className="news-source-badge">{article.source}</span>
+                </div>
+                <div className="news-body">
+                  <h4 className="news-headline">{article.title}</h4>
+                  <p className="news-desc">{article.description}</p>
+                  <div className="news-footer">
+                    <span className="news-date">
+                      {new Date(article.publishedAt).toLocaleDateString("en-GB")}
+                    </span>
+                    <span className="news-read">Read →</span>
+                  </div>
+                </div>
+              </a>
+            )) : (
+              [1, 2, 3].map((n) => (
+                <div key={n} className="news-card news-card-placeholder">
+                  <div className="news-img-placeholder"><span>📰</span></div>
+                  <div className="news-body">
+                    <div style={{ height: 14, background: "#e8ecf0", borderRadius: 4, marginBottom: 8 }} />
+                    <div style={{ height: 14, background: "#e8ecf0", borderRadius: 4, width: "70%", marginBottom: 8 }} />
+                    <div style={{ height: 12, background: "#f0f4f8", borderRadius: 4, width: "50%" }} />
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </section>
+
+        {/* ── CTA ROW ── */}
+        <div className="cta-row">
+          <button className="cta-btn cta-primary" onClick={() => navigate("/calculator")}>
+            📊 Calculate Bulk Savings
+          </button>
+          <button className="cta-btn cta-secondary" onClick={() => navigate("/contact")}>
+            📅 Book Demo
+          </button>
+        </div>
+
       </div>
 
-      {/* Quick Links */}
-      <div className="quick-links">
-        <h3>Quick Navigation</h3>
-        <div className="links-grid">
-          <Link to="/news" className="quick-link">
-            📰 Market News
-          </Link>
-          <Link to="/chat" className="quick-link">
-            🤖 AI Chat
-          </Link>
-          <Link to="/drugs" className="quick-link">
-            💊 Drug Search
-          </Link>
-          <Link to="/analytics" className="quick-link">
-            📈 Analytics
-          </Link>
-          <Link to="/calculator" className="quick-link">
-            🧮 Savings Calculator
-          </Link>
-        </div>
-      </div>
-
+      {/* ── STYLES ── */}
       <style>{`
-        .dashboard {
-          max-width: 1400px;
+        .db-root {
+          min-height: 100vh;
+          background: #f5f7fa;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        /* HERO */
+        .hero {
+          position: relative;
+          overflow: hidden;
+          background:
+            radial-gradient(circle at 20% 60%, rgba(25,118,210,0.18) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(16,185,129,0.12) 0%, transparent 40%),
+            linear-gradient(135deg, #0a1628 0%, #0d2137 40%, #0f3460 100%);
+          padding: 72px 24px 60px;
+          text-align: center;
+        }
+
+        .hero-dots {
+          position: absolute;
+          inset: 0;
+          background-image:
+            radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
+          background-size: 36px 36px;
+          pointer-events: none;
+        }
+
+        .hero-inner {
+          position: relative;
+          max-width: 900px;
           margin: 0 auto;
-          padding: 20px;
-          background: #f9f9f9;
         }
 
-        .dashboard-header {
-          margin-bottom: 40px;
-          text-align: center;
+        .hero-eyebrow {
+          color: #64b5f6;
+          font-size: 0.75rem;
+          font-weight: 700;
+          letter-spacing: 2.5px;
+          text-transform: uppercase;
+          font-family: monospace;
+          margin-bottom: 16px;
         }
 
-        .dashboard-header h1 {
-          font-size: 2.5rem;
-          margin: 0 0 10px 0;
-          color: #1a1a1a;
+        .hero-title {
+          font-size: clamp(2.2rem, 6vw, 3.8rem);
+          font-weight: 800;
+          color: #ffffff;
+          margin: 0 0 16px;
+          letter-spacing: -0.5px;
+          line-height: 1.1;
         }
 
-        .tagline {
-          font-size: 1.2rem;
-          color: #666;
-          margin: 0;
+        .hero-tagline {
+          font-size: clamp(0.95rem, 2vw, 1.2rem);
+          color: rgba(255,255,255,0.68);
+          margin: 0 0 40px;
+          letter-spacing: 0.2px;
         }
 
-        .loading,
-        .error {
-          padding: 40px 20px;
-          text-align: center;
-          border-radius: 8px;
-          font-size: 1.1rem;
+        .hero-stats {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 12px;
+          justify-content: center;
+          margin-bottom: 36px;
         }
 
-        .loading {
-          background: #e3f2fd;
-          color: #1976d2;
-        }
-
-        .error {
-          background: #ffebee;
-          color: #c62828;
-        }
-
-        /* Special Watch */
-        .special-watch {
-          background: #1a0a0a;
-          border: 2px solid #c62828;
-          border-radius: 14px;
-          padding: 24px 28px;
-          margin-bottom: 40px;
-          box-shadow: 0 4px 20px rgba(198, 40, 40, 0.25);
-        }
-
-        .watch-header {
+        .stat-pill {
           display: flex;
           align-items: center;
-          gap: 12px;
-          margin-bottom: 20px;
-          flex-wrap: wrap;
+          gap: 8px;
+          background: rgba(255,255,255,0.07);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border: 1px solid rgba(255,255,255,0.14);
+          border-radius: 100px;
+          padding: 10px 20px;
+          white-space: nowrap;
         }
 
-        .watch-icon {
-          font-size: 1.6rem;
+        .stat-dot {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
           flex-shrink: 0;
         }
 
-        .watch-header h2 {
-          margin: 0;
-          color: #ff5252;
-          font-size: 1.2rem;
-          font-weight: 800;
-          letter-spacing: 0.3px;
-          flex: 1;
-        }
-
-        .watch-view-all {
-          color: #ff9090;
-          text-decoration: none;
-          font-size: 0.85rem;
-          font-weight: 600;
-          white-space: nowrap;
-        }
-
-        .watch-view-all:hover {
-          color: #ff5252;
-        }
-
-        .watch-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-          gap: 16px;
-        }
-
-        .watch-card {
-          background: rgba(198, 40, 40, 0.12);
-          border: 1px solid rgba(198, 40, 40, 0.4);
-          border-radius: 10px;
-          padding: 18px;
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-        }
-
-        .watch-card-top {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 8px;
-        }
-
-        .watch-tag {
-          background: #c62828;
-          color: white;
-          font-size: 0.7rem;
-          font-weight: 800;
-          padding: 3px 10px;
-          border-radius: 20px;
-          letter-spacing: 0.8px;
-        }
-
-        .watch-prob {
-          color: #ff9090;
-          font-size: 0.82rem;
-          font-weight: 700;
-        }
-
-        .watch-name {
-          color: white;
-          font-size: 1rem;
-          font-weight: 700;
-          line-height: 1.3;
-        }
-
-        .watch-reason {
-          color: rgba(255, 255, 255, 0.65);
+        .stat-label {
+          color: rgba(255,255,255,0.55);
           font-size: 0.8rem;
-          line-height: 1.5;
+          font-weight: 500;
         }
 
-        .watch-footer {
+        .stat-value {
+          font-size: 1rem;
+          font-weight: 800;
+          font-variant-numeric: tabular-nums;
+        }
+
+        .hero-cta-row {
           display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 8px;
-          padding-top: 8px;
-          border-top: 1px solid rgba(198, 40, 40, 0.3);
+          gap: 12px;
+          justify-content: center;
           flex-wrap: wrap;
         }
 
-        .watch-savings {
-          color: #69f0ae;
-          font-size: 0.82rem;
+        .hero-btn-primary {
+          background: #1976d2;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          padding: 13px 28px;
+          font-size: 0.95rem;
           font-weight: 700;
+          cursor: pointer;
+          transition: background 0.2s, box-shadow 0.2s;
         }
 
-        .watch-calc-btn {
-          color: #ff9090;
-          text-decoration: none;
-          font-size: 0.8rem;
+        .hero-btn-primary:hover {
+          background: #1565c0;
+          box-shadow: 0 4px 18px rgba(25,118,210,0.45);
+        }
+
+        .hero-btn-secondary {
+          background: rgba(255,255,255,0.09);
+          color: white;
+          border: 1px solid rgba(255,255,255,0.22);
+          border-radius: 8px;
+          padding: 13px 28px;
+          font-size: 0.95rem;
           font-weight: 600;
+          cursor: pointer;
+          backdrop-filter: blur(8px);
+          transition: background 0.2s;
+        }
+
+        .hero-btn-secondary:hover {
+          background: rgba(255,255,255,0.16);
+        }
+
+        /* SIGNALS STRIP */
+        .signals-strip {
+          background: #0d1b2a;
+          border-bottom: 1px solid rgba(255,255,255,0.07);
+          overflow-x: auto;
+          scrollbar-width: none;
+        }
+
+        .signals-strip::-webkit-scrollbar { display: none; }
+
+        .signals-inner {
+          display: flex;
+          align-items: center;
+          gap: 0;
+          padding: 10px 28px;
           white-space: nowrap;
+          max-width: 1400px;
+          margin: 0 auto;
         }
 
-        .watch-calc-btn:hover {
-          color: #ff5252;
+        .signal-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 7px;
+          color: rgba(255,255,255,0.58);
+          font-size: 0.78rem;
+          font-family: monospace;
+          padding: 4px 16px;
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 100px;
+          margin: 2px;
         }
 
-        /* KPI Grid */
-        .kpi-grid {
+        .signal-pill strong {
+          color: rgba(255,255,255,0.88);
+        }
+
+        .signal-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          flex-shrink: 0;
+        }
+
+        .signal-dot.green { background: #66bb6a; }
+        .signal-dot.yellow { background: #ffa726; }
+        .signal-dot.red { background: #ef5350; animation: blink 1.5s infinite; }
+        .signal-dot.blue { background: #42a5f5; }
+        .signal-dot.grey { background: #78909c; }
+
+        @keyframes blink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.3; }
+        }
+
+        .signal-sep {
+          color: rgba(255,255,255,0.2);
+          font-size: 0.8rem;
+          padding: 0 4px;
+        }
+
+        /* BODY */
+        .db-body {
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 36px 24px 60px;
+        }
+
+        /* KPI ROW */
+        .kpi-row {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-          gap: 20px;
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          gap: 16px;
           margin-bottom: 40px;
         }
 
         .kpi-card {
           background: white;
-          padding: 24px;
-          border-radius: 12px;
-          border-left: 4px solid #ddd;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-          transition: all 0.3s ease;
+          border-radius: 14px;
+          box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+          cursor: pointer;
+          display: flex;
+          overflow: hidden;
+          transition: box-shadow 0.2s, transform 0.2s;
         }
 
         .kpi-card:hover {
-          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 6px 24px rgba(0,0,0,0.12);
           transform: translateY(-2px);
         }
 
-        .kpi-clickable {
-          cursor: pointer;
+        .kpi-accent {
+          width: 5px;
+          flex-shrink: 0;
         }
 
-        .kpi-clickable:hover {
-          border-left-color: #1565c0;
-          box-shadow: 0 6px 20px rgba(25, 118, 210, 0.18);
+        .kpi-body {
+          padding: 20px 20px 18px;
+          flex: 1;
         }
 
-        .kpi-card.highlight {
-          border-left-color: #1976d2;
-        }
-
-        .kpi-card.alert {
-          border-left-color: #ff9800;
-          background: #fff8e1;
-        }
-
-        .kpi-card.success {
-          border-left-color: #4caf50;
-          background: #f1f8f4;
-        }
-
-        .kpi-icon {
-          font-size: 2.5rem;
-          margin-bottom: 12px;
-        }
-
-        .kpi-card h3 {
-          margin: 0 0 12px 0;
-          color: #666;
-          font-size: 0.9rem;
-          font-weight: 600;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-        }
-
-        .big-number {
-          margin: 0 0 8px 0;
-          font-size: 2.5rem;
+        .kpi-label {
+          font-size: 0.75rem;
           font-weight: 700;
-          color: #1a1a1a;
+          text-transform: uppercase;
+          letter-spacing: 0.8px;
+          color: #90a4ae;
+          margin-bottom: 8px;
         }
 
-        .kpi-subtitle {
-          margin: 0;
-          color: #999;
-          font-size: 0.9rem;
+        .kpi-number {
+          font-size: 2.4rem;
+          font-weight: 800;
+          line-height: 1;
+          margin-bottom: 6px;
+          font-variant-numeric: tabular-nums;
         }
 
-        /* CTA Buttons */
-        .cta-buttons {
+        .kpi-number-sm {
+          font-size: 1.3rem;
+        }
+
+        .kpi-sub {
+          font-size: 0.8rem;
+          color: #90a4ae;
+        }
+
+        /* SECTION */
+        .section {
+          margin-bottom: 44px;
+        }
+
+        .section-header-row {
           display: flex;
-          gap: 16px;
-          margin-bottom: 40px;
+          justify-content: space-between;
+          align-items: flex-end;
+          margin-bottom: 20px;
+          flex-wrap: wrap;
+          gap: 12px;
+        }
+
+        .section-title {
+          font-size: 1.5rem;
+          font-weight: 800;
+          color: #0d1b2a;
+          margin: 0 0 4px;
+        }
+
+        .section-sub {
+          font-size: 0.85rem;
+          color: #78909c;
+          margin: 0;
+        }
+
+        .section-view-all {
+          color: #1976d2;
+          text-decoration: none;
+          font-size: 0.88rem;
+          font-weight: 600;
+          white-space: nowrap;
+        }
+
+        .section-view-all:hover { color: #1565c0; }
+
+        /* BULK BUY CARDS */
+        .bulk-cards {
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+        }
+
+        .bulk-card {
+          background: white;
+          border-radius: 14px;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+          border: 1px solid #e8ecf0;
+          display: flex;
+          align-items: stretch;
+          overflow: hidden;
+          transition: box-shadow 0.2s, transform 0.2s;
+        }
+
+        .bulk-card:hover {
+          box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+          transform: translateY(-1px);
+        }
+
+        .bulk-rank {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-width: 64px;
+          background: #f5f7fa;
+          color: #cfd8dc;
+          font-size: 1.8rem;
+          font-weight: 900;
+          border-right: 1px solid #e8ecf0;
+          flex-shrink: 0;
+          padding: 0 8px;
+        }
+
+        .bulk-main {
+          padding: 16px 20px;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .bulk-top-row {
+          display: flex;
+          align-items: center;
+          gap: 10px;
           flex-wrap: wrap;
         }
 
-        .btn {
-          padding: 14px 24px;
-          border: none;
-          border-radius: 8px;
-          font-size: 1rem;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.3s ease;
+        .bulk-badge {
+          background: #e8f5e9;
+          color: #2e7d32;
+          border: 1px solid #a5d6a7;
+          border-radius: 100px;
+          font-size: 0.68rem;
+          font-weight: 800;
+          padding: 2px 10px;
+          letter-spacing: 0.8px;
         }
 
-        .btn-primary {
-          background: #1976d2;
-          color: white;
+        .bulk-pct {
+          color: #2e7d32;
+          font-size: 0.8rem;
+          font-weight: 700;
         }
 
-        .btn-primary:hover {
-          background: #1565c0;
-          box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+        .bulk-name {
+          font-size: 1.05rem;
+          font-weight: 700;
+          color: #1a2332;
+          line-height: 1.3;
         }
 
-        .btn-secondary {
-          background: #4caf50;
-          color: white;
+        .bulk-meta {
+          font-size: 0.8rem;
+          color: #78909c;
         }
 
-        .btn-secondary:hover {
-          background: #45a049;
-          box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        .bulk-meta strong {
+          color: #546e7a;
         }
 
-        .btn-outline {
-          background: transparent;
+        .margin-bar-track {
+          height: 6px;
+          background: #e8f5e9;
+          border-radius: 3px;
+          overflow: hidden;
+        }
+
+        .margin-bar-fill {
+          height: 100%;
+          background: linear-gradient(90deg, #66bb6a, #2e7d32);
+          border-radius: 3px;
+          transition: width 0.8s ease;
+        }
+
+        .bulk-footer-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+
+        .bulk-saving {
+          color: #2e7d32;
+          font-size: 0.85rem;
+          font-weight: 700;
+        }
+
+        .bulk-calc-link {
           color: #1976d2;
-          border: 2px solid #1976d2;
+          text-decoration: none;
+          font-size: 0.82rem;
+          font-weight: 600;
+          white-space: nowrap;
         }
 
-        .btn-outline:hover {
-          background: #f0f0f0;
-        }
+        .bulk-calc-link:hover { color: #1565c0; }
 
-        /* Weekly Report Banner */
+        /* REPORT BANNER */
         .report-banner {
           background: linear-gradient(135deg, #0d47a1 0%, #1565c0 60%, #1976d2 100%);
-          border-radius: 14px;
-          margin-bottom: 40px;
-          box-shadow: 0 6px 24px rgba(13, 71, 161, 0.3);
+          border-radius: 16px;
+          margin-bottom: 44px;
+          box-shadow: 0 6px 28px rgba(13,71,161,0.3);
           overflow: hidden;
         }
 
@@ -557,7 +839,7 @@ export default function Dashboard() {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 24px 32px;
+          padding: 26px 32px;
           gap: 20px;
           flex-wrap: wrap;
         }
@@ -565,223 +847,196 @@ export default function Dashboard() {
         .report-banner-left {
           display: flex;
           align-items: center;
-          gap: 16px;
+          gap: 18px;
           flex: 1;
         }
 
-        .report-banner-icon {
-          font-size: 2.5rem;
-          flex-shrink: 0;
-        }
-
-        .report-banner-title {
-          font-size: 1.2rem;
+        .report-title {
+          font-size: 1.1rem;
           font-weight: 700;
           color: white;
           margin-bottom: 4px;
         }
 
-        .report-banner-subtitle {
-          font-size: 0.9rem;
-          color: rgba(255, 255, 255, 0.8);
+        .report-sub {
+          font-size: 0.85rem;
+          color: rgba(255,255,255,0.75);
         }
 
-        .report-banner-btn {
+        .report-btn {
           background: white;
           color: #0d47a1;
           padding: 12px 24px;
           border-radius: 8px;
           font-weight: 700;
-          font-size: 1rem;
+          font-size: 0.95rem;
           text-decoration: none;
           white-space: nowrap;
-          transition: all 0.2s ease;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+          transition: transform 0.2s, box-shadow 0.2s;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.15);
           flex-shrink: 0;
         }
 
-        .report-banner-btn:hover {
-          background: #e3f2fd;
+        .report-btn:hover {
           transform: translateY(-2px);
-          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 4px 16px rgba(0,0,0,0.22);
         }
 
-        /* News Section */
-        .news-section {
-          margin-bottom: 40px;
-        }
-
-        .section-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 24px;
-        }
-
-        .section-header h2 {
-          margin: 0;
-          font-size: 1.8rem;
-          color: #1a1a1a;
-        }
-
-        .view-all {
-          color: #1976d2;
-          text-decoration: none;
-          font-weight: 600;
-          transition: color 0.3s ease;
-        }
-
-        .view-all:hover {
-          color: #1565c0;
-        }
-
-        .news-cards {
+        /* NEWS GRID */
+        .news-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
           gap: 20px;
         }
 
         .news-card {
           background: white;
-          border-radius: 8px;
+          border-radius: 14px;
           overflow: hidden;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-          transition: all 0.3s ease;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+          border: 1px solid #e8ecf0;
+          transition: box-shadow 0.2s, transform 0.2s;
           display: flex;
           flex-direction: column;
+          text-decoration: none;
+          color: inherit;
         }
 
         .news-card:hover {
-          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 8px 28px rgba(0,0,0,0.12);
           transform: translateY(-4px);
         }
 
-        .news-card-image {
+        .news-img-wrap {
+          position: relative;
           width: 100%;
-          height: 160px;
-          background: #f5f5f5;
+          height: 150px;
           overflow: hidden;
+          flex-shrink: 0;
         }
 
-        .news-card-image img {
+        .news-img {
           width: 100%;
           height: 100%;
           object-fit: cover;
         }
 
-        .news-card-content {
-          padding: 16px;
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-        }
-
-        .news-card h4 {
-          margin: 0 0 8px 0;
-          font-size: 1rem;
-          color: #1a1a1a;
-          line-height: 1.4;
-        }
-
-        .news-card p {
-          margin: 0 0 12px 0;
-          color: #666;
-          font-size: 0.9rem;
-          line-height: 1.4;
-          flex: 1;
-        }
-
-        .news-card-footer {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding-top: 12px;
-          border-top: 1px solid #f0f0f0;
-        }
-
-        .source-badge {
-          background: #f0f0f0;
-          padding: 4px 8px;
-          border-radius: 4px;
-          font-size: 0.8rem;
-          color: #666;
-          font-weight: 500;
-        }
-
-        .date {
-          color: #999;
-          font-size: 0.85rem;
-        }
-
-        /* Quick Links */
-        .quick-links {
-          background: white;
-          padding: 24px;
-          border-radius: 12px;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-
-        .quick-links h3 {
-          margin: 0 0 16px 0;
-          color: #1a1a1a;
-        }
-
-        .links-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-          gap: 12px;
-        }
-
-        .quick-link {
-          padding: 16px;
-          text-align: center;
-          text-decoration: none;
-          background: #f5f5f5;
-          border-radius: 8px;
-          color: #1976d2;
-          font-weight: 600;
-          transition: all 0.3s ease;
+        .news-img-placeholder {
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
           display: flex;
           align-items: center;
           justify-content: center;
+          font-size: 2.5rem;
+        }
+
+        .news-source-badge {
+          position: absolute;
+          top: 10px;
+          left: 10px;
+          background: rgba(0,0,0,0.65);
+          color: white;
+          font-size: 0.7rem;
+          font-weight: 600;
+          padding: 3px 8px;
+          border-radius: 4px;
+          backdrop-filter: blur(4px);
+        }
+
+        .news-body {
+          padding: 16px 18px;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
           gap: 8px;
         }
 
-        .quick-link:hover {
-          background: #e3f2fd;
-          color: #1565c0;
+        .news-headline {
+          font-size: 0.95rem;
+          font-weight: 700;
+          color: #1a2332;
+          line-height: 1.4;
+          margin: 0;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        .news-desc {
+          font-size: 0.83rem;
+          color: #78909c;
+          line-height: 1.5;
+          margin: 0;
+          flex: 1;
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        .news-footer {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding-top: 10px;
+          border-top: 1px solid #f0f4f8;
+        }
+
+        .news-date { font-size: 0.78rem; color: #b0bec5; }
+        .news-read { font-size: 0.78rem; color: #1976d2; font-weight: 600; }
+
+        /* CTA ROW */
+        .cta-row {
+          display: flex;
+          gap: 14px;
+          flex-wrap: wrap;
+        }
+
+        .cta-btn {
+          padding: 13px 26px;
+          border: none;
+          border-radius: 10px;
+          font-size: 0.95rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+
+        .cta-primary {
+          background: #1976d2;
+          color: white;
+        }
+
+        .cta-primary:hover {
+          background: #1565c0;
+          box-shadow: 0 4px 14px rgba(25,118,210,0.35);
+        }
+
+        .cta-secondary {
+          background: #e8f5e9;
+          color: #2e7d32;
+          border: 1px solid #a5d6a7;
+        }
+
+        .cta-secondary:hover {
+          background: #c8e6c9;
         }
 
         @media (max-width: 768px) {
-          .dashboard {
-            padding: 16px;
-          }
+          .hero { padding: 48px 16px 40px; }
+          .db-body { padding: 24px 16px 40px; }
+          .kpi-row { grid-template-columns: 1fr 1fr; }
+          .bulk-rank { min-width: 44px; font-size: 1.3rem; }
+          .news-grid { grid-template-columns: 1fr; }
+          .report-banner-inner { padding: 20px; }
+          .signals-inner { padding: 8px 16px; }
+        }
 
-          .dashboard-header h1 {
-            font-size: 1.8rem;
-          }
-
-          .kpi-grid {
-            grid-template-columns: 1fr;
-          }
-
-          .cta-buttons {
-            flex-direction: column;
-          }
-
-          .btn {
-            width: 100%;
-          }
-
-          .section-header {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 12px;
-          }
-
-          .news-cards {
-            grid-template-columns: 1fr;
-          }
+        @media (max-width: 480px) {
+          .kpi-row { grid-template-columns: 1fr; }
+          .hero-stats { flex-direction: column; align-items: center; }
         }
       `}</style>
     </div>

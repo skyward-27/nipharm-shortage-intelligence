@@ -10,6 +10,7 @@ import DrugSearch from "./pages/DrugSearch";
 import Alerts from "./pages/Alerts";
 import WeeklyReport from "./pages/WeeklyReport";
 import Recommendations from "./pages/Recommendations";
+import ChatWidget from "./components/ChatWidget";
 import { healthCheck } from "./api";
 
 export default function App() {
@@ -55,20 +56,8 @@ export default function App() {
               <Link to="/" className="nav-link" onClick={() => setNavOpen(false)}>
                 Dashboard
               </Link>
-              <Link to="/news" className="nav-link" onClick={() => setNavOpen(false)}>
-                Market News
-              </Link>
-              <Link to="/chat" className="nav-link" onClick={() => setNavOpen(false)}>
-                AI Chat
-              </Link>
-              <Link to="/analytics" className="nav-link" onClick={() => setNavOpen(false)}>
-                Analytics
-              </Link>
               <Link to="/recommendations" className="nav-link" onClick={() => setNavOpen(false)}>
                 Buying Recs
-              </Link>
-              <Link to="/calculator" className="nav-link" onClick={() => setNavOpen(false)}>
-                Calculator
               </Link>
               <Link to="/drugs" className="nav-link" onClick={() => setNavOpen(false)}>
                 Drug Search
@@ -80,12 +69,21 @@ export default function App() {
               >
                 🚨 Alerts
               </Link>
+              <Link to="/analytics" className="nav-link" onClick={() => setNavOpen(false)}>
+                Analytics
+              </Link>
+              <Link to="/news" className="nav-link" onClick={() => setNavOpen(false)}>
+                Market News
+              </Link>
               <Link
                 to="/report"
                 className="nav-link nav-link-report"
                 onClick={() => setNavOpen(false)}
               >
                 📊 Report
+              </Link>
+              <Link to="/calculator" className="nav-link" onClick={() => setNavOpen(false)}>
+                Calculator
               </Link>
               <Link to="/contact" className="nav-link" onClick={() => setNavOpen(false)}>
                 Contact
@@ -440,6 +438,7 @@ export default function App() {
           }
         `}</style>
       </div>
+      <ChatWidget />
     </Router>
   );
 }
