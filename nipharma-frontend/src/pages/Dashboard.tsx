@@ -82,7 +82,7 @@ export default function Dashboard() {
       <div className="special-watch">
         <div className="watch-header">
           <span className="watch-icon">💊</span>
-          <h2>Top Bulk Buy Opportunities — April 2026</h2>
+          <h2>Top Bulk Buy Opportunities — {new Date().toLocaleDateString("en-GB", { month: "long", year: "numeric" })}</h2>
           <Link to="/recommendations" className="watch-view-all">View all recs →</Link>
         </div>
         <div className="watch-grid">
