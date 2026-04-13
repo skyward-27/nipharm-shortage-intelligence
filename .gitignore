@@ -29,7 +29,9 @@ Thumbs.db
 
 # ── Keep these — needed by the dashboard & API ────────────────────────────────
 !scrapers/data/model/panel_model.pkl
+!scrapers/data/model/panel_model_xgb.pkl
 !nipharma-backend/model/panel_model.pkl
+!nipharma-backend/model/panel_model_xgb.pkl
 !scrapers/data/model/panel_predictions.csv
 !scrapers/data/model/panel_feature_importance.csv
 !scrapers/data/model/panel_cv_metrics.txt

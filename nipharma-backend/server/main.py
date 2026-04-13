@@ -191,6 +191,10 @@ class PredictionRequest(BaseModel):
     pca_demand_spike: int = 0
     pca_demand_trend_6mo: float = 0.0
     pca_nic_gbp: float = 0.0
+    # v6 new features (BSO NI, FDA warnings, manufacturer diversity)
+    bso_ni_shortage_flag: int = 0
+    fda_warning_flag: int = 0
+    manufacturer_count: int = 3
     # Legacy fields kept for backward compatibility (mapped to pca equivalents)
     items_mom_pct: float = 0.0
     demand_spike: int = 0
@@ -705,7 +709,7 @@ async def predict_concession(request: PredictionRequest):
 
     try:
         # ── STEP 1: MODEL PREDICTION (70% weight) ─────────────────────────────
-        # All 39 features in exact training order (v5 model)
+        # All 42 features in exact training order (v6 model)
         import math
         now_month = datetime.now().month
         month_sin = math.sin(2 * math.pi * now_month / 12)
@@ -764,6 +768,10 @@ async def predict_concession(request: PredictionRequest):
             pca_spike,
             pca_trend,
             request.pca_nic_gbp,
+            # 39-41: v6 features (BSO NI, FDA, manufacturer diversity)
+            request.bso_ni_shortage_flag,
+            request.fda_warning_flag,
+            request.manufacturer_count,
         ]])
 
         model_proba = ml_model.predict_proba(features)[0][1]  # Probability of concession
