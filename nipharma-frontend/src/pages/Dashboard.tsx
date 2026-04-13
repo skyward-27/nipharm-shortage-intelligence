@@ -2,34 +2,29 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchNews, fetchSignals, NewsArticle, Signal } from "../api";
 
-const SPECIAL_WATCH = [
-  {
-    name: "Amoxicillin 500mg Capsules",
-    probability: 78,
-    reason: "India API supply disruption · MHRA alert active · 3rd consecutive concession month",
-    action: "BUY NOW" as const,
-    savings: "22%",
-  },
-  {
-    name: "Amlodipine 10mg Tablets",
-    probability: 75,
-    reason: "GBP/INR stress +2.3% · Price +15% YoY · 2 active MHRA shortage publications",
-    action: "BUY NOW" as const,
-    savings: "20%",
-  },
-  {
-    name: "Levothyroxine 100mcg Tablets",
-    probability: 73,
-    reason: "Demand surge post-pandemic · India sole-source risk · Concession streak 4 months",
-    action: "BUY NOW" as const,
-    savings: "19%",
-  },
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
+
+interface TopDrug {
+  name: string;
+  recommendation: string;
+  margin_gbp: number | null;
+  tariff_price_gbp: number | null;
+  margin_pct: number | null;
+  observation_count: number;
+}
+
+// Fallback if API unavailable
+const FALLBACK_WATCH: TopDrug[] = [
+  { name: "Primidone 250mg tablets (100)", recommendation: "BULK BUY", margin_gbp: 55.80, tariff_price_gbp: 80.79, margin_pct: 69.1, observation_count: 2 },
+  { name: "Famotidine 20mg tablets (28)", recommendation: "BULK BUY", margin_gbp: 19.60, tariff_price_gbp: 20.46, margin_pct: 95.8, observation_count: 13 },
+  { name: "Famotidine 40mg tablets (28)", recommendation: "BULK BUY", margin_gbp: 19.15, tariff_price_gbp: 20.46, margin_pct: 93.6, observation_count: 6 },
 ];
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const [news, setNews] = useState<NewsArticle[]>([]);
   const [signals, setSignals] = useState<Signal | null>(null);
+  const [topDrugs, setTopDrugs] = useState<TopDrug[]>(FALLBACK_WATCH);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -37,12 +32,16 @@ export default function Dashboard() {
     const loadData = async () => {
       try {
         setLoading(true);
-        const [newsData, signalsData] = await Promise.all([
+        const [newsData, signalsData, topData] = await Promise.all([
           fetchNews(),
           fetchSignals(),
+          fetch(`${API_URL}/top-drugs?n=3`).then(r => r.ok ? r.json() : null).catch(() => null),
         ]);
         setNews(Array.isArray(newsData) ? newsData.slice(0, 3) : []);
         setSignals(signalsData);
+        if (topData?.success && topData.drugs?.length > 0) {
+          setTopDrugs(topData.drugs);
+        }
         setError(null);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to load dashboard");
@@ -79,28 +78,43 @@ export default function Dashboard() {
         </p>
       </div>
 
-      {/* Special Watch Flags */}
+      {/* Special Watch Flags — real data from buying recommendations */}
       <div className="special-watch">
         <div className="watch-header">
-          <span className="watch-icon">🚨</span>
-          <h2>Special Watch — Act Before Next Month</h2>
-          <Link to="/drugs" className="watch-view-all">View all drugs →</Link>
+          <span className="watch-icon">💊</span>
+          <h2>Top Bulk Buy Opportunities — April 2026</h2>
+          <Link to="/recommendations" className="watch-view-all">View all recs →</Link>
         </div>
         <div className="watch-grid">
-          {SPECIAL_WATCH.map((drug) => (
-            <div key={drug.name} className="watch-card">
-              <div className="watch-card-top">
-                <div className="watch-tag">BUY NOW</div>
-                <div className="watch-prob">{drug.probability}% shortage risk</div>
+          {topDrugs.map((drug) => {
+            const marginPct = drug.margin_pct ?? 0;
+            const marginGbp = drug.margin_gbp;
+            const tariff = drug.tariff_price_gbp;
+            return (
+              <div key={drug.name} className="watch-card">
+                <div className="watch-card-top">
+                  <div className="watch-tag">BULK BUY</div>
+                  {marginPct > 0 && (
+                    <div className="watch-prob">{marginPct.toFixed(0)}% below tariff</div>
+                  )}
+                </div>
+                <div className="watch-name" style={{ textTransform: "capitalize" }}>
+                  {drug.name}
+                </div>
+                <div className="watch-reason">
+                  NHS Tariff: {tariff != null ? `£${tariff.toFixed(2)}` : "—"}
+                  {drug.observation_count > 1 ? ` · ${drug.observation_count} invoice data points` : ""}
+                  {" · Invoice price verified"}
+                </div>
+                <div className="watch-footer">
+                  <span className="watch-savings">
+                    {marginGbp != null ? `Save £${marginGbp.toFixed(2)} per pack` : "Strong margin"}
+                  </span>
+                  <Link to="/calculator" className="watch-calc-btn">Calculate savings →</Link>
+                </div>
               </div>
-              <div className="watch-name">{drug.name}</div>
-              <div className="watch-reason">{drug.reason}</div>
-              <div className="watch-footer">
-                <span className="watch-savings">Save {drug.savings} bulk discount</span>
-                <Link to="/calculator" className="watch-calc-btn">Calculate savings →</Link>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 

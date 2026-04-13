@@ -1,0 +1,1138 @@
+drug_name,base_molecule,recommendation,tariff_price_gbp,price_vs_tariff_pct,margin_gbp,observation_count,first_seen,last_seen
+primidone 250mg tablets (100),primidone,BULK BUY,80.785,-69.1,55.8,2,2026-02-17,2026-02-23
+famotidine 20mg tablets (28),famotidine,BULK BUY,20.455,-95.8,19.6,13,2026-02-02,2026-03-31
+famotidine 40mg tablets (28),famotidine,BULK BUY,20.455,-93.6,19.15,4,2026-02-16,2026-03-16
+clonazepam 0.5mg tablets (100),clonazepam,BULK BUY,18.53,-91.3,16.92,6,2026-02-02,2026-03-31
+zonisamide 25mg capsules (14),zonisamide,BULK BUY,17.46,-93.4,16.31,1,2026-02-20,2026-02-20
+mefenamic acid 500mg tablets,mefenamic acid,BULK BUY,20.39,-75.8,15.45,2,2025-06-30,2025-06-30
+zonisamide 50mg capsules (56),zonisamide,BULK BUY,17.46,-83.0,14.5,1,2026-02-20,2026-02-20
+zonisamide 100mg capsules (56),zonisamide,BULK BUY,17.46,-82.3,14.37,4,2026-02-09,2026-03-19
+dapagliflozin 5mg tablets (28),dapagliflozin,BULK BUY,14.485,-90.5,13.11,5,2026-02-01,2026-03-31
+dapagliflozin 10mg tablets (28),dapagliflozin,BULK BUY,14.485,-89.7,13.0,25,2026-02-01,2026-03-29
+betamethasone 0.1% w/w scalp application (100ml) (betacap),betamethasone,BULK BUY,16.05,-76.1,12.21,2,2026-02-22,2026-03-08
+betamethasone 0.1% w/w scalp application,betamethasone,BULK BUY,16.05,-76.1,12.21,7,2026-02-01,2026-03-19
+cyanocobalamin 50mcg tablets (50),cyanocobalamin,BULK BUY,10.91,-98.6,10.76,20,2026-02-01,2026-03-29
+sulfasalazine 500mg tablets (112),sulfasalazine,BULK BUY,17.145000000000003,-62.6,10.74,5,2026-02-20,2026-03-22
+cyanocobalamin 50mcg tablets,cyanocobalamin,BULK BUY,10.91,-91.7,10.0,2,2025-12-30,2025-12-30
+prucalopride 2mg tablets (28),prucalopride,BULK BUY,13.21,-59.5,7.86,3,2026-02-03,2026-03-24
+cyanocobalamin b12 tabs 100mcg 50,cyanocobalamin,BULK BUY,10.91,-70.8,7.72,1,2026-04-01,2026-04-01
+salbutamol 100mcg inhaler cfc free,salbutamol,BULK BUY,8.165,-84.1,6.86,1,2025-12-30,2025-12-30
+salbutamol inhaler (cfc free) (salamol/ivax),salbutamol,BULK BUY,8.165,-83.8,6.84,3,2026-02-22,2026-03-29
+salbutamol inhaler (cfc free) (salamol/i,salbutamol,BULK BUY,8.165,-83.8,6.84,20,2026-02-01,2026-03-27
+dapagliflozin 5mg tablets,dapagliflozin,BULK BUY,7.58,-82.1,6.22,1,2026-10-04,2026-10-04
+dapsone 50mg tablets (28),dapsone,BULK BUY,6.96,-75.1,5.23,2,2026-02-02,2026-03-22
+colecalciferol 800iu capsules (30),colecalciferol,BULK BUY,5.53,-93.1,5.15,4,2026-02-26,2026-03-31
+colecalciferol 1000iu capsules (30),colecalciferol,BULK BUY,5.53,-92.9,5.14,1,2026-03-09,2026-03-09
+methocarbamol 750mg tablets (100),methocarbamol,BULK BUY,8.215,-59.5,4.88,2,2026-02-08,2026-03-08
+buspirone 5mg tablets (30),buspirone,BULK BUY,5.56,-86.5,4.81,9,2026-02-05,2026-03-31
+valsartan 40mg capsules (28),valsartan,BULK BUY,6.09,-77.0,4.69,3,2026-02-05,2026-03-29
+buspirone 10mg tablets (30),buspirone,BULK BUY,5.56,-81.8,4.55,6,2026-02-01,2026-03-24
+salbutamol 2.5mg nebules (20),salbutamol,BULK BUY,8.165,-54.2,4.42,7,2026-02-02,2026-03-26
+dapsone 100mg tablets (28),dapsone,BULK BUY,6.96,-62.9,4.38,2,2026-02-12,2026-03-06
+colecalciferol 400iu capsules (30),colecalciferol,BULK BUY,5.53,-76.7,4.24,3,2026-02-17,2026-02-26
+diltiazem 60mg tablets (84/90) m/r,diltiazem,BULK BUY,6.815,-56.9,3.87,1,2026-03-12,2026-03-12
+ivabradine 5mg tablets (56),ivabradine,BULK BUY,5.99,-63.6,3.81,1,2026-02-06,2026-02-06
+nitrofurantoin 50mg capsules (30),nitrofurantoin,BUY AS YOU GO,4.785,-79.1,3.78,6,2026-02-05,2026-03-27
+acamprosate 333mg tablets (168),acamprosate,BULK BUY,22.68,-15.5,3.51,3,2026-02-01,2026-03-22
+valsartan 320mg tablets (28),valsartan,BULK BUY,6.09,-57.0,3.47,1,2026-03-03,2026-03-03
+dosulepin 25mg capsules (28),dosulepin,BULK BUY,6.805,-50.2,3.41,2,2026-02-24,2026-03-23
+levetiracetam 250mg tablets (60),levetiracetam,BUY AS YOU GO,4.105,-81.5,3.35,2,2026-02-02,2026-03-10
+colecalciferol (strivit-d3) 800iu capsul,colecalciferol,BULK BUY,5.53,-59.5,3.29,6,2026-02-04,2026-03-24
+oxycodone 1mg/ml (5mg/5ml) oral solution (250ml),oxycodone,BULK BUY,7.62,-43.2,3.29,2,2026-02-17,2026-03-17
+zolmitriptan 5mg dispersible tablets (6),zolmitriptan,BULK BUY,5.404999999999999,-57.6,3.11,1,2026-02-26,2026-02-26
+brinzolamide 10mg/ml eye drops (5ml),brinzolamide,BULK BUY,4.165,-65.7,2.74,12,2026-02-01,2026-03-31
+cinacalcet 30mg tablets (28),cinacalcet,BULK BUY,6.1,-44.9,2.74,4,2026-02-20,2026-03-15
+naproxen 250mg gastro-resistant tablets,naproxen,BULK BUY,5.79,-46.8,2.71,1,2026-10-04,2026-10-04
+tizanidine 2mg tablets (120),tizanidine,BULK BUY,6.88,-39.4,2.71,2,2026-02-20,2026-03-27
+clarithromycin 500mg tablets (14),clarithromycin,BULK BUY,3.98,-67.8,2.7,13,2026-02-05,2026-03-26
+eplerenone 25mg tablets (28/30),eplerenone,BULK BUY,4.09,-65.5,2.68,19,2026-02-01,2026-03-31
+prochlorperazine 5mg tablets (84),prochlorperazine,BULK BUY,3.51,-74.4,2.61,8,2026-02-05,2026-03-26
+clotrimazole 1% cream (20g) (p),clotrimazole,BULK BUY,3.34,-76.9,2.57,9,2026-02-09,2026-03-18
+zolmitriptan 2.5mg dispersible tablets (,zolmitriptan,BULK BUY,5.404999999999999,-46.7,2.52,1,2026-02-10,2026-02-10
+amisulpride 200mg tablets,amisulpride,BULK BUY,10.03,-23.8,2.39,1,2026-08-04,2026-08-04
+quetiapine 25mg tablets (60),quetiapine,BULK BUY,2.895,-81.3,2.36,28,2026-02-01,2026-03-27
+co-codamol 8/500mg caplets (32),co-codamol,BULK BUY,3.2,-72.5,2.32,2,2026-02-24,2026-02-25
+nicorandil 10mg tablets (60),nicorandil,BULK BUY,3.275,-70.1,2.3,3,2026-02-01,2026-03-26
+paracetamol 500mg caplets (32),paracetamol,BULK BUY,2.56,-89.5,2.29,1,2026-02-19,2026-02-19
+cinnarizine 15mg tablets (84),cinnarizine,BULK BUY,4.775,-47.6,2.28,3,2026-02-02,2026-03-04
+melatonin 1mg/ml ethanol free oral solution (150ml),melatonin,BULK BUY,9.31,-24.1,2.24,1,2026-03-01,2026-03-01
+melatonin 1mg/ml ethanol free oral solut,melatonin,BULK BUY,9.31,-24.1,2.24,2,2026-02-12,2026-03-05
+benzydamine oral spray 0.15% w/v (30ml),benzydamine,BULK BUY,3.42,-65.2,2.23,3,2026-03-05,2026-03-31
+ticagrelor 90mg tablets (56),ticagrelor,BULK BUY,4.3500000000000005,-50.8,2.21,6,2026-02-02,2026-03-29
+tranexamic acid 500mg tablets (60),tranexamic acid,BULK BUY,5.225,-42.0,2.19,8,2026-02-05,2026-03-31
+macrogol sachets (30),macrogol,BULK BUY,6.529999999999999,-33.4,2.18,9,2026-02-01,2026-02-24
+aciclovir 200mg tablets (25),aciclovir,BULK BUY,2.6500000000000004,-81.9,2.17,1,2026-03-16,2026-03-16
+benzydamine 0.15%w/voromuspr man,benzydamine,BULK BUY,3.42,-63.2,2.16,1,2026-04-08,2026-04-08
+paracetamol 500mg capsules (32),paracetamol,BULK BUY,2.56,-84.0,2.15,1,2026-03-09,2026-03-09
+venlafaxine 75mg mrc,venlafaxine,BULK BUY,3.13,-68.4,2.14,2,2024-12-30,2025-12-30
+buprenorphine 2mg tablets,buprenorphine,BULK BUY,2.98,-71.8,2.14,1,2026-03-15,2026-03-15
+paracetamol 500mg caplets,paracetamol,BULK BUY,2.56,-83.2,2.13,2,2025-12-30,2025-12-30
+levetiracetam 500mg tablets (60),levetiracetam,BULK BUY,4.105,-51.5,2.12,5,2026-02-01,2026-03-16
+moxonidine 200mcg tablets (28),moxonidine,BULK BUY,4.86,-43.2,2.1,2,2026-03-05,2026-03-31
+cyclizine 50mg tablets (100),cyclizine,BULK BUY,4.31,-48.5,2.09,8,2026-02-16,2026-03-26
+ticagrelor 60mg tablets (56),ticagrelor,BULK BUY,4.3500000000000005,-46.9,2.04,2,2026-02-11,2026-03-12
+gabapentin 100mg capsules (100),gabapentin,HOLD BUYING,2.99,-67.9,2.03,6,2026-02-11,2026-03-27
+gabapentin 300mg capsules (100),gabapentin,BULK BUY,2.99,-66.9,2.0,16,2026-02-01,2026-03-31
+aciclovir 200mg disp tablets (25),aciclovir,BUY AS YOU GO,2.6500000000000004,-75.5,2.0,2,2026-02-09,2026-03-29
+celecoxib 100mg capsules (60),celecoxib,BULK BUY,3.105,-63.6,1.98,5,2026-02-10,2026-03-26
+celecoxib 200mg capsules (30),celecoxib,BULK BUY,3.105,-63.0,1.96,5,2026-02-06,2026-03-15
+aciclovir 5% cream (2g) (gsl),aciclovir,BULK BUY,2.6500000000000004,-72.5,1.92,1,2026-03-16,2026-03-16
+metformin 500mg tablets (28),metformin,BULK BUY,2.07,-92.3,1.91,25,2026-02-01,2026-03-20
+senna 7.5mg tablets,senna,BULK BUY,2.42,-78.9,1.91,1,2025-12-30,2025-12-30
+bisacodyl 5mg tablets (60),bisacodyl,BULK BUY,3.215,-59.6,1.91,4,2026-02-13,2026-03-24
+esomeprazole 40mg grt,esomeprazole,BULK BUY,2.88,-64.6,1.86,1,2025-12-30,2025-12-30
+metformin 850mg tablets (56),metformin,BULK BUY,2.07,-86.0,1.78,3,2026-02-03,2026-03-03
+chlorpromazine 25mg tablets (28),chlorpromazine,BUY AS YOU GO,18.68,-9.0,1.69,9,2026-02-03,2026-03-26
+chlorpromazine 50mg tablets (28),chlorpromazine,BUY AS YOU GO,18.68,-9.0,1.69,10,2026-02-03,2026-03-29
+levetiracetam oral solution 100mg/ml (30,levetiracetam,BULK BUY,4.105,-41.0,1.69,3,2026-02-09,2026-03-12
+bimatoprost 0.1mg/ml eye drops (3ml),bimatoprost,BULK BUY,4.195,-39.7,1.67,2,2026-02-23,2026-03-27
+rivaroxaban 20mg tablets (28),rivaroxaban,BULK BUY,1.94,-85.6,1.66,5,2026-02-01,2026-03-31
+ibuprofen 200mg tablets (24),ibuprofen,BULK BUY,1.865,-87.7,1.64,1,2026-02-25,2026-02-25
+piroxicam gel (60g),piroxicam,BULK BUY,2.8,-58.6,1.64,3,2026-02-12,2026-03-06
+carbimazole 5mg tablets (100),carbimazole,BUY AS YOU GO,2.67,-60.7,1.62,6,2026-02-06,2026-03-25
+gabapentin 400mg capsules (100),gabapentin,BULK BUY,2.99,-54.2,1.62,3,2026-02-15,2026-03-18
+nebivolol 5mg tablets (28),nebivolol,BULK BUY,2.16,-75.0,1.62,12,2026-02-01,2026-03-29
+hydrocortisone 1% cream (15g) (p),hydrocortisone,BULK BUY,2.46,-65.0,1.6,5,2026-02-09,2026-03-03
+methocarbamol 750mg tablets,methocarbamol,BULK BUY,4.61,-34.3,1.58,1,2026-10-04,2026-10-04
+duloxetine 30mg grc,duloxetine,BULK BUY,2.625,-60.4,1.58,1,2025-12-30,2025-12-30
+naproxen 250mg tablets (28),naproxen,BULK BUY,1.98,-79.3,1.57,18,2026-02-01,2026-03-31
+hydrocortisone 10mg tablets (30),hydrocortisone,BULK BUY,2.46,-63.4,1.56,5,2026-02-03,2026-03-25
+paracetamol 500mg caplets (100),paracetamol,HOLD BUYING,2.56,-60.5,1.55,19,2026-02-01,2026-03-31
+baclofen 10mg tablets (84),baclofen,BULK BUY,2.355,-65.6,1.54,13,2026-02-01,2026-03-27
+amorolfine 5% nail lacquer (5ml),amorolfine,BULK BUY,6.735,-22.9,1.54,3,2026-03-12,2026-03-29
+ibuprofen 400mg tablets (24),ibuprofen,BULK BUY,1.865,-82.8,1.54,1,2026-02-25,2026-02-25
+quetiapine 100mg tablets,quetiapine,BULK BUY,2.91,-52.2,1.52,1,2026-08-04,2026-08-04
+trazodone 150mg tablets (28),trazodone,BULK BUY,2.63,-57.8,1.52,5,2026-02-01,2026-03-31
+senna 7.5mg tablets (60) (p),senna,BULK BUY,1.98,-76.3,1.51,12,2026-02-01,2026-03-29
+paracetamol 500mg capsules (100),paracetamol,BULK BUY,2.56,-58.6,1.5,2,2026-02-11,2026-03-15
+venlafaxine 150mg modified-release capsules,venlafaxine,BULK BUY,3.13,-47.6,1.49,1,2026-09-04,2026-09-04
+carbocisteine 375mg capsules (120),carbocisteine,BULK BUY,4.41,-33.1,1.46,30,2026-02-01,2026-03-31
+febuxostat 80mg tablets,febuxostat,BULK BUY,4.16,-34.9,1.45,1,2026-09-04,2026-09-04
+permethrin 5% cream (30g),permethrin,BULK BUY,6.51,-22.3,1.45,3,2026-02-10,2026-03-27
+duloxetine 30mg capsules (28),duloxetine,BUY AS YOU GO,2.625,-54.7,1.44,10,2026-02-09,2026-03-26
+co-dydramol 10/500mg tablets (100),co-dydramol,BULK BUY,2.965,-48.7,1.44,1,2026-02-22,2026-02-22
+fluoxetine 60mg capsules (30),fluoxetine,BULK BUY,2.18,-65.6,1.43,3,2026-02-04,2026-03-05
+terbinafine 1% cream (15g),terbinafine,BULK BUY,2.6,-54.6,1.42,2,2026-03-06,2026-03-29
+co-dydramol 10/500mg tablets,co-dydramol,BULK BUY,2.965,-47.7,1.41,1,2025-12-30,2025-12-30
+rivastigmine 1.5mg capsules (28),rivastigmine,BULK BUY,2.665,-52.7,1.4,1,2026-02-24,2026-02-24
+apixaban 5mg tablets (56),apixaban,HOLD BUYING,2.48,-55.6,1.38,26,2026-02-01,2026-03-31
+apixaban 2.5mg tablets (60),apixaban,HOLD BUYING,2.48,-55.6,1.38,20,2026-02-01,2026-03-31
+mebeverine 135mg tablets (100),mebeverine,BULK BUY,3.825,-35.4,1.36,6,2026-02-13,2026-03-25
+quetiapine 100mg tablets (60),quetiapine,BULK BUY,2.895,-47.2,1.36,2,2026-02-02,2026-03-02
+flecainide 50mg tablets (60),flecainide,BUY AS YOU GO,2.955,-46.2,1.36,2,2026-02-17,2026-03-16
+loratadine 10mg tablets (30) (gsl),loratadine,BULK BUY,1.53,-88.2,1.35,9,2026-02-01,2026-03-13
+pregabalin 50mg capsules (84),pregabalin,BULK BUY,2.11,-62.6,1.32,1,2026-02-01,2026-02-01
+sitagliptin 25mg tablets (28),sitagliptin,BULK BUY,2.39,-55.2,1.32,3,2026-02-18,2026-03-05
+terbinafine 250mg tablets (28),terbinafine,BULK BUY,2.6,-50.4,1.31,5,2026-02-02,2026-03-13
+loratadine 10mg tablets (30) (p),loratadine,BULK BUY,1.53,-85.0,1.3,2,2026-02-06,2026-03-31
+enalapril 5mg tablets (28),enalapril,BULK BUY,1.67,-77.8,1.3,1,2026-02-24,2026-02-24
+frovatriptan 2.5mg tablets (6),frovatriptan,BULK BUY,3.615,-35.8,1.3,1,2026-03-19,2026-03-19
+clindamycin 150mg capsules (24),clindamycin,BULK BUY,2.38,-54.6,1.3,2,2026-02-26,2026-03-10
+betahistine 8mg tablets (84),betahistine,BULK BUY,1.82,-71.4,1.3,7,2026-02-06,2026-03-20
+carbocisteine 250mg/5ml syrup (300ml),carbocisteine,BULK BUY,4.41,-29.5,1.3,3,2026-02-01,2026-02-19
+temazepam 20mg tablets,temazepam,BULK BUY,23.57,-5.5,1.29,1,2025-12-30,2025-12-30
+temazepam 10mg tablets,temazepam,BULK BUY,23.57,-5.5,1.29,1,2025-12-30,2025-12-30
+memantine 10mg tablets (28),memantine,BULK BUY,1.81,-70.2,1.27,2,2026-02-01,2026-02-16
+naproxen 500mg tablets (28),naproxen,BULK BUY,1.98,-63.6,1.26,21,2026-02-01,2026-03-31
+duloxetine 60mg grc,duloxetine,BULK BUY,2.625,-47.4,1.25,1,2025-12-30,2025-12-30
+lercanidipine 10mg tablets (28),lercanidipine,BULK BUY,3.1,-40.3,1.25,21,2026-02-04,2026-03-31
+lansoprazole 15mg grc,lansoprazole,BULK BUY,1.545,-79.9,1.23,1,2025-12-30,2025-12-30
+tamsulosin 400mcg modified-release capsules,tamsulosin,HOLD BUYING,1.93,-63.7,1.23,2,2026-09-04,2026-10-04
+loperamide 2mg capsules (30) (pom),loperamide,BUY AS YOU GO,1.525,-80.3,1.22,7,2026-02-05,2026-03-25
+cefalexin 250mg capsules (28),cefalexin,BULK BUY,2.39,-51.0,1.22,2,2026-02-04,2026-02-12
+esomeprazole 20mg gastro-resistant capsules,esomeprazole,BULK BUY,2.96,-41.2,1.22,1,2026-10-04,2026-10-04
+lansoprazole 15mg capsules (28),lansoprazole,BULK BUY,1.545,-78.0,1.2,26,2026-02-10,2026-03-31
+lamotrigine 25mg tablets (56),lamotrigine,BUY AS YOU GO,3.17,-37.9,1.2,4,2026-02-20,2026-03-22
+sitagliptin 50mg tablets (28),sitagliptin,BULK BUY,2.39,-50.2,1.2,6,2026-02-02,2026-03-31
+salbutamol 5mg nebules (20),salbutamol,BULK BUY,8.165,-14.6,1.19,7,2026-02-01,2026-03-31
+ibuprofen 100mg/5ml suspension (100ml),ibuprofen,BULK BUY,1.865,-63.0,1.18,1,2026-03-03,2026-03-03
+pregabalin 25mg capsules (56),pregabalin,BULK BUY,2.11,-55.5,1.17,2,2026-03-03,2026-03-10
+losartan 25mg tablets (28),losartan,BULK BUY,1.365,-85.3,1.16,5,2026-02-09,2026-03-27
+zolpidem 10mg tablets (28),zolpidem,BULK BUY,1.45,-79.3,1.15,9,2026-02-02,2026-03-27
+mirtazapine 15mg tablets (28),mirtazapine,BULK BUY,1.7,-67.6,1.15,13,2026-02-03,2026-03-31
+ibuprofen 5% gel (50g),ibuprofen,BULK BUY,1.865,-61.4,1.14,7,2026-02-20,2026-03-31
+telmisartan 40mg tablets (28),telmisartan,BULK BUY,2.225,-51.5,1.14,2,2026-02-23,2026-03-19
+pizotifen 0.5mg tablets (28),pizotifen,BULK BUY,1.64,-69.5,1.14,1,2026-03-20,2026-03-20
+ibuprofen 400mg tablets (84),ibuprofen,BULK BUY,1.865,-61.4,1.14,7,2026-02-02,2026-03-13
+pizotifen 500mcg tablets,pizotifen,BULK BUY,1.64,-68.9,1.13,1,2025-12-30,2025-12-30
+betahistine 16mg tablets (84),betahistine,BULK BUY,1.82,-62.1,1.13,8,2026-02-01,2026-03-29
+cefalexin 500mg capsules (21),cefalexin,BULK BUY,2.39,-46.9,1.12,2,2026-02-01,2026-03-06
+digoxin 125mcg tablets (30),digoxin,BULK BUY,1.635,-68.2,1.12,3,2026-03-04,2026-03-31
+amoxicillin 250mg capsules (21),amoxicillin,BULK BUY,1.39,-79.9,1.11,1,2026-02-01,2026-02-01
+hydrocortisone 1% cream (30g),hydrocortisone,BULK BUY,2.46,-45.1,1.11,4,2026-02-01,2026-03-06
+meloxicam 15mg tablets (30),meloxicam,BULK BUY,1.28,-85.2,1.09,5,2026-02-01,2026-03-19
+meloxicam 7.5mg tablets (30),meloxicam,BULK BUY,1.28,-85.2,1.09,3,2026-02-09,2026-03-02
+ezetimibe 10mg tablets (28),ezetimibe,BULK BUY,1.6,-67.5,1.08,20,2026-02-03,2026-03-31
+amoxicillin 500mg capsules (21),amoxicillin,BULK BUY,1.39,-77.7,1.08,20,2026-02-02,2026-03-31
+modafinil 100mg tablets (30),modafinil,BULK BUY,2.7750000000000004,-38.7,1.08,2,2026-02-05,2026-03-10
+pravastatin 20mg tablets (28),pravastatin,BULK BUY,1.55,-69.0,1.07,4,2026-02-01,2026-03-31
+memantine 20mg tablets (28),memantine,BULK BUY,1.81,-59.1,1.07,14,2026-02-02,2026-03-29
+pravastatin 10mg tablets (28),pravastatin,BULK BUY,1.55,-68.4,1.06,1,2026-03-13,2026-03-13
+hydrocortisone 1% ointment (30g),hydrocortisone,BULK BUY,2.46,-42.7,1.05,1,2026-03-01,2026-03-01
+zolpidem 5mg tablets (28),zolpidem,BULK BUY,1.45,-72.4,1.05,5,2026-02-02,2026-03-30
+aciclovir 400mg disp tablets (56),aciclovir,BULK BUY,2.6500000000000004,-39.6,1.05,1,2026-02-16,2026-02-16
+tamoxifen 20mg tablets (30),tamoxifen,BUY AS YOU GO,2.165,-47.8,1.04,5,2026-02-05,2026-03-31
+digoxin 125mcg tablets (28),digoxin,BULK BUY,1.635,-63.3,1.04,8,2026-02-01,2026-03-24
+co-codamol 15/500mg tablets (100),co-codamol,BULK BUY,3.2,-32.2,1.03,16,2026-02-01,2026-03-31
+paracetamol 120mg/5ml suspension (200ml),paracetamol,BULK BUY,2.56,-40.2,1.03,1,2026-02-02,2026-02-02
+losartan 50mg tablets (28),losartan,BULK BUY,1.365,-75.1,1.02,11,2026-02-01,2026-03-22
+digoxin 62.5mcg tablets (28),digoxin,BULK BUY,1.635,-62.7,1.02,3,2026-02-09,2026-03-02
+spironolactone 50mg tablets (28),spironolactone,BULK BUY,2.16,-47.2,1.02,5,2026-02-04,2026-03-20
+digoxin 250mcg tablets (28),digoxin,BULK BUY,1.635,-62.1,1.02,2,2026-02-05,2026-02-26
+losartan 100mg tablets (28),losartan,BULK BUY,1.365,-74.4,1.02,13,2026-02-01,2026-03-19
+lactulose 10g/15ml oral solution 15ml sachets (10),lactulose,BULK BUY,3.225,-31.8,1.02,1,2026-03-29,2026-03-29
+lactulose 10g/15ml oral solution 15ml sa,lactulose,BULK BUY,3.225,-31.8,1.02,2,2026-02-09,2026-03-13
+co-codamol 15/500mg tablets,co-codamol,BULK BUY,3.2,-31.6,1.01,2,2025-12-30,2025-12-30
+tamoxifen 10mg tablets (30),tamoxifen,BULK BUY,2.165,-46.0,1.0,1,2026-02-16,2026-02-16
+flucloxacillin 125mg/5ml solution (100ml,flucloxacillin,BULK BUY,2.335,-42.6,0.99,1,2026-03-03,2026-03-03
+mycophenolate mofetil 500mg tablets,mycophenolate mofetil,BULK BUY,5.3,-18.7,0.99,1,2026-09-04,2026-09-04
+amoxicillin susps/f 125 mg/5 ml medr,amoxicillin,BULK BUY,1.39,-71.2,0.99,1,2026-04-07,2026-04-07
+esomeprazole 20mg capsules (28),esomeprazole,BULK BUY,2.88,-34.0,0.98,14,2026-02-08,2026-03-31
+fluoxetine 40mg capsules (30),fluoxetine,BULK BUY,2.18,-45.0,0.98,5,2026-02-01,2026-03-27
+lansoprazole 30mg grc,lansoprazole,BULK BUY,1.545,-63.8,0.98,1,2025-12-30,2025-12-30
+vitamin b co strong tablets (28),vitamin,BULK BUY,1.125,-85.8,0.96,7,2026-02-16,2026-03-22
+lansoprazole 30mg capsules (28),lansoprazole,BULK BUY,1.545,-62.5,0.96,31,2026-02-01,2026-03-31
+fexofenadine 120mg tablets (30),fexofenadine,BULK BUY,1.545,-61.8,0.96,5,2026-02-09,2026-03-01
+spironolactone 100mg tablets (28),spironolactone,BUY AS YOU GO,2.16,-44.4,0.96,7,2026-02-03,2026-03-31
+lansoprazole 30mg capsules,lansoprazole,BULK BUY,1.545,-62.5,0.96,1,2026-10-04,2026-10-04
+amoxicillin 125mg/5ml suspension (100ml),amoxicillin,BULK BUY,1.39,-69.1,0.96,4,2026-02-02,2026-03-25
+pantoprazole 20mg tablets (28),pantoprazole,BULK BUY,1.205,-79.3,0.96,16,2026-02-01,2026-03-19
+risperidone 2mg tablets (60),risperidone,BULK BUY,1.985,-48.1,0.95,1,2026-03-02,2026-03-02
+prednisolone 1mg tablets (28),prednisolone,BULK BUY,1.145,-81.7,0.94,6,2026-02-16,2026-03-26
+methotrexate 2.5mg tablets (24) (blister,methotrexate,BULK BUY,1.645,-57.4,0.94,3,2026-02-06,2026-02-13
+azathioprine 25mg tablets (28),azathioprine,BULK BUY,1.475,-62.7,0.92,4,2026-02-16,2026-03-15
+aripiprazole 5mg tablets (28),aripiprazole,BULK BUY,1.62,-56.8,0.92,1,2026-02-19,2026-02-19
+pantoprazole 40mg tablets (28),pantoprazole,BUY AS YOU GO,1.205,-75.9,0.92,12,2026-02-04,2026-03-27
+mirtazapine 30mg tablets (28),mirtazapine,BULK BUY,1.7,-53.5,0.91,15,2026-02-03,2026-03-29
+rivaroxaban 20mg tablets,rivaroxaban,BULK BUY,1.23,-74.0,0.91,1,2025-12-30,2025-12-30
+co-codamol 8/500mg tablets (100),co-codamol,BUY AS YOU GO,3.2,-28.1,0.9,11,2026-02-01,2026-03-25
+duloxetine 60mg capsules (28),duloxetine,BUY AS YOU GO,2.625,-34.1,0.9,12,2026-02-04,2026-03-25
+aciclovir 800mg tablets (35),aciclovir,BULK BUY,2.6500000000000004,-34.0,0.9,1,2026-03-19,2026-03-19
+risperidone 1mg tablets (60),risperidone,BULK BUY,1.985,-45.6,0.9,2,2026-02-01,2026-03-01
+spironolactone 25mg tablets (28),spironolactone,HOLD BUYING,2.16,-41.2,0.89,9,2026-02-04,2026-03-19
+eplerenone 50mg tablets (28/30),eplerenone,BUY AS YOU GO,4.09,-21.8,0.89,4,2026-02-09,2026-03-22
+sumatriptan 50mg tablets (6),sumatriptan,BULK BUY,1.1549999999999998,-77.5,0.89,4,2026-02-18,2026-03-19
+atorvastatin 10mg tablets (28),atorvastatin,BULK BUY,1.01,-88.1,0.89,12,2026-02-01,2026-03-31
+flucloxacillin 250mg/5ml solution (100ml,flucloxacillin,BULK BUY,2.335,-37.9,0.88,4,2026-02-09,2026-03-18
+azithromycin 250mg tablets (4),azithromycin,BULK BUY,1.085,-81.6,0.88,5,2026-02-02,2026-03-31
+donepezil 5mg tablets (28),donepezil,BULK BUY,1.185,-74.7,0.88,4,2026-02-10,2026-03-09
+venlafaxine 75mg mrt,venlafaxine,BULK BUY,3.13,-27.8,0.87,1,2025-12-30,2025-12-30
+montelukast 10mg tablets (28/30),montelukast,BUY AS YOU GO,1.24,-70.2,0.87,24,2026-02-01,2026-03-31
+montelukast 4mg chewable tablets (28),montelukast,BULK BUY,1.24,-69.4,0.86,1,2026-03-01,2026-03-01
+tadalafil 10mg tablets (4),tadalafil,BULK BUY,1.11,-76.6,0.85,2,2026-02-20,2026-03-29
+ibuprofen 5% gel (100g),ibuprofen,BULK BUY,1.865,-45.3,0.84,20,2026-02-01,2026-03-31
+donepezil 10mg tablets (28),donepezil,BULK BUY,1.185,-71.3,0.84,16,2026-02-01,2026-03-29
+tranexamic acid 500mg tablets,tranexamic acid,BULK BUY,3.68,-22.3,0.82,2,2025-06-30,2026-10-04
+azithromycin 500mg tablets (3),azithromycin,BULK BUY,1.085,-76.0,0.82,2,2026-02-17,2026-03-05
+alendronic acid 70mg tablets (4),alendronic acid,BULK BUY,1.145,-72.1,0.82,22,2026-02-01,2026-03-31
+clopidogrel 75mg tablets (28),clopidogrel,BULK BUY,1.1949999999999998,-69.0,0.82,12,2026-02-04,2026-03-31
+enalapril 20mg tablets (28),enalapril,HOLD BUYING,1.67,-49.1,0.82,3,2026-02-11,2026-03-25
+sumatriptan 100mg tablets (6),sumatriptan,BULK BUY,1.1549999999999998,-71.4,0.82,4,2026-02-12,2026-03-26
+tadalafil 20mg tablets (4),tadalafil,BULK BUY,1.11,-73.9,0.82,4,2026-03-01,2026-03-23
+desogestrel 75mcg tablets (84),desogestrel,BULK BUY,2.38,-34.0,0.81,3,2026-02-05,2026-03-17
+aciclovir 400mg tablets (56),aciclovir,BULK BUY,2.6500000000000004,-30.2,0.8,1,2026-02-04,2026-02-04
+atorvastatin 20mg tablets (28),atorvastatin,BULK BUY,1.01,-78.2,0.79,26,2026-02-01,2026-03-31
+solifenacin 5mg tablets (30),solifenacin,BULK BUY,1.4449999999999998,-55.0,0.79,15,2026-02-01,2026-03-27
+febuxostat 120mg tablets (28),febuxostat,BULK BUY,2.6900000000000004,-29.0,0.78,4,2026-02-10,2026-03-26
+metoclopramide 10mg tablets (28),metoclopramide,BULK BUY,0.975,-79.5,0.77,1,2026-03-25,2026-03-25
+dutasteride 500microgram capsules,dutasteride,BULK BUY,2.58,-29.8,0.77,1,2026-10-04,2026-10-04
+lamotrigine 100mg tablets (56),lamotrigine,BUY AS YOU GO,3.17,-24.3,0.77,9,2026-02-01,2026-03-30
+olanzapine 2.5mg tablets (28),olanzapine,BULK BUY,1.18,-65.3,0.77,2,2026-03-05,2026-03-22
+escitalopram 10mg tablets (28),escitalopram,BULK BUY,1.255,-61.0,0.76,3,2026-02-05,2026-03-13
+simvastatin 10mg tablets (28),simvastatin,BULK BUY,0.895,-84.4,0.76,2,2026-03-09,2026-03-16
+sertraline 50mg tablets (28),sertraline,BULK BUY,1.11,-68.5,0.76,35,2026-02-01,2026-03-27
+warfarin 1mg tablets (28),warfarin,BULK BUY,1.06,-71.7,0.76,7,2026-02-04,2026-03-27
+zopiclone 3.75mg tablets (28),zopiclone,BULK BUY,1.0950000000000002,-68.9,0.76,10,2026-02-12,2026-03-31
+hydroxyzine 25mg tablets (28),hydroxyzine,BULK BUY,1.1150000000000002,-67.7,0.76,2,2026-02-19,2026-03-03
+paroxetine 20mg tablets (30),paroxetine,BULK BUY,1.41,-53.2,0.75,5,2026-02-05,2026-03-27
+montelukast 5mg chewable tablets,montelukast,BULK BUY,1.24,-60.5,0.75,1,2025-12-30,2025-12-30
+metronidazole 400mg tablets (21),metronidazole,BULK BUY,1.21,-62.0,0.75,8,2026-02-01,2026-03-25
+finasteride 5mg tablets (28),finasteride,BULK BUY,1.18,-62.7,0.74,12,2026-02-03,2026-03-27
+omeprazole 20mg grc,omeprazole,BULK BUY,1.06,-68.9,0.73,2,2024-12-30,2025-12-30
+phenytoin sodium 100mg capsules,phenytoin sodium,BULK BUY,10.33,-7.1,0.73,1,2024-12-30,2024-12-30
+omeprazole 20mg capsules,omeprazole,BULK BUY,1.06,-68.9,0.73,1,2026-10-04,2026-10-04
+omeprazole 10mg capsules (28),omeprazole,BULK BUY,1.06,-67.9,0.72,12,2026-02-02,2026-03-31
+eplerenone 25mg tablets,eplerenone,BULK BUY,2.15,-33.5,0.72,2,2025-12-30,2026-10-04
+simvastatin 20mg tablets (28),simvastatin,BULK BUY,0.895,-79.9,0.72,11,2026-02-04,2026-03-22
+mirtazapine 45mg tablets (28),mirtazapine,BULK BUY,1.7,-42.4,0.72,18,2026-02-03,2026-03-24
+azathioprine 50mg tablets (56),azathioprine,BUY AS YOU GO,1.475,-48.5,0.72,9,2026-02-04,2026-03-31
+atorvastatin 40mg tablets (28),atorvastatin,BUY AS YOU GO,1.01,-70.3,0.71,17,2026-02-02,2026-03-31
+paracetamol 500mg effervescent tablets (,paracetamol,BULK BUY,2.56,-27.7,0.71,1,2026-02-25,2026-02-25
+candesartan 2mg tablets (7),candesartan,HOLD BUYING,1.04,-68.3,0.71,10,2026-02-01,2026-03-31
+pravastatin 40mg tablets (28),pravastatin,BULK BUY,1.55,-45.8,0.71,1,2026-02-26,2026-02-26
+fexofenadine 180mg tablets,fexofenadine,BULK BUY,2.96,-23.6,0.7,1,2026-10-04,2026-10-04
+fluoxetine 20mg capsules (30),fluoxetine,BULK BUY,2.18,-31.7,0.69,25,2026-02-02,2026-03-27
+montelukast 5mg chewable tablets (28),montelukast,BUY AS YOU GO,1.24,-55.6,0.69,4,2026-02-13,2026-03-22
+escitalopram 20mg tablets (28),escitalopram,BULK BUY,1.255,-55.4,0.69,4,2026-02-01,2026-03-10
+allopurinol 100mg tablets (28),allopurinol,BUY AS YOU GO,0.86,-80.2,0.69,18,2026-02-02,2026-03-31
+co-amoxiclav 500/125mg tablets,co-amoxiclav,BULK BUY,2.09,-32.5,0.68,1,2025-12-30,2025-12-30
+omeprazole 20mg capsules (28),omeprazole,BULK BUY,1.06,-64.2,0.68,25,2026-02-01,2026-03-31
+quetiapine 150mg tablets (60),quetiapine,BULK BUY,2.895,-23.3,0.67,2,2026-02-01,2026-02-26
+atenolol 25mg tablets (28),atenolol,BULK BUY,0.8,-83.8,0.67,7,2026-02-04,2026-03-19
+etoricoxib 60mg tablets,etoricoxib,BUY AS YOU GO,1.83,-36.1,0.66,2,2025-12-30,2026-10-04
+verapamil 120mg tablets (28),verapamil,BULK BUY,2.19,-29.7,0.65,1,2026-02-18,2026-02-18
+propranolol 10mg tablets (28),propranolol,BULK BUY,0.87,-73.6,0.64,21,2026-02-01,2026-03-27
+sertraline 100mg tablets (28),sertraline,BULK BUY,1.11,-57.7,0.64,38,2026-02-01,2026-03-27
+sildenafil 50mg tablets (4),sildenafil,BUY AS YOU GO,0.765,-83.0,0.64,7,2026-02-11,2026-03-25
+buspirone 5mg tablets,buspirone,BULK BUY,1.44,-44.4,0.64,2,2024-12-30,2026-10-04
+sildenafil 100mg tablets (4),sildenafil,BULK BUY,0.765,-83.0,0.64,3,2026-03-03,2026-03-23
+amitriptyline 10mg tablets (28),amitriptyline,BULK BUY,0.755,-85.4,0.64,28,2026-02-01,2026-03-31
+losartan 12.5mg tablets (28),losartan,BULK BUY,1.365,-46.5,0.64,3,2026-02-09,2026-03-10
+esomeprazole 40mg capsules (28),esomeprazole,BUY AS YOU GO,2.88,-21.9,0.63,23,2026-02-01,2026-03-31
+warfarin 3mg tablets (28),warfarin,BULK BUY,1.06,-59.4,0.63,5,2026-02-06,2026-03-27
+atenolol 50mg tablets (28),atenolol,BULK BUY,0.8,-77.5,0.62,6,2026-02-05,2026-03-10
+citalopram 10mg tablets (28),citalopram,BULK BUY,0.94,-66.0,0.62,11,2026-02-03,2026-03-31
+chlorphenamine 4mg tablets (28) (p),chlorphenamine,BUY AS YOU GO,0.895,-69.8,0.62,3,2026-02-04,2026-03-03
+piroxicam gel (112g),piroxicam,BULK BUY,2.8,-22.1,0.62,9,2026-02-01,2026-03-26
+prednisolone 5mg tablets (28),prednisolone,HOLD BUYING,1.145,-54.6,0.62,21,2026-02-01,2026-03-26
+memantine 10mg tablets,memantine,BULK BUY,1.1,-55.5,0.61,1,2026-09-04,2026-09-04
+amoxicillin 250mg/5ml suspension (100ml),amoxicillin,BULK BUY,1.39,-43.9,0.61,16,2026-02-01,2026-03-23
+gliclazide 80mg tablets (28),gliclazide,BUY AS YOU GO,0.96,-63.5,0.61,9,2026-02-01,2026-03-11
+gabapentin 100mg capsules,gabapentin,BULK BUY,1.11,-54.1,0.6,1,2025-12-30,2025-12-30
+amitriptyline tabletsá25 mg acc,amitriptyline,BULK BUY,0.755,-80.1,0.6,1,2026-04-07,2026-04-07
+co-amoxiclav 625mg tablets (21),co-amoxiclav,BULK BUY,2.09,-28.7,0.6,13,2026-02-01,2026-03-31
+amitriptyline tabletsá25 mg(bc)acc,amitriptyline,BULK BUY,0.755,-80.1,0.6,1,2026-04-07,2026-04-07
+solifenacin 10mg tablets (30),solifenacin,BULK BUY,1.4449999999999998,-41.9,0.6,17,2026-02-01,2026-03-20
+simvastatin 40mg tablets (28),simvastatin,BULK BUY,0.895,-66.5,0.6,20,2026-02-01,2026-03-23
+citalopram 40mg tablets (28),citalopram,BULK BUY,0.94,-63.8,0.6,7,2026-02-01,2026-03-31
+nitrazepam 5mg tablets (28),nitrazepam,BULK BUY,1.875,-31.7,0.6,7,2026-02-05,2026-03-27
+warfarin 1mg tablets,warfarin,BULK BUY,0.91,-64.8,0.59,1,2025-12-30,2025-12-30
+etoricoxib 90mg tablets,etoricoxib,BULK BUY,2.03,-29.1,0.59,1,2025-12-30,2025-12-30
+meloxicam 15mg tablets,meloxicam,BULK BUY,0.77,-76.6,0.59,1,2026-08-04,2026-08-04
+allopurinol 300mg tablets (28),allopurinol,BULK BUY,0.86,-68.6,0.59,11,2026-02-02,2026-03-31
+celecoxib 100mg capsules,celecoxib,BULK BUY,1.74,-33.3,0.58,2,2025-12-30,2025-12-30
+temazepam 10mg tablets (28),temazepam,BULK BUY,23.53,-2.5,0.58,12,2026-02-02,2026-03-27
+atenolol 100mg tablets (28),atenolol,BULK BUY,0.8,-72.5,0.58,3,2026-02-13,2026-03-16
+temazepam 20mg tablets (28),temazepam,BULK BUY,23.53,-2.5,0.58,2,2026-02-05,2026-03-01
+amitriptyline 25mg tablets (28),amitriptyline,BUY AS YOU GO,0.755,-76.2,0.57,17,2026-02-01,2026-03-31
+co-trimoxazole 80/400 tablets (28),co-trimoxazole,HOLD BUYING,1.705,-33.1,0.57,4,2026-02-02,2026-03-31
+paracetamol 250mg/5ml suspension (200ml),paracetamol,BULK BUY,2.56,-22.3,0.57,6,2026-02-05,2026-03-25
+haloperidol 5mg tablets,haloperidol,BULK BUY,4.18,-13.6,0.57,1,2024-12-30,2024-12-30
+brinzolamide 10mg/ml eye drops,brinzolamide,BULK BUY,2.33,-24.5,0.57,1,2025-12-30,2025-12-30
+sildenafil 25mg tablets (4),sildenafil,BULK BUY,0.765,-75.2,0.57,2,2026-02-16,2026-03-19
+citalopram 20mg tablets (28),citalopram,BULK BUY,0.94,-60.6,0.57,27,2026-02-01,2026-03-31
+duloxetine 20mg capsules,duloxetine,BULK BUY,2.625,-21.5,0.56,1,2026-08-04,2026-08-04
+olanzapine 5mg tablets (28),olanzapine,BULK BUY,1.18,-47.5,0.56,8,2026-02-05,2026-03-31
+cetirizine 10mg tablets (30) (gsl),cetirizine,BUY AS YOU GO,0.79,-69.6,0.55,13,2026-02-01,2026-03-24
+diazepam 2mg tablets (28),diazepam,BULK BUY,0.775,-70.3,0.55,19,2026-02-03,2026-03-30
+gliclazide 40mg tablets (28),gliclazide,HOLD BUYING,0.96,-57.3,0.55,10,2026-02-01,2026-03-29
+lisinopril 2.5mg tablets (28),lisinopril,BULK BUY,0.8,-68.8,0.55,7,2026-02-06,2026-03-22
+quetiapine 25mg tablets,quetiapine,BULK BUY,1.09,-50.5,0.55,2,2024-12-30,2026-10-04
+fluconazole 50mg capsules (7),fluconazole,BULK BUY,0.8049999999999999,-68.9,0.55,1,2026-03-11,2026-03-11
+candesartan 8mg tablets (28),candesartan,BULK BUY,1.04,-52.9,0.55,5,2026-02-10,2026-03-02
+diazepam 5mg tablets (28),diazepam,BULK BUY,0.775,-70.3,0.55,20,2026-02-02,2026-03-31
+fluconazole 150mg capsule (1) (p),fluconazole,BULK BUY,0.8049999999999999,-67.7,0.54,6,2026-02-09,2026-03-19
+folic acid 5mg tablets,folic acid,BULK BUY,0.71,-76.1,0.54,1,2025-12-30,2025-12-30
+amlodipine 2.5mg tablets,amlodipine,BULK BUY,3.4,-15.9,0.54,1,2025-12-30,2025-12-30
+pravastatin 40mg tablets,pravastatin,BULK BUY,1.28,-41.4,0.53,1,2026-08-04,2026-08-04
+famotidine 20mg tablets,famotidine,BULK BUY,1.34,-39.6,0.53,2,2026-08-04,2026-10-04
+doxazosin 1mg tablets (28),doxazosin,BULK BUY,0.78,-67.9,0.53,11,2026-02-01,2026-03-31
+sitagliptin 100mg tablets (28),sitagliptin,BULK BUY,2.39,-22.2,0.53,11,2026-02-01,2026-03-31
+zolpidem 10mg tablets,zolpidem,BULK BUY,0.83,-63.9,0.53,1,2026-09-04,2026-09-04
+gabapentin 300mg capsules,gabapentin,BULK BUY,1.61,-32.3,0.52,2,2026-08-04,2026-09-04
+duloxetine 20mg capsules (28),duloxetine,BULK BUY,2.625,-20.0,0.52,2,2026-02-20,2026-03-15
+furosemide 20mg tablets (28),furosemide,BULK BUY,0.675,-77.8,0.52,11,2026-02-01,2026-03-19
+lisinopril 5mg tablets (28),lisinopril,BULK BUY,0.8,-63.8,0.51,14,2026-02-03,2026-03-31
+pregabalin 75mg capsules,pregabalin,BULK BUY,0.95,-53.7,0.51,1,2025-12-30,2025-12-30
+amlodipine 10mg tablets,amlodipine,BULK BUY,0.6,-85.0,0.51,1,2025-12-30,2025-12-30
+zopiclone 7.5mg tablets,zopiclone,BULK BUY,0.77,-64.9,0.5,1,2025-12-30,2025-12-30
+duloxetine 40mg capsules (56),duloxetine,BULK BUY,2.625,-19.2,0.5,4,2026-02-06,2026-03-22
+glimepiride 2mg tablets (30),glimepiride,BULK BUY,1.0,-49.0,0.49,1,2026-03-03,2026-03-03
+bendroflumethiazide 2.5mg tablets (28),bendroflumethiazide,BUY AS YOU GO,0.7,-68.6,0.48,16,2026-02-02,2026-03-30
+clopidogrel 75mg tablets,clopidogrel,BULK BUY,0.86,-55.8,0.48,2,2025-12-30,2026-08-04
+omeprazole 40mg capsules (28),omeprazole,BULK BUY,1.06,-45.3,0.48,6,2026-02-01,2026-03-29
+mometasone 0.1% cream (30g),mometasone,BULK BUY,4.225,-11.5,0.48,1,2026-03-30,2026-03-30
+amlodipine 5mg,amlodipine,BULK BUY,0.72,-66.7,0.48,37,2026-02-01,2026-03-27
+levetiracetam 1g tablets,levetiracetam,BULK BUY,3.57,-13.4,0.48,1,2025-12-30,2025-12-30
+gliclazide 40mg tablets,gliclazide,BULK BUY,0.74,-64.9,0.48,1,2026-08-04,2026-08-04
+nortriptyline 10mg tablets (100),nortriptyline,BULK BUY,2.015,-23.6,0.47,2,2026-02-13,2026-03-09
+digoxin 125microgram tablets,digoxin,BULK BUY,1.02,-46.1,0.47,1,2026-10-04,2026-10-04
+pizotifen 1.5mg tablets (28),pizotifen,BULK BUY,1.64,-28.7,0.47,5,2026-02-13,2026-03-31
+rosuvastatin 20mg tablets,rosuvastatin,BULK BUY,0.81,-58.0,0.47,1,2025-12-30,2025-12-30
+zopiclone 3.75mg tablets,zopiclone,BULK BUY,0.72,-65.3,0.47,2,2025-06-30,2025-12-30
+methylphenidate 10mg tablets,methylphenidate,BULK BUY,3.06,-15.0,0.46,1,2025-12-30,2025-12-30
+amitriptyline 10mg tablets,amitriptyline,BUY AS YOU GO,0.57,-80.7,0.46,6,2024-12-30,2026-10-04
+escitalopram 10mg tablets,escitalopram,BULK BUY,0.95,-48.4,0.46,1,2026-09-04,2026-09-04
+amitriptyline 50mg tablets (28),amitriptyline,BUY AS YOU GO,0.755,-60.3,0.46,7,2026-02-09,2026-03-23
+levothyroxine sodium 50mcg tablets,levothyroxine sodium,BULK BUY,0.81,-55.6,0.45,1,2026-10-04,2026-10-04
+propranolol 10mg tablets,propranolol,BULK BUY,0.66,-68.2,0.45,1,2025-12-30,2025-12-30
+amitriptyline 50mg tablets,amitriptyline,BULK BUY,0.7,-64.3,0.45,2,2025-12-30,2026-08-04
+sertraline 100mg tablets,sertraline,BULK BUY,0.89,-50.6,0.45,7,2025-12-30,2026-10-04
+finasteride 5mg tablets,finasteride,BULK BUY,0.89,-50.6,0.45,1,2025-12-30,2025-12-30
+ramipril 5mg capsules (28),ramipril,BULK BUY,1.07,-42.1,0.45,17,2026-02-01,2026-03-31
+ramipril 2.5mg capsules (28),ramipril,BULK BUY,1.07,-42.1,0.45,21,2026-02-04,2026-03-31
+loperamide 2mg capsules,loperamide,BULK BUY,0.69,-63.8,0.44,1,2025-12-30,2025-12-30
+amitriptyline 25mg tablets,amitriptyline,BULK BUY,0.6,-73.3,0.44,1,2025-12-30,2025-12-30
+bisoprolol 10mg tablets (28),bisoprolol,BULK BUY,0.77,-57.1,0.44,12,2026-02-04,2026-03-29
+sumatriptan 50mg tablets,sumatriptan,BUY AS YOU GO,0.72,-61.1,0.44,3,2025-12-30,2026-08-04
+travoprost 40mcg/ml eye drops (2.5ml),travoprost,BULK BUY,2.26,-19.5,0.44,7,2026-02-02,2026-03-26
+amlodipine 10mg,amlodipine,BULK BUY,0.72,-61.1,0.44,38,2026-02-01,2026-03-31
+lisinopril 10mg tablets (28),lisinopril,BULK BUY,0.8,-55.0,0.44,15,2026-02-04,2026-03-19
+losartan 25mg tablets,losartan,BUY AS YOU GO,0.62,-71.0,0.44,2,2026-08-04,2026-10-04
+flucloxacillin 500mg capsules (28),flucloxacillin,BULK BUY,2.335,-18.6,0.44,11,2026-02-01,2026-03-27
+furosemide 20mg tablets,furosemide,BULK BUY,0.58,-75.9,0.44,1,2026-10-04,2026-10-04
+bisoprolol 7.5mg tablets,bisoprolol,BULK BUY,0.71,-60.6,0.43,1,2025-12-30,2025-12-30
+baclofen 10mg tablets,baclofen,BULK BUY,1.15,-37.4,0.43,2,2026-08-04,2026-09-04
+zopiclone 7.5mg tablets (28),zopiclone,BUY AS YOU GO,1.0950000000000002,-38.8,0.43,10,2026-02-02,2026-03-26
+codeine 30mg tablets,codeine,BULK BUY,0.87,-49.4,0.43,2,2025-12-30,2025-12-30
+anastrozole 1mg tablets,anastrozole,BULK BUY,0.98,-43.9,0.43,1,2026-08-04,2026-08-04
+erythromycin 250mg tablets (28),erythromycin,BULK BUY,1.92,-22.4,0.43,1,2026-02-20,2026-02-20
+folic acid 5mg tablets (28),folic acid,BULK BUY,0.81,-53.1,0.43,6,2026-02-04,2026-03-13
+diazepam 5mg tablets,diazepam,BULK BUY,0.65,-64.6,0.42,2,2024-12-30,2025-12-30
+atorvastatin 40mg tablets,atorvastatin,BULK BUY,0.67,-62.7,0.42,1,2025-12-30,2025-12-30
+terbinafine 1% cream (30g),terbinafine,BULK BUY,2.6,-16.2,0.42,3,2026-02-01,2026-03-31
+lercanidipine 20mg tablets (28),lercanidipine,BULK BUY,3.1,-13.5,0.42,24,2026-02-04,2026-03-31
+pizotifen 500microgram tablets,pizotifen,BULK BUY,0.89,-46.1,0.41,1,2026-10-04,2026-10-04
+bisoprolol 3.75mg tablets (28),bisoprolol,BULK BUY,0.77,-53.2,0.41,16,2026-02-10,2026-03-31
+rosuvastatin 5mg tablets,rosuvastatin,BULK BUY,0.65,-63.1,0.41,1,2025-12-30,2025-12-30
+paracetamol 500mg capsules,paracetamol,BULK BUY,0.77,-51.9,0.4,1,2025-12-30,2025-12-30
+diazepam 2mg tablets,diazepam,BULK BUY,0.63,-63.5,0.4,5,2025-06-30,2026-09-04
+spironolactone 25mg tablets,spironolactone,BULK BUY,0.86,-46.5,0.4,1,2025-12-30,2025-12-30
+fluoxetine 20mg capsules,fluoxetine,BULK BUY,0.73,-54.8,0.4,1,2025-12-30,2025-12-30
+naproxen 500mg tablets,naproxen,BULK BUY,1.15,-34.8,0.4,3,2024-12-30,2026-09-04
+amlodipine 5mg tablets,amlodipine,HOLD BUYING,0.57,-68.4,0.39,4,2025-12-30,2026-10-04
+atenolol 50mg tablets,atenolol,BULK BUY,0.54,-72.2,0.39,1,2026-09-04,2026-09-04
+sertraline 50mg tablets,sertraline,BULK BUY,0.73,-53.4,0.39,5,2025-06-30,2026-10-04
+ramipril 10mg capsules,ramipril,BULK BUY,0.78,-48.7,0.38,1,2025-12-30,2025-12-30
+olanzapine 10mg tablets,olanzapine,BULK BUY,1.21,-31.4,0.38,1,2026-08-04,2026-08-04
+citalopram 10mg tablets,citalopram,BULK BUY,0.61,-60.7,0.37,3,2025-12-30,2026-10-04
+thiamine 100mg tablets,thiamine,BULK BUY,2.23,-16.1,0.36,1,2025-12-30,2025-12-30
+candesartan 32mg tablets,candesartan,BULK BUY,1.14,-31.6,0.36,1,2026-09-04,2026-09-04
+candesartan 16mg tablets (28),candesartan,BULK BUY,1.04,-33.7,0.35,3,2026-02-24,2026-03-19
+bisoprolol 5mg tablets (28),bisoprolol,HOLD BUYING,0.77,-45.5,0.35,21,2026-02-04,2026-03-31
+bisoprolol 2.5mg tablets (28),bisoprolol,BUY AS YOU GO,0.77,-45.5,0.35,18,2026-02-05,2026-03-31
+codeine 15mg tablets,codeine,BULK BUY,0.75,-45.3,0.34,1,2025-12-30,2025-12-30
+bisoprolol 5mg tablets,bisoprolol,BULK BUY,0.61,-55.7,0.34,1,2026-09-04,2026-09-04
+lisinopril 10mg tablets,lisinopril,BULK BUY,0.67,-50.7,0.34,2,2025-12-30,2026-10-04
+atorvastatin 20mg tablets,atorvastatin,HOLD BUYING,0.6,-56.7,0.34,5,2025-12-30,2026-10-04
+amoxicillin 500mg capsules,amoxicillin,BULK BUY,0.79,-43.0,0.34,1,2025-12-30,2025-12-30
+bendroflumethiazide 2.5mg tablets,bendroflumethiazide,BUY AS YOU GO,0.57,-59.6,0.34,3,2025-12-30,2026-10-04
+clobazam 10mg tablets,clobazam,BULK BUY,2.25,-15.1,0.34,1,2025-12-30,2025-12-30
+sildenafil 50mg tablets,sildenafil,BULK BUY,0.56,-60.7,0.34,1,2025-12-30,2025-12-30
+dutasteride 0.5mg capsules (30),dutasteride,BULK BUY,2.175,-15.4,0.33,23,2026-02-01,2026-03-26
+nitrazepam 5mg tablets,nitrazepam,BULK BUY,1.81,-18.2,0.33,1,2026-09-04,2026-09-04
+ramipril 10mg capsules (28),ramipril,BULK BUY,1.07,-30.8,0.33,20,2026-02-01,2026-03-31
+chloramphenicol eye ointment (4g) pom,chloramphenicol,BULK BUY,2.48,-13.3,0.33,1,2026-03-27,2026-03-27
+dutasteride 500mcg capsules,dutasteride,BULK BUY,2.175,-14.9,0.32,1,2026-08-04,2026-08-04
+citalopram 20mg tablets,citalopram,BULK BUY,0.62,-51.6,0.32,4,2025-12-30,2026-10-04
+paroxetine 30mg tablets (30),paroxetine,BULK BUY,1.41,-22.7,0.32,2,2026-03-01,2026-03-27
+chloramphenicol eye ointment (4g) (p),chloramphenicol,BULK BUY,2.48,-12.5,0.31,1,2026-02-10,2026-02-10
+solifenacin 5mg tablets,solifenacin,BULK BUY,0.84,-35.7,0.3,1,2026-09-04,2026-09-04
+betamethasone valerate 0.1% ointment,betamethasone valerate,BULK BUY,1.23,-23.6,0.29,1,2026-09-04,2026-09-04
+furosemide 40mg tablets,furosemide,BULK BUY,0.66,-43.9,0.29,3,2025-12-30,2026-10-04
+bisoprolol 7.5mg tablets (28),bisoprolol,BULK BUY,0.77,-37.7,0.29,15,2026-02-05,2026-03-26
+candesartan 32mg tablets (28),candesartan,BULK BUY,1.04,-26.9,0.28,8,2026-02-05,2026-03-10
+atorvastatin 80mg tablets (28),atorvastatin,BULK BUY,1.01,-27.7,0.28,26,2026-02-01,2026-03-31
+indapamide 1.5mg sr tablets (30),indapamide,BULK BUY,0.955,-28.8,0.27,7,2026-02-01,2026-03-25
+aspirin 300mg dispersible tablets (32),aspirin,BULK BUY,0.9,-28.9,0.26,2,2026-03-01,2026-03-05
+bendroflumethiazide 5mg tablets (28),bendroflumethiazide,BUY AS YOU GO,0.7,-37.1,0.26,2,2026-03-01,2026-03-25
+cetirizine 10mg tablets,cetirizine,HOLD BUYING,0.66,-39.4,0.26,5,2025-12-30,2026-10-04
+candesartan 8mg tablets,candesartan,BULK BUY,0.73,-35.6,0.26,2,2026-09-04,2026-10-04
+olanzapine 10mg tablets (28),olanzapine,BULK BUY,1.18,-22.0,0.26,14,2026-02-01,2026-03-29
+furosemide 40mg tablets (28),furosemide,BULK BUY,0.675,-36.3,0.25,19,2026-02-01,2026-03-31
+metformin 500mg modified-release tablets,metformin,BULK BUY,1.45,-17.2,0.25,2,2026-08-04,2026-09-04
+lisinopril 20mg tablets (28),lisinopril,BUY AS YOU GO,0.8,-30.0,0.24,14,2026-02-01,2026-03-23
+mirtazapine 30mg tablets,mirtazapine,BULK BUY,0.89,-27.0,0.24,1,2026-09-04,2026-09-04
+solifenacin 10mg tablets,solifenacin,BULK BUY,1.01,-23.8,0.24,1,2026-08-04,2026-08-04
+lisinopril 20mg tablets,lisinopril,BULK BUY,0.73,-32.9,0.24,2,2025-12-30,2026-08-04
+atorvastatin 80mg tablets,atorvastatin,BULK BUY,1.01,-22.8,0.23,1,2026-08-04,2026-08-04
+pramipexole 0.18mg tablets (30),pramipexole,BULK BUY,2.12,-10.4,0.22,2,2026-02-17,2026-03-16
+bisoprolol 2.5mg tablets,bisoprolol,BUY AS YOU GO,0.6,-35.0,0.21,2,2026-08-04,2026-10-04
+nicorandil 20mg tablets (60),nicorandil,BULK BUY,3.275,-6.6,0.21,2,2026-02-20,2026-03-20
+paracetamol 500mg tablets,paracetamol,HOLD BUYING,0.64,-31.2,0.2,2,2025-12-30,2025-12-30
+candesartan 16mg tablets,candesartan,BUY AS YOU GO,0.8,-25.0,0.2,3,2025-12-30,2026-10-04
+olanzapine 2.5mg tablets,olanzapine,BULK BUY,0.92,-20.7,0.19,1,2025-12-30,2025-12-30
+mirtazapine 45mg tablets,mirtazapine,BUY AS YOU GO,1.13,-16.8,0.19,2,2025-12-30,2026-09-04
+mirtazapine 15mg tablets,mirtazapine,HOLD BUYING,0.77,-22.1,0.17,2,2025-12-30,2026-09-04
+doxazosin 2mg tablets (28),doxazosin,BUY AS YOU GO,0.78,-21.8,0.17,22,2026-02-01,2026-03-31
+nebivolol 2.5mg tablets (28),nebivolol,BULK BUY,2.16,-6.9,0.15,5,2026-02-10,2026-03-23
+mirtazapine 15mg dispersible tablets (30,mirtazapine,BUY AS YOU GO,1.7,-8.8,0.15,5,2026-02-04,2026-03-27
+candesartan 4mg tablets (28),candesartan,BULK BUY,1.04,-14.4,0.15,6,2026-02-13,2026-03-18
+metformin 500mg tablets,metformin,BULK BUY,0.54,-25.9,0.14,2,2025-12-30,2025-12-30
+naproxen 250mg tablets,naproxen,BULK BUY,0.72,-16.7,0.12,1,2025-12-30,2025-12-30
+phenytoin sodium 100mg capsules (84) fly,phenytoin sodium,BULK BUY,9.24,-1.2,0.11,2,2026-02-10,2026-03-11
+vitamin a & d capsules (84),vitamin,BULK BUY,1.125,-8.4,0.09,1,2026-03-10,2026-03-10
+mometasone 0.1% ointment (30g),mometasone,BULK BUY,4.225,-2.2,0.09,2,2026-02-05,2026-02-10
+benzydamine 0.15% oral rinse (300ml),benzydamine,BULK BUY,3.42,-2.6,0.09,1,2026-02-10,2026-02-10
+doxazosin 4mg tablets (28),doxazosin,HOLD BUYING,0.78,-11.5,0.09,8,2026-02-01,2026-03-23
+ramipril 2.5mg capsules,ramipril,BULK BUY,0.7,-11.4,0.08,2,2026-08-04,2026-09-04
+irbesartan 75mg tablets (28),irbesartan,BULK BUY,1.32,-5.3,0.07,20,2026-02-11,2026-03-31
+ramipril 1.25mg capsules (28),ramipril,BULK BUY,1.07,-4.7,0.05,11,2026-02-01,2026-03-12
+propranolol 40mg tablets (28),propranolol,BULK BUY,0.87,-5.7,0.05,29,2026-02-02,2026-03-27
+isosorbide mononitrate 10mg tablets (56),isosorbide mononitrate,BULK BUY,1.1949999999999998,-4.6,0.05,2,2026-02-26,2026-03-31
+baclofen 5mg/5ml oral solution (300ml) s,baclofen,BULK BUY,2.355,-1.9,0.04,1,2026-03-02,2026-03-02
+baclofen 5mg/5ml oral solution (300ml),baclofen,BULK BUY,2.355,-1.9,0.04,1,2026-03-29,2026-03-29
+propranolol 40mg tablets,propranolol,BUY AS YOU GO,0.67,-3.0,0.02,6,2024-12-30,2026-10-04
+ramipril 5mg capsules,ramipril,HOLD BUYING,0.71,-2.8,0.02,2,2024-12-30,2026-09-04
+aspirin 75mg dispersible tablets,aspirin,BULK BUY,0.69,-2.9,0.02,2,2025-12-30,2025-12-30
+risperidone 0.5mg tablets (20),risperidone,BULK BUY,1.985,-0.8,0.01,14,2026-02-01,2026-03-29
+gliclazide 30mg modified-release tablets,gliclazide,BULK BUY,1.04,1.0,-0.01,1,2026-10-04,2026-10-04
+pioglitazone 15mg tablets (28),pioglitazone,BULK BUY,1.77,1.1,-0.02,4,2026-02-06,2026-03-15
+tramadol 50mg capsules,tramadol,BULK BUY,0.64,6.2,-0.04,1,2025-12-30,2025-12-30
+olanzapine 15mg tablets (28),olanzapine,BULK BUY,1.18,3.4,-0.04,4,2026-02-05,2026-03-26
+lansoprazole 15mg odt tablets (28),lansoprazole,BULK BUY,1.545,3.6,-0.06,2,2026-02-10,2026-02-15
+hydrocortisone 1% cream (50g),hydrocortisone,BULK BUY,2.46,2.8,-0.07,1,2026-03-06,2026-03-06
+pregabalin 75mg capsules (56),pregabalin,BUY AS YOU GO,2.11,3.3,-0.07,5,2026-02-18,2026-03-27
+irbesartan 300mg tablets (28),irbesartan,BUY AS YOU GO,1.32,6.1,-0.08,24,2026-02-01,2026-03-31
+imipramine 25mg tablets (28),imipramine,BUY AS YOU GO,1.54,7.1,-0.11,3,2026-02-11,2026-03-13
+candesartan 2mg tablets,candesartan,BULK BUY,0.57,21.1,-0.12,1,2026-09-04,2026-09-04
+indapamide 2.5mg tablets (28),indapamide,BULK BUY,0.955,13.1,-0.13,9,2026-02-03,2026-03-31
+trimethoprim 200mg tablets (14),trimethoprim,BULK BUY,1.49,9.4,-0.14,3,2026-02-06,2026-03-11
+lymecycline 408mg capsules (56),lymecycline,BUY AS YOU GO,6.75,2.1,-0.14,11,2026-02-04,2026-03-20
+hydroxocobalamin injection (5x1ml),hydroxocobalamin,BULK BUY,10.16,2.0,-0.2,3,2026-02-01,2026-03-25
+carvedilol 3.125mg tablets (28),carvedilol,HOLD BUYING,1.145,17.9,-0.21,4,2026-02-01,2026-03-31
+letrozole 2.5mg tablets (28),letrozole,BULK BUY,1.56,13.5,-0.21,5,2026-02-13,2026-03-31
+hydroxocobalamin 1mg/1ml injection,hydroxocobalamin,BULK BUY,10.16,2.4,-0.24,1,2025-12-30,2025-12-30
+tadalafil 5mg tablets (28),tadalafil,BULK BUY,1.11,21.6,-0.24,5,2026-02-17,2026-03-29
+pramipexole 0.088mg tablets (30),pramipexole,BULK BUY,2.12,12.7,-0.27,4,2026-02-03,2026-03-18
+lamotrigine 200mg tablets (56),lamotrigine,BULK BUY,3.17,10.1,-0.32,3,2026-02-15,2026-03-20
+rosuvastatin 40mg tablets (28),rosuvastatin,BULK BUY,1.1949999999999998,26.4,-0.32,11,2026-02-01,2026-03-29
+rosuvastatin 5mg tablets (28),rosuvastatin,BULK BUY,1.1949999999999998,29.7,-0.36,13,2026-02-01,2026-03-20
+doxycycline 100mg capsules,doxycycline,BULK BUY,0.69,53.6,-0.37,1,2026-10-04,2026-10-04
+hydroxychloroquine 200mg tablets (60),hydroxychloroquine,BULK BUY,3.22,13.0,-0.42,4,2026-02-05,2026-03-19
+gabapentin 600mg tablets (100),gabapentin,BULK BUY,2.99,15.7,-0.47,1,2026-02-18,2026-02-18
+lamotrigine 50mg tablets (56),lamotrigine,BUY AS YOU GO,3.17,15.1,-0.48,5,2026-02-01,2026-03-27
+sodium fluoride 5000ppm toothpaste (51g),sodium fluoride,BULK BUY,3.29,15.2,-0.5,1,2026-02-19,2026-02-19
+isosorbide mononitrate 20mg tablets (56),isosorbide mononitrate,BULK BUY,1.1949999999999998,42.3,-0.51,3,2026-02-10,2026-03-31
+rosuvastatin 10mg tablets (28),rosuvastatin,BULK BUY,1.1949999999999998,45.6,-0.55,22,2026-02-01,2026-03-31
+fluoxetine 10mg capsules (30),fluoxetine,HOLD BUYING,2.18,26.1,-0.57,5,2026-02-01,2026-03-15
+doxycycline 100mg capsules (50),doxycycline,BULK BUY,1.02,56.9,-0.58,10,2026-02-02,2026-03-31
+lactulose solution cre,lactulose,BULK BUY,3.225,20.0,-0.64,1,2026-04-07,2026-04-07
+ferrous sulfate 200mg tablets,ferrous sulfate,BULK BUY,0.84,77.4,-0.65,1,2026-10-04,2026-10-04
+tibolone 2.5mg tablets (28),tibolone,BULK BUY,3.56,19.1,-0.68,1,2026-03-24,2026-03-24
+propylthiouracil 50mg tablets (56),propylthiouracil,BULK BUY,5.34,14.4,-0.77,1,2026-03-25,2026-03-25
+co-codamol 30/500mg capsules,co-codamol,BULK BUY,3.2,24.4,-0.78,1,2025-12-30,2025-12-30
+pregabalin 300mg capsules (56),pregabalin,BULK BUY,2.11,37.0,-0.78,1,2026-03-19,2026-03-19
+pregabalin 100mg capsules (84),pregabalin,BULK BUY,2.11,37.0,-0.78,4,2026-02-24,2026-03-26
+carvedilol 25mg tablets (28),carvedilol,BULK BUY,1.145,70.3,-0.8,1,2026-02-26,2026-02-26
+carvedilol 12.5mg tablets (28),carvedilol,HOLD BUYING,1.145,70.3,-0.8,2,2026-02-09,2026-03-16
+aspirin 75mg tablets (28),aspirin,BULK BUY,0.9,90.0,-0.81,8,2026-03-02,2026-03-31
+co-codamol 30/500mg caplets,co-codamol,BULK BUY,3.2,25.9,-0.83,4,2025-12-30,2025-12-30
+pregabalin 150mg capsules (56),pregabalin,HOLD BUYING,2.11,39.8,-0.84,10,2026-02-01,2026-03-25
+valsartan 80mg capsules (28),valsartan,BULK BUY,6.09,14.0,-0.85,4,2026-02-01,2026-03-25
+lactulose solution (300ml),lactulose,BULK BUY,3.225,26.5,-0.86,2,2026-02-03,2026-02-24
+co-codamol 8/500 eff tablets (100) sterw,co-codamol,BULK BUY,3.2,30.9,-0.99,1,2026-02-02,2026-02-02
+ondansetron 4mg tablets (30),ondansetron,BULK BUY,1.4049999999999998,70.1,-0.99,2,2026-02-24,2026-03-24
+pregabalin 200mg capsules (84),pregabalin,HOLD BUYING,2.11,47.9,-1.01,4,2026-02-01,2026-03-23
+co-amoxiclav 250/62.5mg suspension (100m,co-amoxiclav,BULK BUY,2.09,53.6,-1.12,2,2026-02-10,2026-03-16
+rosuvastatin 20mg tablets (28),rosuvastatin,BUY AS YOU GO,1.1949999999999998,100.8,-1.2,30,2026-02-01,2026-03-31
+fexofenadine 180mg tablets (30),fexofenadine,BULK BUY,1.545,78.0,-1.2,16,2026-02-01,2026-03-17
+ursodeoxycholic acid 250mg capsules (60),ursodeoxycholic acid,BULK BUY,8.675,14.0,-1.21,4,2026-02-11,2026-03-31
+tramadol 50mg capsules (100),tramadol,BULK BUY,1.715,73.8,-1.27,1,2026-02-18,2026-02-18
+aspirin 75mg dispersible tablets (28),aspirin,BULK BUY,0.9,144.4,-1.3,2,2026-02-12,2026-03-09
+co-codamol 8mg/500mg tablets,co-codamol,BULK BUY,0.83,171.1,-1.42,1,2026-09-04,2026-09-04
+bumetanide 1mg tablets (28),bumetanide,BUY AS YOU GO,1.405,102.8,-1.44,11,2026-02-01,2026-02-23
+bisoprolol 1.25mg tablets (28),bisoprolol,HOLD BUYING,0.77,192.2,-1.48,23,2026-02-01,2026-03-27
+fesoterodine fumarate pr 4mg tablets (28,fesoterodine,HOLD BUYING,3.01,52.5,-1.58,7,2026-02-02,2026-03-27
+sotalol 40mg tablets (28),sotalol,BULK BUY,1.01,157.4,-1.59,2,2026-02-01,2026-03-31
+naproxen 250mg gr tablets,naproxen,BULK BUY,1.98,81.3,-1.61,2,2024-12-30,2025-12-30
+indapamide 2.5mg tablets,indapamide,BULK BUY,0.73,243.8,-1.78,1,2025-12-30,2025-12-30
+rizatriptan 10mg tablets (3),rizatriptan,BULK BUY,4.42,41.0,-1.81,1,2026-03-16,2026-03-16
+pramipexole 88mcg tablets,pramipexole,BULK BUY,2.12,86.3,-1.83,1,2025-06-30,2025-06-30
+fesoterodine fumarate pr 8mg tablets (28,fesoterodine,BULK BUY,3.01,62.8,-1.89,1,2026-03-16,2026-03-16
+ursodeoxycholic acid 250mg capsules,ursodeoxycholic acid,BULK BUY,8.0,25.2,-2.02,1,2026-08-04,2026-08-04
+valsartan 160mg capsules (28),valsartan,BULK BUY,6.09,33.7,-2.05,2,2026-02-11,2026-03-12
+memantine 20mg tablets,memantine,BULK BUY,1.47,140.1,-2.06,1,2024-12-30,2024-12-30
+propranolol 80mg tablets (56),propranolol,BULK BUY,0.87,243.7,-2.12,5,2026-02-02,2026-03-18
+cetirizine 5mg/5ml solution (200ml),cetirizine,BULK BUY,0.79,269.6,-2.13,4,2026-03-15,2026-03-25
+amlodipine 2.5mg tablets (28),amlodipine,BULK BUY,0.72,297.2,-2.14,2,2026-02-10,2026-03-23
+irbesartan 150mg tablets (28),irbesartan,BULK BUY,1.32,165.2,-2.18,2,2026-03-10,2026-03-24
+cetirizine 1mg/ml oral soln,cetirizine,BULK BUY,0.79,303.8,-2.4,1,2025-12-30,2025-12-30
+co-codamol 30/500mg capsules (100),co-codamol,BULK BUY,3.2,75.0,-2.4,2,2026-02-06,2026-03-18
+methenamine hippurate 1g tablets (60),methenamine hippurate,BULK BUY,16.22,14.9,-2.41,6,2026-02-03,2026-03-16
+rabeprazole 20mg tablets (28),rabeprazole,BULK BUY,1.87,140.6,-2.63,2,2026-02-19,2026-03-26
+lactulose 3.1-3.7g/5ml oral soln,lactulose,BULK BUY,3.225,82.0,-2.64,2,2025-12-30,2025-12-30
+co-codamol 30/500mg eff tablets (100),co-codamol,BULK BUY,3.2,84.1,-2.69,1,2026-02-12,2026-02-12
+prednisolone 5mg soluble tablets (30),prednisolone,BULK BUY,1.145,240.6,-2.76,2,2026-02-02,2026-02-19
+lactulose solution (500ml),lactulose,BULK BUY,3.225,87.6,-2.82,17,2026-02-01,2026-03-31
+metformin sr (sukkarto) 1000mg tablets (,metformin,BULK BUY,2.07,138.6,-2.87,4,2026-02-10,2026-03-13
+olanzapine 10mg odt tablets,olanzapine,BULK BUY,1.18,244.9,-2.89,1,2025-12-30,2025-12-30
+dihydrocodeine 30mg tablets,dihydrocodeine,BULK BUY,1.61,182.6,-2.94,1,2025-12-30,2025-12-30
+trimethoprim 100mg tablets (28),trimethoprim,BULK BUY,1.49,202.0,-3.01,3,2026-02-08,2026-03-05
+labetalol 200mg tablets (56),labetalol,BULK BUY,4.94,65.2,-3.22,1,2026-02-03,2026-02-03
+sertraline 25mg tablets (28),sertraline,BULK BUY,1.11,297.3,-3.3,2,2026-02-18,2026-03-08
+co-codamol 30/500mg caplets (100),co-codamol,BULK BUY,3.2,109.4,-3.5,15,2026-02-20,2026-03-25
+omeprazole 20mg tablets (28),omeprazole,BULK BUY,1.06,372.6,-3.95,3,2026-02-01,2026-03-29
+co-codamol 15/500mg capsules (100),co-codamol,BULK BUY,3.2,125.0,-4.0,1,2026-02-20,2026-02-20
+acetazolamide 250mg tablets (112),acetazolamide,BULK BUY,5.48,74.5,-4.08,1,2026-03-11,2026-03-11
+sotalol 80mg tablets (28),sotalol,BULK BUY,1.01,469.3,-4.74,1,2026-02-04,2026-02-04
+salbutamol 2.5mg/2.5ml nebuliser,salbutamol,BULK BUY,8.165,60.3,-4.93,1,2026-10-04,2026-10-04
+alfuzosin 2.5mg tablets (60),alfuzosin,BULK BUY,1.4,382.1,-5.35,2,2026-03-03,2026-03-24
+mometasone 0.1% cream (100g),mometasone,BULK BUY,4.225,134.3,-5.68,1,2026-02-23,2026-02-23
+lamotrigine 25mg dispersible tablets (56,lamotrigine,BULK BUY,3.17,203.5,-6.45,2,2026-03-02,2026-03-05
+lamotrigine 25mg dispersible tablets (56),lamotrigine,BULK BUY,3.17,203.5,-6.45,1,2026-03-29,2026-03-29
+clarithromycin 125mg suspension (70ml),clarithromycin,BULK BUY,3.98,175.4,-6.98,2,2026-02-01,2026-03-20
+trimethoprim 50mg/5ml suspension (100ml),trimethoprim,BULK BUY,1.49,469.8,-7.0,5,2026-02-13,2026-03-31
+nitrofurantoin 50mg tablets (100),nitrofurantoin,BULK BUY,4.785,160.8,-7.7,1,2026-03-10,2026-03-10
+dipyridamole 200mg mr capsules,dipyridamole,BULK BUY,5.449999999999999,141.3,-7.7,2,2025-12-30,2025-12-30
+tramadol 100mg modified-release capsules,tramadol,BULK BUY,1.715,451.0,-7.74,1,2026-09-04,2026-09-04
+cabergoline 1mg tablets,cabergoline,BULK BUY,15.58,51.6,-8.04,1,2026-10-04,2026-10-04
+propranolol 10mg/5ml oral solution (150m,propranolol,BULK BUY,0.87,994.3,-8.65,2,2026-02-23,2026-03-10
+tolterodine 2mg tablets (56),tolterodine,BULK BUY,2.4400000000000004,414.3,-10.11,2,2026-02-10,2026-02-19
+spironolactone 12.5mg tablets (28),spironolactone,BULK BUY,2.16,473.6,-10.23,2,2026-02-10,2026-03-05
+sertraline 150mg tablets(30),sertraline,BULK BUY,1.11,1106.3,-12.28,1,2026-02-18,2026-02-18
+rosuvastatin 40mg capsules (28),rosuvastatin,BULK BUY,1.1949999999999998,1047.3,-12.52,2,2026-02-26,2026-03-31
+paracetamol 500mg soluble tablets (100),paracetamol,BULK BUY,2.56,493.8,-12.64,1,2026-02-05,2026-02-05
+prochlorperazine 3mg buccal tablets (50),prochlorperazine,BULK BUY,3.51,382.9,-13.44,1,2026-03-31,2026-03-31
+paracetamol 500mg tablets (1000),paracetamol,BULK BUY,2.56,539.8,-13.82,1,2026-03-05,2026-03-05
+procyclidine 5mg tablets,procyclidine,BULK BUY,1.11,1292.8,-14.35,1,2026-08-04,2026-08-04
+hydrocortisone 5mg tablets (30),hydrocortisone,BULK BUY,2.46,703.7,-17.31,2,2026-02-06,2026-03-19
+duloxetine 90mg capsules (28),duloxetine,BULK BUY,2.625,696.2,-18.27,4,2026-02-01,2026-03-30
+colesevelam 625mg tablets,colesevelam,BULK BUY,58.7,32.4,-19.03,1,2025-12-30,2025-12-30
+clarithromycin 250mg suspension (70ml),clarithromycin,BULK BUY,3.98,509.8,-20.29,2,2026-02-05,2026-03-15
+gabapentin 600mg tablets,gabapentin,BULK BUY,4.37,469.8,-20.53,1,2024-12-30,2024-12-30
+amoxicillin 3g sachets (2),amoxicillin,BULK BUY,1.39,1564.0,-21.74,1,2026-02-11,2026-02-11
+duloxetine 120mg capsules (28),duloxetine,BULK BUY,2.625,839.0,-22.02,1,2026-03-20,2026-03-20
+celiprolol 400mg tablets (28),celiprolol,BULK BUY,12.29,192.4,-23.65,1,2026-02-09,2026-02-09
+cilostazol 50mg tablets,cilostazol,BULK BUY,6.295,419.9,-26.43,1,2026-10-04,2026-10-04
+memantine 20mg orodispersible tablets (2,memantine,BULK BUY,1.81,2409.4,-43.61,1,2026-02-20,2026-02-20
+nizatidine 150mg capsules (30),nizatidine,BULK BUY,18.49,250.7,-46.35,2,2026-02-10,2026-03-11
+oxybutynin 2.5mg/5ml oral solution (150m,oxybutynin,BULK BUY,1.43,4050.3,-57.92,1,2026-03-06,2026-03-06
+haloperidol 0.5mg tablets (28),haloperidol,BULK BUY,3.345,4712.6,-157.64,1,2026-02-11,2026-02-11
+abilify maintena inj vial 400mg,abilify,BULK BUY,,,,1,2026-04-01,2026-04-01
+acamprosate tabs 333mg,acamprosate tabs,BULK BUY,,,,1,2026-04-01,2026-04-01
+accrete d3 1000mg/880iu one a day chewab,accrete d3,BULK BUY,,,,23,2026-02-01,2026-03-31
+accrete d3 1500mg/400iu tablets (60) (pom),accrete d3,BULK BUY,,,,2,2026-03-08,2026-03-29
+acnecide 5% gel (30g),acnecide,BULK BUY,,,,7,2026-02-13,2026-03-23
+acnecide 5% gel (60g),acnecide,BULK BUY,,,,1,2026-03-23,2026-03-23
+activheal foam adhesive 10cm x 10cm (10),activheal,BULK BUY,,,,1,2026-02-13,2026-02-13
+adaflex 2mg tablets,adaflex,BULK BUY,,,,1,2026-09-04,2026-09-04
+adapalene & benzoyl peroxide 0.1%/2.5% g,adapalene,BULK BUY,,,,2,2026-02-23,2026-03-31
+adcal chewable 1500mg tablets (100),adcal chewable,BULK BUY,,,,1,2026-03-19,2026-03-19
+adcal-d3 750mg/200unit caplets,adcal-d3,BULK BUY,,,,1,2026-10-04,2026-10-04
+adcal-d3 chewable tablets,adcal-d3,BULK BUY,,,,1,2025-12-30,2025-12-30
+addovobet gel,addovobet,BULK BUY,,,,1,2026-04-10,2026-04-10
+addovobet ointment,addovobet,BULK BUY,,,,1,2026-04-07,2026-04-07
+adfucibet cream,adfucibet,BULK BUY,,,,2,2026-04-07,2026-04-10
+adizem-sr 120mg capsules,adizem-sr,BULK BUY,,,,1,2026-10-04,2026-10-04
+adizem-xl 120mg capsules,adizem-xl,BULK BUY,,,,1,2026-10-04,2026-10-04
+adoport 2mg capsules (50),adoport,BULK BUY,,,,1,2026-03-10,2026-03-10
+aerochamber plus adult mask,aerochamber,BULK BUY,,,,1,2025-12-30,2025-12-30
+aerochamber plus with adult mask,aerochamber,BULK BUY,,,,1,2026-10-04,2026-10-04
+agomelatine 25mg tablets (28),agomelatine,BULK BUY,,,,1,2026-02-26,2026-02-26
+alfuzosin xl 10mg tablets (30),alfuzosin xl,BULK BUY,,,,3,2026-02-13,2026-03-10
+allevyn adhesive wound dr (10cmx10cm) (1,allevyn,BULK BUY,,,,4,2026-02-12,2026-03-26
+allevyn adhesive wound dr (12.5cm x 22.5,allevyn,BULK BUY,,,,1,2026-02-20,2026-02-20
+allevyn adhesive wound dr (7.5cmx7.5cm),allevyn,BULK BUY,,,,3,2026-02-26,2026-03-30
+allevyn gentle border 10cm x 10cm (10) (,allevyn,BULK BUY,,,,1,2026-02-02,2026-02-02
+allevyn gentle border 15cm x 15cm (10) (,allevyn,BULK BUY,,,,1,2026-02-02,2026-02-02
+allevyn heel 10.5cm x 13.5cm (5) (660076,allevyn heel,BULK BUY,,,,1,2026-02-12,2026-02-12
+alverine citrate 120mg capsules (60),alverine citrate,BULK BUY,,,,1,2026-02-06,2026-02-06
+alverine citrate 60mg capsules (100),alverine citrate,BULK BUY,,,,5,2026-02-01,2026-03-31
+amgesic 1% gel (100g) (diclofenac),amgesic,BULK BUY,,,,1,2026-03-01,2026-03-01
+amoxicillin caps 500mg,amoxicillin caps,BULK BUY,,,,1,2026-04-01,2026-04-01
+anastrazole 1mg tablets (28),anastrazole,BULK BUY,,,,4,2026-02-01,2026-03-29
+anbesol adult gel (10g),anbesol,BULK BUY,,,,1,2026-02-24,2026-02-24
+anbesol liquid (10ml),anbesol,BULK BUY,,,,1,2026-02-24,2026-02-24
+anoro ellipta 55/22mcg inhaler,anoro ellipta,BULK BUY,,,,3,2026-08-04,2026-10-04
+anusol cream (23g),anusol,BULK BUY,,,,2,2026-02-20,2026-02-23
+anusol plus hc ointment (15g),anusol,BULK BUY,,,,1,2026-02-15,2026-02-15
+anusol plus hc suppositories (12),anusol,BULK BUY,,,,1,2026-02-23,2026-02-23
+anusol suppositories (12),anusol,BULK BUY,,,,1,2026-03-29,2026-03-29
+aquacel extra 10cm x 10cm (10) 420672,aquacel extra,BULK BUY,,,,3,2026-02-06,2026-03-09
+aquacel extra 15cm x 15cm (5) 420673,aquacel extra,BULK BUY,,,,1,2026-02-01,2026-02-01
+aquacel extra 5cm x 5cm (10) 420671,aquacel extra,BULK BUY,,,,2,2026-02-12,2026-02-24
+aripiprazole tablets 10 mg cres,aripiprazole tablets,BULK BUY,,,,1,2026-04-07,2026-04-07
+artelac nighttime 0.2% eye gel,artelac nighttime,BULK BUY,,,,1,2026-08-04,2026-08-04
+ascorbic acid 500mg tablets (28),ascorbic acid,BULK BUY,,,,1,2026-03-20,2026-03-20
+ascorbic acid 50mg tablets (28),ascorbic acid,BULK BUY,,,,2,2026-02-24,2026-03-12
+aspirin ec 75mg tablets (56),aspirin ec,BULK BUY,,,,2,2026-02-20,2026-02-23
+aveeno cream,aveeno,BULK BUY,,,,2,2025-12-30,2025-12-30
+aveeno cream (500ml),aveeno,BULK BUY,,,,7,2026-02-05,2026-03-25
+azarga eye drops (5ml),azarga,BULK BUY,,,,1,2026-03-04,2026-03-04
+azopt 10mg/ml eye drops,azopt,BULK BUY,,,,1,2025-12-30,2025-12-30
+azopt eye drops (5ml),azopt,BULK BUY,,,,1,2026-03-09,2026-03-09
+balneum intensiv cream 500g [3509536],balneum,BULK BUY,,,,1,2026-02-23,2026-02-23
+beclomethasone 200mcg cfc free (clenil),beclomethasone,BULK BUY,,,,2,2026-02-01,2026-02-19
+belvo 250mg gr tablets (30) (valproate,belvo,BULK BUY,,,,2,2026-02-10,2026-03-06
+benylin 4 flu tablets (24),benylin,BULK BUY,,,,1,2026-03-09,2026-03-09
+benylin mucus cough max honey 100mg/5ml,benylin,BULK BUY,,,,1,2025-12-30,2025-12-30
+benylin mucus cough max menthol 100mg/5ml,benylin,BULK BUY,,,,1,2025-12-30,2025-12-30
+benylin mucus cough night,benylin,BULK BUY,,,,1,2025-12-30,2025-12-30
+benylinchestycoughoriginal,benylinchestycoughoriginal,BULK BUY,,,,1,2026-04-07,2026-04-07
+betacap 0.1% scalp application,betacap,BULK BUY,,,,1,2025-12-30,2025-12-30
+betamethasone ointment 0.1% (30g),betamethasone ointment,BULK BUY,,,,3,2026-02-12,2026-03-25
+betamethasonevalerate oint 0.1% man,betamethasonevalerate oint,BULK BUY,,,,1,2026-04-09,2026-04-09
+betmiga 50mg modified-release tablets,betmiga,BULK BUY,,,,1,2026-09-04,2026-09-04
+betmiga 50mg mrt,betmiga,BULK BUY,,,,1,2025-12-30,2025-12-30
+betnovate 0.1% ointment,betnovate,BULK BUY,,,,2,2025-12-30,2026-10-04
+bezafibrate 200mg tablets (100),bezafibrate,BULK BUY,,,,1,2026-02-04,2026-02-04
+bezafibrate xl 400mg tablets (30),bezafibrate xl,BULK BUY,,,,1,2026-02-01,2026-02-01
+bezalip mono 400mg tablets (30),bezalip mono,BULK BUY,,,,1,2026-03-10,2026-03-10
+biotene moisturising mouthwashml,biotene,BULK BUY,,,,1,2025-12-30,2025-12-30
+biquelle (quetiapine) xl 400mg tablets (,biquelle,BULK BUY,,,,1,2026-03-12,2026-03-12
+blephaclean eyelid cleansing wipes (20),blephaclean,BULK BUY,,,,1,2026-02-18,2026-02-18
+blissel 50mcg/g vaginal gel (30g),blissel,BULK BUY,,,,1,2026-03-31,2026-03-31
+brilique 90mg tablets (56),brilique,BULK BUY,,,,2,2026-02-06,2026-03-12
+budesonide 0.5mg nebules 2ml (20),budesonide,BULK BUY,,,,4,2026-03-10,2026-03-19
+butec 10mcg/hour patches,butec,BULK BUY,,,,1,2026-08-04,2026-08-04
+butec 15mcg/hr transdermal patches,butec,BULK BUY,,,,1,2025-06-30,2025-06-30
+calceos tablets (60),calceos,BULK BUY,,,,6,2026-02-01,2026-03-24
+calpol infant suspension s/f c/f (100ml),calpol,BULK BUY,,,,1,2026-03-05,2026-03-05
+camcolit cr 400mg tablets (100),camcolit cr,BULK BUY,,,,1,2026-02-13,2026-02-13
+canesten 1% cream (20g),canesten,BULK BUY,,,,1,2026-02-23,2026-02-23
+canesten combi 500mg/2%,canesten combi,BULK BUY,,,,1,2025-12-30,2025-12-30
+canesten hc cream (15g),canesten,BULK BUY,,,,1,2026-03-19,2026-03-19
+capasal therapeutic shampoo,capasal,BULK BUY,,,,1,2025-12-30,2025-12-30
+captopril 50mg tablets (56),captopril,BULK BUY,,,,1,2026-02-03,2026-02-03
+carbidopa/levodopa 12.5mg/50mg tablets (100),carbidopa/levodopa,BULK BUY,,,,1,2026-03-01,2026-03-01
+carbidopa/levodopa 25mg/100mg tablets (100),carbidopa/levodopa,BULK BUY,,,,1,2026-03-01,2026-03-01
+carbomer gel (10g),carbomer,BULK BUY,,,,6,2026-02-04,2026-03-27
+cardioplen xl 10mg tablets (28),cardioplen xl,BULK BUY,,,,1,2026-02-05,2026-02-05
+care - acetone 50ml,care,BULK BUY,,,,1,2026-03-06,2026-03-06
+care - decongestant tablets 12's,care,BULK BUY,,,,1,2026-03-01,2026-03-01
+care - epsom salts 300g,care,BULK BUY,,,,1,2026-03-01,2026-03-01
+caresennalaxative tablets,caresennalaxative,BULK BUY,,,,1,2026-04-09,2026-04-09
+caresennalaxative tablets(dc),caresennalaxative,BULK BUY,,,,1,2026-04-07,2026-04-07
+cavilon barrier film 1ml applicator (5),cavilon,BULK BUY,,,,1,2026-03-09,2026-03-09
+cavilon durable barrier cream (28g),cavilon,BULK BUY,,,,1,2026-02-10,2026-02-10
+cefalexin susp 125 mg/5 ml fln,cefalexin susp,BULK BUY,,,,1,2026-04-07,2026-04-07
+cellcept 250mg capsules (100),cellcept,BULK BUY,,,,2,2026-02-02,2026-03-26
+ceptava 360mg gastro-resistant tablets,ceptava,BULK BUY,,,,1,2026-10-04,2026-10-04
+cerelle 75mcg film coated tablets (84),cerelle,BULK BUY,,,,13,2026-02-06,2026-03-26
+cetraben emollient cream 1050g,cetraben,BULK BUY,,,,1,2026-03-08,2026-03-08
+cetraben ointment 450g,cetraben ointment,BULK BUY,,,,4,2026-02-10,2026-03-08
+cetrabenemollient creampump,cetrabenemollient,BULK BUY,,,,1,2026-04-10,2026-04-10
+chlordiazepoxide 10mg capsules (100),chlordiazepoxide,BULK BUY,,,,1,2026-02-24,2026-02-24
+cipralex 10mg tablets,cipralex,BULK BUY,,,,1,2026-09-04,2026-09-04
+clenil modulite 100mcg inhaler,clenil modulite,BULK BUY,,,,1,2025-12-30,2025-12-30
+clenil modulite 200mcg/dose inhaler,clenil modulite,BULK BUY,,,,1,2026-09-04,2026-09-04
+co-careldopa mr 200/50mg tablets (60) (l,co-careldopa mr,BULK BUY,,,,1,2026-03-01,2026-03-01
+co-cyprindiol 2000/35mcg tablets,co-cyprindiol,BULK BUY,,,,1,2025-12-30,2025-12-30
+codeine phosphate 30mg tablets (28),codeine phosphate,BULK BUY,,,,7,2026-02-04,2026-03-31
+codeine phosphate 60mg tablets (28),codeine phosphate,BULK BUY,,,,1,2026-02-18,2026-02-18
+colecalciferoltab 800 iu con,colecalciferoltab,BULK BUY,,,,1,2026-04-08,2026-04-08
+colesevelam hydrochloride 625mg fc table,colesevelam hydrochloride,BULK BUY,,,,3,2026-02-04,2026-03-05
+colofacmr capsules 200 mg myl,colofacmr capsules,BULK BUY,,,,1,2026-04-07,2026-04-07
+colpermin capsules (100),colpermin,BULK BUY,,,,4,2026-02-10,2026-03-31
+concerta xl 18mg tablets (30),concerta xl,BULK BUY,,,,2,2026-02-17,2026-03-31
+concerta xl 36mg tablets,concerta xl,BULK BUY,,,,1,2026-10-04,2026-10-04
+coracten sr 10mg capsules (60),coracten sr,BULK BUY,,,,2,2026-02-10,2026-03-05
+coracten sr 20mg capsules (60),coracten sr,BULK BUY,,,,1,2026-03-03,2026-03-03
+coversyl argenine 10mg tablets (30),coversyl argenine,BULK BUY,,,,1,2026-02-10,2026-02-10
+coversyl argenine plus 1.25mg/5mg tablet,coversyl,BULK BUY,,,,1,2026-03-26,2026-03-26
+cyanocob12 100mcg tablets,cyanocob12,BULK BUY,,,,1,2026-08-04,2026-08-04
+cyanocob12 1mg tablets,cyanocob12,BULK BUY,,,,1,2026-08-04,2026-08-04
+cymex cream 5g,cymex cream,BULK BUY,,,,1,2026-03-04,2026-03-04
+cystopurin 3g sachets (6),cystopurin,BULK BUY,,,,3,2026-02-01,2026-03-27
+daktacort hc cream (15g),daktacort,BULK BUY,,,,1,2026-02-02,2026-02-02
+daktarin 2% cream,daktarin,BULK BUY,,,,1,2026-08-04,2026-08-04
+daktarin cream 2%,daktarin cream,BULK BUY,,,,1,2026-04-09,2026-04-09
+daktarin oral gel (15g),daktarin,BULK BUY,,,,2,2026-02-06,2026-03-04
+dentemprecap-it,dentemprecap-it,BULK BUY,,,,1,2026-04-09,2026-04-09
+depo-medrone 40mg/1ml injection,depo-medrone,BULK BUY,,,,1,2026-08-04,2026-08-04
+depo-medrone 40mg/ml injection (1),depo-medrone,BULK BUY,,,,4,2026-02-01,2026-02-11
+depo-medrone 40mg/ml injection (10),depo-medrone,BULK BUY,,,,2,2026-02-25,2026-03-02
+dermol 200 shower emollient,dermol,BULK BUY,,,,1,2026-08-04,2026-08-04
+dermol 500 lotion,dermol,BULK BUY,,,,4,2025-12-30,2026-08-04
+dermol cream,dermol,BULK BUY,,,,1,2026-10-04,2026-10-04
+dermol wash cutaneous emulsion,dermol,BULK BUY,,,,1,2025-12-30,2025-12-30
+dermovate 0.05% cream,dermovate,BULK BUY,,,,1,2026-08-04,2026-08-04
+dermovate 0.05% ointment,dermovate,BULK BUY,,,,1,2025-12-30,2025-12-30
+dermovate cream (100g),dermovate,BULK BUY,,,,1,2026-02-05,2026-02-05
+desloratidine 5mg tablets (30),desloratidine,BULK BUY,,,,3,2026-02-11,2026-03-23
+dexamethasone/neomycin sulfate/acetic ac,dexamethasone/neomycin,BULK BUY,,,,6,2026-02-01,2026-03-27
+dexcom one+ glucose monitor (1),dexcom,BULK BUY,,,,1,2026-03-11,2026-03-11
+diazepam tablets 2 mg(be)acc,diazepam tablets,BULK BUY,,,,1,2026-04-07,2026-04-07
+diclofenac 2.32% gel,diclofenac,BULK BUY,,,,2,2026-08-04,2026-09-04
+diclofenac 2.32% gel# tev,diclofenac,BULK BUY,,,,1,2026-04-09,2026-04-09
+difflam 0.15% sore throat rinse,difflam,BULK BUY,,,,1,2025-12-30,2025-12-30
+difflam 0.15% spray,difflam,BULK BUY,,,,1,2025-12-30,2025-12-30
+difflam oral rinse 300ml (p),difflam,BULK BUY,,,,1,2026-03-27,2026-03-27
+difflam throat & mouth spray 30ml (p),difflam,BULK BUY,,,,1,2026-02-24,2026-02-24
+dioctyl 100mg capsules,dioctyl,BULK BUY,,,,2,2026-09-04,2026-10-04
+dioctyl 100mg capsules (30),dioctyl,BULK BUY,,,,4,2026-02-11,2026-02-24
+diprosalic scalp application (100ml),diprosalic,BULK BUY,,,,1,2026-03-19,2026-03-19
+doxazosin xl 4mg tablets (28),doxazosin xl,BULK BUY,,,,6,2026-02-03,2026-03-25
+doxycycline caps 100 mg acc,doxycycline caps,BULK BUY,,,,1,2026-04-08,2026-04-08
+drospirenone/ethinylestradiol 3mg/0.03mg,drospirenone/ethinylestradiol,BULK BUY,,,,1,2026-02-19,2026-02-19
+dulcolax adult 5mg tablets,dulcolax adult,BULK BUY,,,,1,2025-12-30,2025-12-30
+duoresp spiromax 320/9mcg inhaler (60 do,duoresp spiromax,BULK BUY,,,,2,2026-02-04,2026-03-15
+duraphat toothpaste 5000 (51g) - 1.1%,duraphat toothpaste,BULK BUY,,,,1,2026-03-29,2026-03-29
+dutasteride capsules 0.5 mg mil,dutasteride capsules,BULK BUY,,,,1,2026-04-08,2026-04-08
+dutasteride/tamsulosin 0.5mg/0.4mg capsu,dutasteride/tamsulosin,BULK BUY,,,,4,2026-02-10,2026-03-13
+dymista 137/50mcg nasal spray,dymista,BULK BUY,,,,1,2025-12-30,2025-12-30
+dymista nasal spray (23g),dymista,BULK BUY,,,,22,2026-02-01,2026-03-29
+e45 cream,e45,BULK BUY,,,,1,2026-08-04,2026-08-04
+e45 cream pump dispensing pack 500g,e45,BULK BUY,,,,2,2026-03-06,2026-03-13
+eaccu-chekinstantstrip,eaccu-chekinstantstrip,BULK BUY,,,,1,2026-04-10,2026-04-10
+earcalm 2% spray (5ml),earcalm,BULK BUY,,,,1,2026-03-30,2026-03-30
+easy peak flow meter low range,easy,BULK BUY,,,,1,2025-12-30,2025-12-30
+easyhaler (beclometasone) 200mcg inhaler,easyhaler,BULK BUY,,,,1,2026-03-02,2026-03-02
+easyhaler (budesonide) 200mcg inhaler (2,easyhaler,BULK BUY,,,,1,2026-03-19,2026-03-19
+easyhaler (salbutamol) 100mcg inhaler (2,easyhaler,BULK BUY,,,,4,2026-02-05,2026-03-19
+easyhaler salbutamol 100mcg inhaler,easyhaler salbutamol,BULK BUY,,,,1,2026-08-04,2026-08-04
+efultiumd 3 caps 3200 unit,efultiumd,BULK BUY,,,,1,2026-04-09,2026-04-09
+elleste duet 1mg tablets (84),elleste duet,BULK BUY,,,,1,2026-02-01,2026-02-01
+elocon 0.1% ointment,elocon,BULK BUY,,,,1,2025-12-30,2025-12-30
+enutilisclearthickener,enutilisclearthickener,BULK BUY,,,,1,2026-04-07,2026-04-07
+epaderm cream (500g),epaderm,BULK BUY,,,,8,2026-02-05,2026-03-05
+epaderm ointment (500g),epaderm,BULK BUY,,,,5,2026-02-23,2026-03-31
+epimax excetra cream,epimax,BULK BUY,,,,1,2025-12-30,2025-12-30
+epimax excetra cream (500g),epimax,BULK BUY,,,,19,2026-02-01,2026-03-24
+epimax original cream (500g),epimax,BULK BUY,,,,10,2026-02-01,2026-03-27
+eropid tabletsf/c 50 mg,eropid,BULK BUY,,,,2,2026-04-07,2026-04-09
+estriol 0.01% cream with applicator (80g,estriol,BULK BUY,,,,6,2026-02-03,2026-03-13
+estriol 0.1% cream (15g),estriol,BULK BUY,,,,17,2026-02-04,2026-03-29
+ethosuximide 250mg capsules (56),ethosuximide,BULK BUY,,,,1,2026-02-20,2026-02-20
+etoricoxib fc 30mg tablets (28),etoricoxib fc,BULK BUY,,,,4,2026-02-03,2026-03-31
+etoricoxib fc 60mg tablets (28),etoricoxib fc,BULK BUY,,,,13,2026-02-01,2026-03-27
+etoricoxib fc 90mg tablets (28),etoricoxib fc,BULK BUY,,,,4,2026-02-02,2026-03-08
+eumovate 0.05% ointment,eumovate,BULK BUY,,,,1,2025-12-30,2025-12-30
+eurax hc cream (15g),eurax,BULK BUY,,,,1,2026-02-23,2026-02-23
+fastclix lancets (204),fastclix,BULK BUY,,,,4,2026-02-24,2026-03-31
+felodipine mr 10mg tablets (28),felodipine mr,BULK BUY,,,,1,2026-03-01,2026-03-01
+felodipine mr 5mg tablets (28),felodipine mr,BULK BUY,,,,2,2026-02-26,2026-03-08
+felodipine xl 2.5mg tablets (28),felodipine xl,BULK BUY,,,,8,2026-02-11,2026-03-31
+femoston 1mg/10mg tablets (84),femoston,BULK BUY,,,,1,2026-03-20,2026-03-20
+femoston conti 1mg/5mg (84),femoston conti,BULK BUY,,,,1,2026-03-06,2026-03-06
+femoston conti low 2.5mg/0.5mg tablets (,femoston,BULK BUY,,,,2,2026-02-04,2026-02-11
+fentanyl 37.5mcg patches (5) mezolar matrix,fentanyl,BULK BUY,,,,2,2026-02-18,2026-03-20
+fentanyl 50mcg patches (5) mezolar matrix,fentanyl,BULK BUY,,,,3,2026-02-02,2026-03-30
+fentanyl 75mcg patches (5) mezolar matrix,fentanyl,BULK BUY,,,,2,2026-02-18,2026-03-13
+ferrous fumarate 305mg capsules (100),ferrous fumarate,BULK BUY,,,,3,2026-02-20,2026-03-06
+fexofenadine tablets 120 mg zen,fexofenadine tablets,BULK BUY,,,,1,2026-04-07,2026-04-07
+flexitol heel balm (40g),flexitol,BULK BUY,,,,1,2026-02-02,2026-02-02
+flixotide 250mcg evohaler (120 dose),flixotide,BULK BUY,,,,2,2026-02-02,2026-03-26
+fludrocortisone acetate 0.05mg tablets (,fludrocortisone acetate,BULK BUY,,,,2,2026-02-17,2026-03-17
+fludrocortisone acetate 0.1mg tablets (3,fludrocortisone acetate,BULK BUY,,,,3,2026-02-01,2026-03-25
+fluticasone aqueous nasal spray (150 dos,fluticasone,BULK BUY,,,,4,2026-02-11,2026-03-19
+fluticasone aqueous nasal spray (150 dose),fluticasone,BULK BUY,,,,1,2026-03-08,2026-03-08
+flutiform 125mcg inhaler (120 dose),flutiform,BULK BUY,,,,2,2026-03-03,2026-03-24
+forceval capsules,forceval,BULK BUY,,,,1,2026-10-04,2026-10-04
+fortini compact multifibre neutral (125m,fortini,BULK BUY,,,,2,2026-02-01,2026-02-26
+fortisip compact liquid vanillaml,fortisip,BULK BUY,,,,1,2025-12-30,2025-12-30
+fortisip compact protein (4x125ml) - str,fortisip,BULK BUY,,,,2,2026-02-04,2026-02-17
+fortisip compact protein (4x125ml) - van,fortisip,BULK BUY,,,,1,2026-02-12,2026-02-12
+fostair nexthaler 200/6mcg inhaler (120 dose),fostair nexthaler,BULK BUY,,,,1,2026-03-29,2026-03-29
+freestyle libre 2 plus,freestyle libre,BULK BUY,,,,1,2026-04-09,2026-04-09
+fresubin 2kcal creme dessert vanilla (4,fresubin,BULK BUY,,,,1,2026-03-20,2026-03-20
+fresubin 5kcal shot neutral (4 x 120ml),fresubin,BULK BUY,,,,1,2026-03-26,2026-03-26
+fultium d3 3200iu capsules (30),fultium d3,BULK BUY,,,,2,2026-03-01,2026-03-31
+"fultium-d3 3,200unit capsules",fultium-d3,BULK BUY,,,,1,2026-08-04,2026-08-04
+fusidic acid/betamethasone 20mg/g/1mg/g,fusidic,BULK BUY,,,,3,2026-02-19,2026-03-23
+fybogel orange sachets (2 x 30),fybogel,BULK BUY,,,,2,2026-02-04,2026-02-09
+fybogel plain sachets (2 x 30),fybogel,BULK BUY,,,,2,2026-02-10,2026-03-05
+fycompa 10mg tablets (28),fycompa,BULK BUY,,,,1,2026-03-16,2026-03-16
+ganfort 0.3/5mg/ml eye drops,ganfort,BULK BUY,,,,2,2025-12-30,2025-12-30
+gauze swabs (10cmx10cm) (8plyx100) (non-,gauze,BULK BUY,,,,1,2026-03-31,2026-03-31
+gaviscon advance oral suspension aniseed,gaviscon,BULK BUY,,,,1,2026-10-04,2026-10-04
+gaviscon advance oral suspension peppermint,gaviscon,BULK BUY,,,,1,2026-10-04,2026-10-04
+gaviscon advanced aniseed (500ml/dispens,gaviscon,BULK BUY,,,,1,2026-03-04,2026-03-04
+gaviscon advanced peppermint (250ml/disp,gaviscon,BULK BUY,,,,1,2026-02-01,2026-02-01
+gaviscon double action chewable,gaviscon,BULK BUY,,,,1,2025-12-30,2025-12-30
+gavisconadvp/mint tabs(disppk),gavisconadvp/mint,BULK BUY,,,,1,2026-04-09,2026-04-09
+gentamicin 0.3% eye/ear drops 10ml,gentamicin,BULK BUY,,,,4,2026-02-02,2026-03-01
+gliclazide mr 30mg tablets (28),gliclazide mr,BULK BUY,,,,1,2026-03-29,2026-03-29
+gliclazide mr 30mg tablets (56),gliclazide mr,BULK BUY,,,,2,2026-03-25,2026-03-27
+gliclazide tablets 80 mg acc,gliclazide tablets,BULK BUY,,,,1,2026-04-10,2026-04-10
+glucomen areo b-ketone sensor (10),glucomen,BULK BUY,,,,6,2026-02-10,2026-03-31
+glucomen areo sensor strips,glucomen,BULK BUY,,,,1,2026-10-04,2026-10-04
+glucomen areo test strips (50),glucomen,BULK BUY,,,,6,2026-02-01,2026-03-27
+glucorx finepoint p/ndls 4mm 31g 100,glucorx,BULK BUY,,,,1,2026-04-01,2026-04-01
+glucorx insulin needles 5mm/31g,glucorx,BULK BUY,,,,1,2025-12-30,2025-12-30
+glycerin adult suppositories (4g),glycerin,BULK BUY,,,,1,2026-02-26,2026-02-26
+gtn 400mcg spray (180 dose),gtn,BULK BUY,,,,8,2026-02-06,2026-03-08
+gtn 400mcg spray (200 dose),gtn,BULK BUY,,,,6,2026-02-01,2026-03-18
+half securon sr 120mg tabs (40),half,BULK BUY,,,,1,2026-03-03,2026-03-03
+hedrin 4% lotion (150ml),hedrin,BULK BUY,,,,1,2026-02-20,2026-02-20
+hirudoid 300mg gel (50g),hirudoid,BULK BUY,,,,1,2026-03-19,2026-03-19
+hydramed 0.2% eye dropsml,hydramed,BULK BUY,,,,1,2025-12-30,2025-12-30
+hydromol cream (500g),hydromol,BULK BUY,,,,1,2026-03-26,2026-03-26
+hydromol ointment 500g (543490),hydromol ointment,BULK BUY,,,,6,2026-02-10,2026-03-16
+hylo-forte 0.2% eye drops,hylo-forte,BULK BUY,,,,2,2026-08-04,2026-09-04
+hylo-forte 0.2% eye dropsml,hylo-forte,BULK BUY,,,,1,2025-12-30,2025-12-30
+hylo-tear 1mg/ml eye drops (10ml),hylo-tear,BULK BUY,,,,2,2026-03-01,2026-03-25
+hyoscine 10mg tablets (100),hyoscine,BULK BUY,,,,18,2026-02-01,2026-03-31
+hypromellose 0.3% eye drops (10ml),hypromellose,BULK BUY,,,,3,2026-02-05,2026-03-19
+hypromellose 0.3% eye drops preservative,hypromellose,BULK BUY,,,,2,2026-03-12,2026-03-22
+ibuprofenw/w gel 10% mec,ibuprofenw/w,BULK BUY,,,,1,2026-04-09,2026-04-09
+inadine 5cm x 5cm (25),inadine,BULK BUY,,,,2,2026-02-09,2026-02-24
+incruse ellipta 55mcg inhaler (30 dose),incruse ellipta,BULK BUY,,,,3,2026-02-01,2026-02-26
+invita d3 800unit capsules,invita d3,BULK BUY,,,,1,2025-12-30,2025-12-30
+invitad 3 capsules 50000 unit con,invitad,BULK BUY,,,,2,2026-04-07,2026-04-10
+invokana 300mg tablets (30),invokana,BULK BUY,,,,2,2026-02-11,2026-02-16
+ipinnia xl 8mg tablets (28) (ropinirole),ipinnia xl,BULK BUY,,,,1,2026-03-19,2026-03-19
+irbesartan tablets 300 mg cre,irbesartan tablets,BULK BUY,,,,1,2026-04-08,2026-04-08
+irripod topical saline (25x20ml),irripod,BULK BUY,,,,2,2026-02-01,2026-03-20
+isosorbide mononitrate la 50mg capsules,isosorbide,BULK BUY,,,,13,2026-02-01,2026-03-31
+isotard xl 25mg tablets (28),isotard xl,BULK BUY,,,,2,2026-02-06,2026-03-01
+isotard xl 40mg tablets (28),isotard xl,BULK BUY,,,,2,2026-02-15,2026-03-12
+ispaghula husk orange sachets (30),ispaghula,BULK BUY,,,,4,2026-02-18,2026-03-03
+ivabradine tablets 7.5 mg cre,ivabradine tablets,BULK BUY,,,,1,2026-04-08,2026-04-08
+jardiance 10mg tablets (28),jardiance,BULK BUY,,,,20,2026-02-01,2026-03-20
+jardiance 25mg tablets,jardiance,BULK BUY,,,,1,2026-09-04,2026-09-04
+jardiance 25mg tablets (28),jardiance,BULK BUY,,,,13,2026-02-01,2026-03-12
+jelonet cartons (10cmx10cm) (10) 7404,jelonet,BULK BUY,,,,1,2026-02-04,2026-02-04
+keppra 1000mg tablets (60),keppra,BULK BUY,,,,2,2026-02-15,2026-03-17
+keppra 500mg tablets (60),keppra,BULK BUY,,,,1,2026-02-10,2026-02-10
+kwells adult 300mcg tablets (12),kwells adult,BULK BUY,,,,1,2026-02-10,2026-02-10
+lamictal 100mg tablets,lamictal,BULK BUY,,,,1,2025-12-30,2025-12-30
+lamictal 100mg tablets (56),lamictal,BULK BUY,,,,1,2026-03-25,2026-03-25
+lantus 100units/ml solution for injection 3ml pens,lantus,BULK BUY,,,,1,2026-10-04,2026-10-04
+latuda 74mg tablets,latuda,BULK BUY,,,,1,2026-10-04,2026-10-04
+laxido orange (30),laxido,BULK BUY,,,,15,2026-02-01,2026-03-25
+laxido orange oral powder sachets,laxido,BULK BUY,,,,1,2026-08-04,2026-08-04
+laxido orange sachets,laxido,BULK BUY,,,,1,2025-12-30,2025-12-30
+laxido paediatric plain 6.9g sachets (30,laxido,BULK BUY,,,,12,2026-02-02,2026-03-25
+laxido paediatric plain 6.9g sachets (30),laxido,BULK BUY,,,,4,2026-02-01,2026-03-29
+lemsip max cold & flu capsules (16),lemsip,BULK BUY,,,,1,2026-03-04,2026-03-04
+lenzetto 1.53mg/dose transdermal spray,lenzetto,BULK BUY,,,,1,2026-08-04,2026-08-04
+levest tablets 150mcg/30mcg (63s) (micro,levest tablets,BULK BUY,,,,1,2026-03-18,2026-03-18
+levofloxacin 500mg tablets,levofloxacin,BULK BUY,,,,1,2025-12-30,2025-12-30
+levothyroxine 100mcg tablets,levothyroxine,BULK BUY,,,,1,2025-12-30,2025-12-30
+levothyroxine 25mcg tablets,levothyroxine,BULK BUY,,,,1,2025-12-30,2025-12-30
+levothyroxine 50mcg/5ml solution (100ml),levothyroxine,BULK BUY,,,,1,2026-02-09,2026-02-09
+levothyroxine 75mcg tablets (28),levothyroxine,BULK BUY,,,,12,2026-02-01,2026-03-24
+losartan tabs 100mg,losartan tabs,BULK BUY,,,,1,2026-04-01,2026-04-01
+lotriderm cream (30g),lotriderm,BULK BUY,,,,3,2026-03-18,2026-03-26
+lurasidone 74mg fc tablets (28),lurasidone,BULK BUY,,,,1,2026-02-02,2026-02-02
+lycleardermal cream,lycleardermal,BULK BUY,,,,1,2026-04-07,2026-04-07
+marol 150mg mrt,marol,BULK BUY,,,,1,2025-12-30,2025-12-30
+maxalt melt 10mg wafer (6),maxalt melt,BULK BUY,,,,4,2026-02-01,2026-03-26
+medikinet xl 50mg capsules (30),medikinet xl,BULK BUY,,,,1,2026-03-24,2026-03-24
+meflynate xl 10mg capsules,meflynate xl,BULK BUY,,,,1,2025-12-30,2025-12-30
+meflynate xl 20mg capsules,meflynate xl,BULK BUY,,,,1,2025-12-30,2025-12-30
+melatonin pr 2mg tablets (30),melatonin pr,BULK BUY,,,,15,2026-02-02,2026-03-31
+mepilex border comfort dressing 7.5cm x,mepilex,BULK BUY,,,,1,2026-03-09,2026-03-09
+mesorb absorbent dressing cellulose 10cm,mesorb,BULK BUY,,,,3,2026-02-04,2026-03-05
+mesorb absorbent dressing cellulose 15cm,mesorb,BULK BUY,,,,2,2026-02-06,2026-02-26
+mesorb absorbent dressing cellulose 20cm,mesorb,BULK BUY,,,,1,2026-03-05,2026-03-05
+metformin sr 750mg tablets (28),metformin sr,BULK BUY,,,,3,2026-02-01,2026-03-19
+mezavant xl 1200mg tablets,mezavant xl,BULK BUY,,,,1,2026-09-04,2026-09-04
+microgynon tablets (63),microgynon,BULK BUY,,,,1,2026-03-12,2026-03-12
+microlet 0.5mm/28g blood lancets (100),microlet,BULK BUY,,,,2,2026-03-26,2026-03-29
+micropore tape 2.5cm x 5m (1),micropore tape,BULK BUY,,,,2,2026-02-06,2026-02-10
+mintec capsules,mintec,BULK BUY,,,,1,2026-04-07,2026-04-07
+mometasone furoate 50mcg nasal spray (14,mometasone furoate,BULK BUY,,,,16,2026-02-02,2026-03-27
+mometasone furoate 50mcg nasal spray (140 dose),mometasone furoate,BULK BUY,,,,2,2026-03-01,2026-03-08
+mometasone oint 0.1%,mometasone oint,BULK BUY,,,,1,2026-04-01,2026-04-01
+morphine 10mg/5ml oral solution (100ml),morphine,BULK BUY,,,,7,2026-02-01,2026-03-19
+mounjaro 12.5mg,mounjaro,BULK BUY,,,,1,2026-04-01,2026-04-01
+mounjaro 2.5m,mounjaro,BULK BUY,,,,1,2026-04-01,2026-04-01
+mycophenolate 250mg capsules (100),mycophenolate,BULK BUY,,,,3,2026-02-26,2026-03-26
+mycophenolate 500mg tablets (50),mycophenolate,BULK BUY,,,,8,2026-02-02,2026-03-31
+myribase gel,myribase,BULK BUY,,,,1,2026-10-04,2026-10-04
+myribase gel (500ml),myribase,BULK BUY,,,,5,2026-02-10,2026-02-22
+nabumetone 500mg tablets (56),nabumetone,BULK BUY,,,,1,2026-02-05,2026-02-05
+naproxen ec 250mg tablets (56),naproxen ec,BULK BUY,,,,1,2026-03-19,2026-03-19
+nasobec aqueous 50mcg nasal spray,nasobec aqueous,BULK BUY,,,,1,2024-12-30,2024-12-30
+nasobec aqueous 50mcg/dose nasal spray,nasobec aqueous,BULK BUY,,,,1,2026-10-04,2026-10-04
+nasonex nasal spray (140 dose),nasonex,BULK BUY,,,,1,2026-03-01,2026-03-01
+nebido 1000mg/4ml injection,nebido,BULK BUY,,,,1,2025-12-30,2025-12-30
+nicorette freshmint gum 2mg (105),nicorette,BULK BUY,,,,1,2026-03-31,2026-03-31
+nicorette inhalator 15mg (20) (white),nicorette inhalator,BULK BUY,,,,4,2026-02-01,2026-03-22
+nicorette inhalator 15mg cartridge pack,nicorette inhalator,BULK BUY,,,,5,2026-03-05,2026-03-31
+nicorette invisi-patch 25mg (7),nicorette invisi-patch,BULK BUY,,,,1,2026-02-01,2026-02-01
+nicorette quickmist 1mg (13.2ml) single,nicorette quickmist,BULK BUY,,,,1,2026-02-23,2026-02-23
+nicotinell patches tts 20 - 14mg/24hrs (,nicotinell,BULK BUY,,,,1,2026-02-23,2026-02-23
+nifedipine mr 20mg tablets (56) (tensipi,nifedipine mr,BULK BUY,,,,1,2026-02-25,2026-02-25
+niquitin cq patches 21mg clear (7),niquitin,BULK BUY,,,,5,2026-02-01,2026-03-27
+niquitin cq patches 7mg clear (7),niquitin,BULK BUY,,,,1,2026-03-05,2026-03-05
+nitrofurantoin pr 100mg capsules (14),nitrofurantoin pr,BULK BUY,,,,17,2026-02-01,2026-03-30
+nizoral shampoo (60ml),nizoral,BULK BUY,,,,14,2026-02-01,2026-03-26
+nizoral shampoo 2%,nizoral shampoo,BULK BUY,,,,1,2026-04-09,2026-04-09
+nizoral shampoo 2% tho,nizoral shampoo,BULK BUY,,,,1,2026-04-10,2026-04-10
+norgalax 120mg/10g enema (6),norgalax,BULK BUY,,,,2,2026-02-04,2026-03-27
+nurofen plus tablets (32),nurofen,BULK BUY,,,,1,2026-03-04,2026-03-04
+nustendi 180mg/10mg tablets (28),nustendi,BULK BUY,,,,3,2026-02-03,2026-03-04
+nutilis clear food thickener tin (175g),nutilis,BULK BUY,,,,1,2026-02-15,2026-02-15
+nutilis clear powderg,nutilis,BULK BUY,,,,1,2025-12-30,2025-12-30
+nytol one-a-night 50mg tablets,nytol one-a-night,BULK BUY,,,,1,2025-12-30,2025-12-30
+nyzamac (isosorbide mononitrate) sr 40mg,nyzamac,BULK BUY,,,,2,2026-02-05,2026-03-06
+nyzamac (isosorbide mononitrate) sr 60mg,nyzamac,BULK BUY,,,,2,2026-02-05,2026-03-06
+octasa mr (mesalazine) 800mg tablets (90,octasa,BULK BUY,,,,2,2026-03-16,2026-03-25
+oestrogel 0.06% gel,oestrogel,BULK BUY,,,,1,2024-12-30,2024-12-30
+oilatum bath formula (300ml),oilatum,BULK BUY,,,,1,2026-03-08,2026-03-08
+oilatum cream 500ml,oilatum cream,BULK BUY,,,,1,2026-03-27,2026-03-27
+oilatum emollient 500ml,oilatum emollient,BULK BUY,,,,2,2026-02-05,2026-03-25
+oilatum junior emollient bath (150ml),oilatum,BULK BUY,,,,1,2026-03-09,2026-03-09
+oilatum scalp anti-dandruff shampoo (100ml),oilatum,BULK BUY,,,,1,2026-03-29,2026-03-29
+oilatum shower gel ff (150g),oilatum,BULK BUY,,,,2,2026-03-19,2026-03-31
+oilatummoisturerichbathsoak,oilatummoisturerichbathsoak,BULK BUY,,,,1,2026-04-09,2026-04-09
+olanzapine tablets 7.5 mg acc,olanzapine tablets,BULK BUY,,,,1,2026-04-08,2026-04-08
+olive oil ear drops (10ml),olive,BULK BUY,,,,8,2026-02-12,2026-03-31
+omacor 1000mg capsules (28),omacor,BULK BUY,,,,1,2026-03-10,2026-03-10
+omeprazole disp 20mg tablets (28),omeprazole disp,BULK BUY,,,,5,2026-02-02,2026-03-18
+one touch select plus test strips (50),one,BULK BUY,,,,5,2026-02-01,2026-02-26
+opticrom allergy eye drops (10ml),opticrom,BULK BUY,,,,2,2026-02-18,2026-03-19
+optrex multi action eye wash 300ml,optrex,BULK BUY,,,,1,2026-03-16,2026-03-16
+orajel 10% dental gel.30g,orajel,BULK BUY,,,,1,2025-12-30,2025-12-30
+orajel extra strength 20% dental gel.30g,orajel,BULK BUY,,,,1,2025-12-30,2025-12-30
+osmolite 1.5kcal (1000ml),osmolite,BULK BUY,,,,2,2026-02-19,2026-02-26
+otrivine adult measured dose sinusitis,otrivine,BULK BUY,,,,1,2025-12-30,2025-12-30
+otrivine adult metered 0.1% nasal spray,otrivine,BULK BUY,,,,1,2025-12-30,2025-12-30
+ovestin 1mg cream,ovestin,BULK BUY,,,,1,2024-12-30,2024-12-30
+ovex 100mg/5ml suspension 30ml,ovex,BULK BUY,,,,4,2026-02-22,2026-03-12
+ovex tablet 1's,ovex tablet,BULK BUY,,,,2,2026-03-12,2026-03-20
+penicillin v 125mg/5ml oral solution (10,penicillin v,BULK BUY,,,,1,2026-02-05,2026-02-05
+penicillin vk 250mg tablets (28),penicillin vk,BULK BUY,,,,15,2026-02-01,2026-03-31
+peppermint oil 0.2ml gr capsules (84),peppermint oil,BULK BUY,,,,1,2026-02-26,2026-02-26
+perindopril 2mg tablets (30),perindopril,BULK BUY,,,,5,2026-02-19,2026-03-26
+perindopril 4mg tablets (30),perindopril,BULK BUY,,,,2,2026-02-12,2026-02-18
+perindopril 8mg tablets (30),perindopril,BULK BUY,,,,8,2026-02-18,2026-03-29
+phenergan 25mg tablets,phenergan,BULK BUY,,,,2,2025-12-30,2026-08-04
+piriton syrup 150ml,piriton syrup,BULK BUY,,,,2,2026-02-10,2026-03-13
+piroxicam gel 0.5% acc,piroxicam gel,BULK BUY,,,,1,2026-04-09,2026-04-09
+pivmecillinam 200mg tablets (10),pivmecillinam,BULK BUY,,,,4,2026-02-04,2026-03-03
+prednisolone ec 2.5mg tablets (28),prednisolone ec,BULK BUY,,,,1,2026-03-18,2026-03-18
+priadel 400mg modified-release tablets,priadel,BULK BUY,,,,1,2026-08-04,2026-08-04
+priadelmr tablets 400 mg,priadelmr tablets,BULK BUY,,,,1,2026-04-09,2026-04-09
+promethazine 10mg tablets (56) (pom),promethazine,BULK BUY,,,,1,2026-03-12,2026-03-12
+promethazine 25mg tablets (56) (p),promethazine,BULK BUY,,,,3,2026-03-01,2026-03-10
+promethazine 25mg tablets (56) (pom),promethazine,BULK BUY,,,,2,2026-03-23,2026-03-27
+prostap 3 dcs 11.25mg injection,prostap,BULK BUY,,,,1,2025-12-30,2025-12-30
+protopic 0.1% ointment,protopic,BULK BUY,,,,1,2026-09-04,2026-09-04
+quetiapine tablets 50 mg acc,quetiapine tablets,BULK BUY,,,,2,2026-04-07,2026-04-07
+quinine sulphate 200mg tablets (28),quinine sulphate,BULK BUY,,,,8,2026-02-01,2026-03-20
+qvar press + breathe inhaler 100mcg (200,qvar,BULK BUY,,,,2,2026-02-01,2026-03-03
+qvar press + breathe inhaler 100mcg (200 dose),qvar,BULK BUY,,,,1,2026-03-29,2026-03-29
+ramipril caps 5mg,ramipril caps,BULK BUY,,,,1,2026-04-01,2026-04-01
+ranolazine pr 500mg tablets (60),ranolazine pr,BULK BUY,,,,1,2026-03-26,2026-03-26
+rapilose gel (3 x 25g),rapilose,BULK BUY,,,,8,2026-02-04,2026-03-13
+regurin xl 60mg capsules (28),regurin xl,BULK BUY,,,,2,2026-02-20,2026-03-20
+relvar ellipta 184/22mcg inhaler,relvar ellipta,BULK BUY,,,,1,2025-12-30,2025-12-30
+relvar ellipta 184/22mcg inhaler (30 dose),relvar ellipta,BULK BUY,,,,2,2026-03-01,2026-03-29
+relvar ellipta 92/22mcg inhaler (30 dose,relvar ellipta,BULK BUY,,,,16,2026-02-04,2026-03-27
+relvar ellipta 92/22mcg inhaler (30 dose),relvar ellipta,BULK BUY,,,,1,2026-02-22,2026-02-22
+rinaspray 21mcg nasal spray (15ml),rinaspray,BULK BUY,,,,1,2026-03-08,2026-03-08
+risedronate 35mg tablets (4) (once weekl,risedronate,BULK BUY,,,,6,2026-02-05,2026-03-26
+robaxin 750 tablet#,robaxin,BULK BUY,,,,1,2026-04-07,2026-04-07
+robitussin chesty cough 100mg/5mlml,robitussin,BULK BUY,,,,1,2025-12-30,2025-12-30
+ropinirole fc 0.25mg tablets (12),ropinirole fc,BULK BUY,,,,2,2026-02-10,2026-03-27
+ropinirole fc 1mg tablets (84),ropinirole fc,BULK BUY,,,,1,2026-02-19,2026-02-19
+ropinirole xl 2mg tablets (28),ropinirole xl,BULK BUY,,,,2,2026-02-16,2026-03-18
+ropinirole xl 4mg tablets (28),ropinirole xl,BULK BUY,,,,3,2026-02-01,2026-03-24
+rosuvastatin tablets 20 mg(pots) tev,rosuvastatin tablets,BULK BUY,,,,1,2026-04-08,2026-04-08
+rosuvastatin tablets 5 mg(pots) tev,rosuvastatin tablets,BULK BUY,,,,1,2026-04-08,2026-04-08
+rotigotine 1mg/24hrs transdermal patches,rotigotine,BULK BUY,,,,3,2026-02-05,2026-03-26
+rotigotine 2mg/24hrs transdermal patches,rotigotine,BULK BUY,,,,1,2026-02-10,2026-02-10
+salamol 100mcg inhaler cfc free,salamol,BULK BUY,,,,2,2025-12-30,2025-12-30
+salamol 100mcg/dose easi-breathe inhaler,salamol,BULK BUY,,,,1,2026-08-04,2026-08-04
+salamol 100micrograms/dose easi-breathe inhaler,salamol,BULK BUY,,,,1,2026-10-04,2026-10-04
+salamoleasi-breatheinhcfcfree ivax 200 dse,salamoleasi-breatheinhcfcfree ivax,BULK BUY,,,,2,2026-04-07,2026-04-09
+saline 2.5mg 0.9% nebules (20x2.5ml),saline,BULK BUY,,,,8,2026-02-05,2026-03-26
+salivix dry mouth pastilles (50),salivix,BULK BUY,,,,7,2026-02-01,2026-03-26
+senokot max strength tablets,senokot,BULK BUY,,,,1,2025-12-30,2025-12-30
+seretide 100mcg accuhaler (60 dose),seretide,BULK BUY,,,,2,2026-02-18,2026-03-03
+seretide 250mcg accuhaler (60 dose),seretide,BULK BUY,,,,4,2026-02-01,2026-03-29
+seretide 500mcg accuhaler (60 dose),seretide,BULK BUY,,,,1,2026-03-22,2026-03-22
+seretide 50mcg evohaler (120 dose),seretide,BULK BUY,,,,5,2026-02-01,2026-02-24
+sertraline tablets 50 mg sun,sertraline tablets,BULK BUY,,,,1,2026-04-07,2026-04-07
+setofilm 8mg orodispersible film (10),setofilm,BULK BUY,,,,5,2026-02-01,2026-03-19
+sharpsguard bin yellow 1l [dd477wylr 1l],sharpsguard,BULK BUY,,,,1,2026-03-26,2026-03-26
+simple linctus,simple,BULK BUY,,,,1,2024-12-30,2024-12-30
+sinutab tablets (15),sinutab,BULK BUY,,,,1,2026-02-25,2026-02-25
+sirdupla 125mcg inhaler (120 dose),sirdupla,BULK BUY,,,,4,2026-02-05,2026-03-06
+sirdupla 250mcg inhaler (120 dose),sirdupla,BULK BUY,,,,4,2026-02-17,2026-03-25
+slenyto 1mg mrt,slenyto,BULK BUY,,,,1,2025-12-30,2025-12-30
+slenyto mr 1mg tablets (60),slenyto mr,BULK BUY,,,,1,2026-02-10,2026-02-10
+slenyto mr 5mg tablets (30),slenyto mr,BULK BUY,,,,1,2026-02-20,2026-02-20
+sodium picosulfate 5mg/5ml oral solution,sodium picosulfate,BULK BUY,,,,1,2026-03-02,2026-03-02
+solpadeine max soluble tablets (24),solpadeine,BULK BUY,,,,1,2026-03-04,2026-03-04
+sominex 20mg tablets,sominex,BULK BUY,,,,2,2025-12-30,2025-12-30
+spiriva respimat 2.5mcg refill,spiriva respimat,BULK BUY,,,,1,2025-12-30,2025-12-30
+sterimar isotonic nasal spray (50ml) [34,sterimar,BULK BUY,,,,1,2026-02-24,2026-02-24
+stexerol 25mcg/1000iu d3 tablets (28),stexerol,BULK BUY,,,,1,2026-02-09,2026-02-09
+strefen lozenges honey/lemon (16),strefen,BULK BUY,,,,1,2026-03-02,2026-03-02
+sudafed blocked nose 0.1% spray,sudafed,BULK BUY,,,,1,2025-12-30,2025-12-30
+sudafed blocked nose spray (15ml),sudafed,BULK BUY,,,,1,2026-02-25,2026-02-25
+sudafed decongestant tablets (12),sudafed,BULK BUY,,,,2,2026-02-25,2026-03-13
+sudafedsinuspressure+pain tabs,sudafedsinuspressure+pain,BULK BUY,,,,1,2026-04-09,2026-04-09
+sudocrem antiseptic cream tub (250g),sudocrem,BULK BUY,,,,2,2026-03-03,2026-03-05
+sudocrem antiseptic cream tub (400g),sudocrem,BULK BUY,,,,1,2026-02-19,2026-02-19
+symbicort 100/6 turbohaler,symbicort,BULK BUY,,,,2,2026-08-04,2026-10-04
+tamsulosin mr 0.4mg capsules (30),tamsulosin mr,BULK BUY,,,,24,2026-02-01,2026-03-26
+thorens oral drops 10000iu/ml solution (,thorens,BULK BUY,,,,1,2026-03-27,2026-03-27
+tildiem la 200mg capsules (28),tildiem la,BULK BUY,,,,1,2026-03-26,2026-03-26
+tildiem mr 60mg tablets (90),tildiem mr,BULK BUY,,,,2,2026-02-22,2026-03-23
+tiogiva (tiotropium) 18mcg inhalation ca,tiogiva,BULK BUY,,,,1,2026-02-16,2026-02-16
+tostran 2% gel (60g),tostran,BULK BUY,,,,2,2026-02-24,2026-03-26
+trajenta 5mg tablets (28),trajenta,BULK BUY,,,,9,2026-02-03,2026-03-10
+tramadol pr 200mg capsules (60),tramadol pr,BULK BUY,,,,1,2026-03-24,2026-03-24
+tramadol/paracetamol 37.5/325mg tablets,tramadol/paracetamol,BULK BUY,,,,1,2026-03-26,2026-03-26
+transtec 52.5mcg/hr patch (4),transtec,BULK BUY,,,,2,2026-02-22,2026-03-29
+travoprost/timolol 0.04mg/5mg/ml eye dro,travoprost/timolol,BULK BUY,,,,3,2026-02-26,2026-03-24
+trelegy ellipta 92/55/22mcg inhaler,trelegy ellipta,BULK BUY,,,,2,2025-12-30,2026-10-04
+trimovate cream,trimovate,BULK BUY,,,,1,2026-09-04,2026-09-04
+trimovate cream (30g),trimovate,BULK BUY,,,,4,2026-02-26,2026-03-26
+trimovate cream enn,trimovate,BULK BUY,,,,2,2026-04-09,2026-04-10
+uniroid hc 5mg/1g/5mg/1g ointment (30g),uniroid hc,BULK BUY,,,,15,2026-02-01,2026-03-26
+uniroid hc 5mg/5mg suppositories (12),uniroid hc,BULK BUY,,,,4,2026-02-09,2026-03-19
+uniroid-hc ointment,uniroid-hc,BULK BUY,,,,1,2026-04-10,2026-04-10
+uniroid-hcsuppositories(ae),uniroid-hcsuppositories(ae),BULK BUY,,,,1,2026-04-10,2026-04-10
+urgotul dressing 10 x 10cm (10) (504007),urgotul dressing,BULK BUY,,,,1,2026-02-13,2026-02-13
+ursodeoxycolic acid 500mg tablets (100),ursodeoxycolic acid,BULK BUY,,,,1,2026-03-24,2026-03-24
+utrogestan 100mg capsules (30),utrogestan,BULK BUY,,,,2,2026-03-03,2026-03-23
+vagifem 10mcg tablets (24),vagifem,BULK BUY,,,,2,2026-03-06,2026-03-09
+vagifem 10mcg vaginal tablets,vagifem,BULK BUY,,,,1,2026-09-04,2026-09-04
+vagirux 10mcg vaginal tablets (24),vagirux,BULK BUY,,,,4,2026-02-01,2026-02-09
+vaniqa 11.5% cream (60g),vaniqa,BULK BUY,,,,1,2026-02-01,2026-02-01
+vanquoral 100mg capsules,vanquoral,BULK BUY,,,,1,2026-09-04,2026-09-04
+vencarm (venlafaxine) xl 225mg capsules,vencarm,BULK BUY,,,,4,2026-02-12,2026-03-26
+venladex (venlafaxine) xl 75mg tablets (,venladex,BULK BUY,,,,28,2026-02-01,2026-03-31
+venlafaxine pr 150mg capsules (28),venlafaxine pr,BULK BUY,,,,17,2026-02-01,2026-03-27
+venlafaxine pr 37.5mg capsules (28),venlafaxine pr,BULK BUY,,,,5,2026-02-01,2026-03-22
+venlafaxine pr 75mg capsules (28),venlafaxine pr,BULK BUY,,,,4,2026-02-12,2026-03-23
+vensir (venlafaxine) xl 150mg capsules (,vensir,BULK BUY,,,,6,2026-02-01,2026-03-27
+vensir (venlafaxine) xl 150mg capsules (28),vensir,BULK BUY,,,,1,2026-03-01,2026-03-01
+vensir (venlafaxine) xl 75mg capsules (2,vensir,BULK BUY,,,,6,2026-02-04,2026-03-27
+verapamil sr 240mg tablets (28),verapamil sr,BULK BUY,,,,2,2026-02-03,2026-03-31
+vicks sinex micromist nasal spray,vicks,BULK BUY,,,,1,2025-12-30,2025-12-30
+vipidia (alogliptin) 12.5mg tablets (28),vipidia,BULK BUY,,,,2,2026-02-01,2026-03-03
+vipidia (alogliptin) 25mg tablets (28),vipidia,BULK BUY,,,,2,2026-03-05,2026-03-08
+virgan 0.15% eye gel (5g),virgan,BULK BUY,,,,1,2026-02-12,2026-02-12
+viscotears 0.2% gel (10g),viscotears,BULK BUY,,,,5,2026-02-01,2026-03-27
+vitamin b1 100mg tablets (100) thiamine,vitamin b1,BULK BUY,,,,4,2026-02-01,2026-03-05
+vitamin b1 50mg tablets (100) thiamine f,vitamin b1,BULK BUY,,,,1,2026-03-19,2026-03-19
+voltarol 1% gel (100g),voltarol,BULK BUY,,,,8,2026-02-03,2026-03-31
+voltarol 1.16% emulgel,voltarol,BULK BUY,,,,1,2026-08-04,2026-08-04
+voltarol 12 hour gel 2.32% 30g,voltarol,BULK BUY,,,,1,2026-03-18,2026-03-18
+xailin night preservative free eye ointm,xailin,BULK BUY,,,,3,2026-02-04,2026-03-17
+xemacort cream (60g) fusidic acid/betame,xemacort,BULK BUY,,,,1,2026-02-06,2026-02-06
+xultophy 100/3.6mg/ml pre-filled pens,xultophy,BULK BUY,,,,1,2024-12-30,2024-12-30
+zemtard (diltiazem) xl 120mg capsules (28),zemtard,BULK BUY,,,,1,2026-03-08,2026-03-08
+zemtard (diltiazem) xl 240mg capsules (2,zemtard,BULK BUY,,,,1,2026-03-20,2026-03-20
+zemtard (diltiazem) xl 300mg capsules (28),zemtard,BULK BUY,,,,1,2026-03-08,2026-03-08
+zeroderm ointment (125g),zeroderm,BULK BUY,,,,2,2026-02-23,2026-03-02
+zeroderm ointment (500g),zeroderm,BULK BUY,,,,1,2026-02-24,2026-02-24
+zeroveen emollient cream (100g),zeroveen,BULK BUY,,,,2,2026-02-23,2026-03-02
+zeroveen emollient cream (500g),zeroveen,BULK BUY,,,,1,2026-02-24,2026-02-24
+zumenon 2mg tablets (84),zumenon,BULK BUY,,,,1,2026-02-17,2026-02-17
+sulfasalazine ec 500mg tablets (112),sulfasalazine ec,BULK BUY,,,,2,2026-02-15,2026-03-06
+beclomethasone 100mcg cfc free (clenil),beclomethasone,BULK BUY,,,,6,2026-02-18,2026-03-31
+evacal d3 chewable tablets (56),evacal,BULK BUY,,,,2,2026-02-26,2026-03-24
+enstilar cutaneous foam (60g),enstilar,BULK BUY,,,,6,2026-02-01,2026-03-29
+accrete d3 1500mg/400iu tablets (60),accrete d3,BULK BUY,,,,24,2026-02-01,2026-03-27
+zemtard (diltiazem) xl 300mg capsules (2,zemtard,BULK BUY,,,,3,2026-02-04,2026-03-05
+venlafaxine pr 225mg tablets (30),venlafaxine pr,BULK BUY,,,,7,2026-02-01,2026-03-27
+ketoprofen gel (100g),ketoprofen,BULK BUY,,,,4,2026-02-10,2026-03-23
+ranolazine pr 375mg tablets (60),ranolazine pr,BULK BUY,,,,8,2026-02-12,2026-03-29
+relvar ellipta 184/22mcg inhaler (30 dos,relvar ellipta,BULK BUY,,,,8,2026-02-05,2026-03-27
+omeprazole disp 10mg tablets (28),omeprazole disp,BULK BUY,,,,3,2026-02-01,2026-03-22
+hylo-forte 2mg/ml eye drops (10ml) -,hylo-forte,BULK BUY,,,,5,2026-02-01,2026-03-24
+cetraben emollient cream 500g,cetraben,BULK BUY,,,,14,2026-02-05,2026-03-30
+metformin sr 500mg tablets (56),metformin sr,HOLD BUYING,,,,19,2026-02-01,2026-03-31
+metformin sr 1000mg tablets (28),metformin sr,HOLD BUYING,,,,13,2026-02-01,2026-03-19
+sodium bicarbonate ear drops (10ml),sodium,HOLD BUYING,,,,6,2026-02-01,2026-03-31
+mounjaro 7.5mg,mounjaro,HOLD BUYING,,,,2,2026-04-01,2026-04-01
+ferrous fumarate 322mg tablets (28),ferrous fumarate,HOLD BUYING,,,,6,2026-02-11,2026-03-31
+bicalutamide tablets 150mg (28),bicalutamide tablets,BUY AS YOU GO,,,,3,2026-02-16,2026-03-12
+verapamil sr 120mg tablets (28),verapamil sr,BUY AS YOU GO,,,,5,2026-02-11,2026-03-26
+cavilon durable barrier cream (92g),cavilon,BUY AS YOU GO,,,,6,2026-02-10,2026-03-22
+penicillin v 250mg/5ml oral solution (10,penicillin v,BUY AS YOU GO,,,,8,2026-02-01,2026-03-16
+bd micro fine 4mm pen needles 32g (100),bd,BUY AS YOU GO,,,,4,2026-02-03,2026-03-16
+dulcolax suppositories (10mg/12),dulcolax,BUY AS YOU GO,,,,2,2026-02-03,2026-03-02
+levocetirizine 5mg tablets (30),levocetirizine,BUY AS YOU GO,,,,2,2026-02-19,2026-03-27
+levothyroxine 50mcg tablets (28),levothyroxine,BUY AS YOU GO,,,,10,2026-02-01,2026-03-31
+quinine sulphate 300mg tablets (28),quinine sulphate,BUY AS YOU GO,,,,6,2026-02-01,2026-03-23
+elocon ointment (30g),elocon,BUY AS YOU GO,,,,4,2026-02-17,2026-03-30
+ranolazine pr 750mg tablets (60),ranolazine pr,BUY AS YOU GO,,,,2,2026-02-05,2026-03-24
+levothyroxine 100mcg tablets (28),levothyroxine,BUY AS YOU GO,,,,6,2026-02-03,2026-03-31
+pepto-bismol 17.5mg/ml oral suspml,pepto-bismol,BUY AS YOU GO,,,,2,2025-12-30,2025-12-30
+isosorbide mononitrate la 25mg capsules,isosorbide,BUY AS YOU GO,,,,9,2026-02-03,2026-03-25
+sominex tablets 20 mg dex,sominex tablets,BUY AS YOU GO,,,,2,2026-04-09,2026-04-09
+venlafaxine pr 150mg tablets (30),venlafaxine pr,BUY AS YOU GO,,,,9,2026-02-13,2026-03-31
+mounjaro 5mg,mounjaro,BUY AS YOU GO,,,,2,2026-04-01,2026-04-01
+canesten thrush cream 2% (20g),canesten,BUY AS YOU GO,,,,3,2026-02-09,2026-03-23
+levothyroxine 25mcg tablets (28),levothyroxine,BUY AS YOU GO,,,,16,2026-02-01,2026-03-27

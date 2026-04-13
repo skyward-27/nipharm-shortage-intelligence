@@ -65,10 +65,10 @@ export default function App() {
                 Analytics
               </Link>
               <Link to="/recommendations" className="nav-link" onClick={() => setNavOpen(false)}>
-                Recommendations
+                Buying Recs
               </Link>
               <Link to="/calculator" className="nav-link" onClick={() => setNavOpen(false)}>
-                💰 Calculator
+                Calculator
               </Link>
               <Link to="/drugs" className="nav-link" onClick={() => setNavOpen(false)}>
                 Drug Search
@@ -85,10 +85,10 @@ export default function App() {
                 className="nav-link nav-link-report"
                 onClick={() => setNavOpen(false)}
               >
-                📊 Weekly Report
+                📊 Report
               </Link>
               <Link to="/contact" className="nav-link" onClick={() => setNavOpen(false)}>
-                Contact Us
+                Contact
               </Link>
             </nav>
 
@@ -204,15 +204,23 @@ export default function App() {
 
           .navbar-menu {
             display: flex;
-            gap: 32px;
+            gap: 14px;
             align-items: center;
-            margin-left: 48px;
+            margin-left: 20px;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            scrollbar-width: none;
+          }
+
+          .navbar-menu::-webkit-scrollbar {
+            display: none;
           }
 
           .nav-link {
             color: #666;
             text-decoration: none;
             font-weight: 500;
+            font-size: 0.88rem;
             transition: color 0.3s ease;
             white-space: nowrap;
           }
@@ -237,10 +245,10 @@ export default function App() {
           .nav-link-report {
             background: #1976d2;
             color: white !important;
-            padding: 6px 14px;
+            padding: 5px 12px;
             border-radius: 20px;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.82rem;
           }
 
           .nav-link-report:hover {

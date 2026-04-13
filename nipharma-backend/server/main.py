@@ -415,9 +415,9 @@ async def recommendations_endpoint():
     Reads from buying_recommendations.csv and returns structured recommendations.
     """
     REC_PATHS = [
-        "../scrapers/data/pharmacy_invoices/buying_recommendations.csv",
-        "./model/buying_recommendations.csv",
-        "/app/model/buying_recommendations.csv",
+        "./model/buying_recommendations.csv",           # Railway (committed)
+        "/app/model/buying_recommendations.csv",        # Railway alternate
+        "../scrapers/data/pharmacy_invoices/buying_recommendations.csv",  # Local dev (full)
     ]
     for path in REC_PATHS:
         try:
@@ -495,6 +495,58 @@ async def recommendations_endpoint():
         "hold_warnings": hold_warnings,
         "recommendations": recs,
     }
+
+
+@app.get("/top-drugs")
+async def top_drugs_endpoint(n: int = 3):
+    """
+    Return the top N bulk-buy drug opportunities from buying recommendations.
+    Used by the Dashboard 'Special Watch' section to show real data.
+    """
+    REC_PATHS = [
+        "./model/buying_recommendations.csv",
+        "/app/model/buying_recommendations.csv",
+        "../scrapers/data/pharmacy_invoices/buying_recommendations.csv",
+    ]
+    df = None
+    for path in REC_PATHS:
+        try:
+            df = pd.read_csv(path)
+            break
+        except Exception:
+            continue
+
+    if df is None:
+        return {"success": False, "drugs": [], "message": "No recommendations data available"}
+
+    df.columns = [c.strip().lower() for c in df.columns]
+
+    # Get top N BULK BUY by margin
+    rec_col = next((c for c in ["recommendation", "action", "rec"] if c in df.columns), None)
+    margin_col = next((c for c in ["margin_gbp", "margin", "saving_gbp"] if c in df.columns), None)
+    tariff_col = next((c for c in ["tariff_price_gbp", "tariff", "nhs_tariff"] if c in df.columns), None)
+
+    if rec_col and margin_col:
+        bulk = df[df[rec_col].str.upper() == "BULK BUY"]
+        bulk = bulk.dropna(subset=[margin_col])
+        top = bulk.nlargest(n, margin_col)
+    else:
+        top = df.head(n)
+
+    drugs = []
+    for _, row in top.iterrows():
+        margin = row.get(margin_col) if margin_col else None
+        tariff = row.get(tariff_col) if tariff_col else None
+        drugs.append({
+            "name": str(row.get("drug_name", "Unknown")),
+            "recommendation": str(row.get(rec_col, "BULK BUY")) if rec_col else "BULK BUY",
+            "margin_gbp": round(float(margin), 2) if margin is not None and not pd.isna(margin) else None,
+            "tariff_price_gbp": round(float(tariff), 2) if tariff is not None and not pd.isna(tariff) else None,
+            "margin_pct": round(float(row.get("price_vs_tariff_pct", 0)) * -1, 1) if "price_vs_tariff_pct" in row else None,
+            "observation_count": int(row.get("observation_count", 1)) if "observation_count" in row else 1,
+        })
+
+    return {"success": True, "drugs": drugs, "count": len(drugs)}
 
 
 @app.get("/signals")
