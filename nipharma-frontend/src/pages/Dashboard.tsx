@@ -110,56 +110,38 @@ export default function Dashboard() {
   return (
     <div className="db-root">
 
-      {/* ── HERO ── */}
-      <section className="hero">
-        <div className="hero-dots" />
-        <div className="hero-inner">
-          <div className="hero-eyebrow">LIVE · NHS DRUG INTELLIGENCE</div>
-          <h1 className="hero-title">NiPharm Intelligence</h1>
-          <p className="hero-tagline">
-            NHS drug shortage prediction &nbsp;·&nbsp; 1,137 drugs tracked &nbsp;·&nbsp; Model AUC 0.9988
-          </p>
-
-          {/* Animated stat pills */}
-          <div className="hero-stats">
-            <div className="stat-pill">
-              <span className="stat-dot" style={{ background: "#ef5350" }} />
-              <span className="stat-label">Drugs at Risk</span>
-              <span className="stat-value" style={{ color: "#ef5350" }}>
+      {/* ── COMPACT HEADER ── */}
+      <div className="page-header">
+        <div className="page-header-inner">
+          <div className="page-header-left">
+            <div className="page-eyebrow">LIVE · NHS DRUG INTELLIGENCE</div>
+            <h1 className="page-title">NiPharm Intelligence</h1>
+            <p className="page-tagline">
+              NHS shortage prediction &nbsp;·&nbsp; 1,137 drugs tracked &nbsp;·&nbsp; XGBoost v6 · AUC 0.9988
+            </p>
+          </div>
+          <div className="page-header-right">
+            <div className="header-stat-pill" style={{ borderColor: "#ef5350" }}>
+              <span style={{ color: "#ef5350", fontWeight: 800, fontSize: "1.5rem" }}>
                 <AnimatedCounter target={12} />
               </span>
+              <span className="header-stat-label">Drugs at Risk</span>
             </div>
-            <div className="stat-pill">
-              <span className="stat-dot" style={{ background: "#66bb6a" }} />
-              <span className="stat-label">Savings / yr</span>
-              <span className="stat-value" style={{ color: "#66bb6a" }}>
+            <div className="header-stat-pill" style={{ borderColor: "#2e7d32" }}>
+              <span style={{ color: "#2e7d32", fontWeight: 800, fontSize: "1.5rem" }}>
                 £<AnimatedCounter target={45} />k
               </span>
+              <span className="header-stat-label">Savings / yr</span>
             </div>
-            <div className="stat-pill">
-              <span className="stat-dot" style={{ background: "#42a5f5" }} />
-              <span className="stat-label">Bulk Buy Signals</span>
-              <span className="stat-value" style={{ color: "#42a5f5" }}>
+            <div className="header-stat-pill" style={{ borderColor: "#1976d2" }}>
+              <span style={{ color: "#1976d2", fontWeight: 800, fontSize: "1.5rem" }}>
                 <AnimatedCounter target={1035} />
               </span>
+              <span className="header-stat-label">Bulk Buy Signals</span>
             </div>
-            <div className="stat-pill">
-              <span className="stat-dot" style={{ background: "#ab47bc" }} />
-              <span className="stat-label">Model</span>
-              <span className="stat-value" style={{ color: "#ab47bc" }}>XGBoost v6</span>
-            </div>
-          </div>
-
-          <div className="hero-cta-row">
-            <button className="hero-btn-primary" onClick={() => navigate("/recommendations")}>
-              View Buying Recs →
-            </button>
-            <button className="hero-btn-secondary" onClick={() => navigate("/analytics")}>
-              Shortage Forecast
-            </button>
           </div>
         </div>
-      </section>
+      </div>
 
       {/* ── MARKET SIGNALS STRIP ── */}
       <div className="signals-strip">
@@ -188,6 +170,67 @@ export default function Dashboard() {
 
       {/* ── MAIN CONTENT AREA ── */}
       <div className="db-body">
+
+        {/* ── TOP BULK BUY — first thing you see ── */}
+        <section className="section">
+          <div className="section-header-row">
+            <div>
+              <h2 className="section-title">🔥 Top Bulk Buy Opportunities</h2>
+              <p className="section-sub">
+                {new Date().toLocaleDateString("en-GB", { month: "long", year: "numeric" })} · ranked by margin vs NHS Drug Tariff · invoice-verified
+              </p>
+            </div>
+            <Link to="/recommendations" className="section-view-all">View all 1,035 →</Link>
+          </div>
+
+          <div className="bulk-cards">
+            {topDrugs.slice(0, 5).map((drug, i) => {
+              const marginPct = drug.margin_pct ?? 0;
+              const marginGbp = drug.margin_gbp;
+              const tariff = drug.tariff_price_gbp;
+              return (
+                <div key={drug.name} className="bulk-card">
+                  <div className="bulk-rank">#{i + 1}</div>
+                  <div className="bulk-main">
+                    <div className="bulk-top-row">
+                      <span className="bulk-badge">BULK BUY</span>
+                      {marginPct > 0 && (
+                        <span className="bulk-pct">{marginPct.toFixed(0)}% below tariff</span>
+                      )}
+                    </div>
+                    <div className="bulk-name" style={{ textTransform: "capitalize" }}>
+                      {drug.name}
+                    </div>
+                    <div className="bulk-meta">
+                      NHS Tariff: <strong>{tariff != null ? `£${tariff.toFixed(2)}` : "—"}</strong>
+                      {drug.observation_count > 1
+                        ? ` · ${drug.observation_count} invoice data points`
+                        : " · invoice verified"}
+                      {marginGbp != null && (
+                        <span style={{ color: "#2e7d32", fontWeight: 700, marginLeft: 12 }}>
+                          Save £{marginGbp.toFixed(2)} / pack
+                        </span>
+                      )}
+                    </div>
+                    {/* Margin bar */}
+                    <div className="margin-bar-track">
+                      <div
+                        className="margin-bar-fill"
+                        style={{ width: `${Math.min(Math.max(marginPct, 0), 100)}%` }}
+                      />
+                    </div>
+                    <div className="bulk-footer-row">
+                      <span className="bulk-saving" style={{ color: "#546e7a", fontSize: "0.8rem" }}>
+                        {marginPct > 0 ? `${marginPct.toFixed(1)}% margin below NHS tariff` : "Competitive pricing"}
+                      </span>
+                      <Link to="/calculator" className="bulk-calc-link">→ Calculate savings</Link>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
 
         {/* ── KPI ROW ── */}
         <div className="kpi-row">
@@ -257,62 +300,6 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-
-        {/* ── TOP 5 BULK BUY ── */}
-        <section className="section">
-          <div className="section-header-row">
-            <div>
-              <h2 className="section-title">Top 5 Bulk Buy Opportunities</h2>
-              <p className="section-sub">
-                {new Date().toLocaleDateString("en-GB", { month: "long", year: "numeric" })} · ranked by margin vs NHS Drug Tariff
-              </p>
-            </div>
-            <Link to="/recommendations" className="section-view-all">View all recs →</Link>
-          </div>
-
-          <div className="bulk-cards">
-            {topDrugs.slice(0, 5).map((drug, i) => {
-              const marginPct = drug.margin_pct ?? 0;
-              const marginGbp = drug.margin_gbp;
-              const tariff = drug.tariff_price_gbp;
-              return (
-                <div key={drug.name} className="bulk-card">
-                  <div className="bulk-rank">#{i + 1}</div>
-                  <div className="bulk-main">
-                    <div className="bulk-top-row">
-                      <span className="bulk-badge">BULK BUY</span>
-                      {marginPct > 0 && (
-                        <span className="bulk-pct">{marginPct.toFixed(0)}% below tariff</span>
-                      )}
-                    </div>
-                    <div className="bulk-name" style={{ textTransform: "capitalize" }}>
-                      {drug.name}
-                    </div>
-                    <div className="bulk-meta">
-                      NHS Tariff: <strong>{tariff != null ? `£${tariff.toFixed(2)}` : "—"}</strong>
-                      {drug.observation_count > 1
-                        ? ` · ${drug.observation_count} data points`
-                        : " · invoice verified"}
-                    </div>
-                    {/* Margin bar */}
-                    <div className="margin-bar-track">
-                      <div
-                        className="margin-bar-fill"
-                        style={{ width: `${Math.min(marginPct, 100)}%` }}
-                      />
-                    </div>
-                    <div className="bulk-footer-row">
-                      <span className="bulk-saving">
-                        {marginGbp != null ? `Save £${marginGbp.toFixed(2)} / pack` : "Strong margin"}
-                      </span>
-                      <Link to="/calculator" className="bulk-calc-link">→ Calculate</Link>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </section>
 
         {/* ── WEEKLY REPORT BANNER ── */}
         <div className="report-banner">
@@ -405,138 +392,75 @@ export default function Dashboard() {
           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
-        /* HERO */
-        .hero {
-          position: relative;
-          overflow: hidden;
-          background:
-            radial-gradient(circle at 20% 60%, rgba(25,118,210,0.18) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(16,185,129,0.12) 0%, transparent 40%),
-            linear-gradient(135deg, #0a1628 0%, #0d2137 40%, #0f3460 100%);
-          padding: 72px 24px 60px;
+        /* COMPACT PAGE HEADER */
+        .page-header {
+          background: white;
+          border-bottom: 1px solid #e8ecf0;
+          padding: 28px 0 24px;
+        }
+
+        .page-header-inner {
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 0 24px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 24px;
+          flex-wrap: wrap;
+        }
+
+        .page-header-left { flex: 1; min-width: 260px; }
+
+        .page-eyebrow {
+          color: #1976d2;
+          font-size: 0.7rem;
+          font-weight: 700;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          font-family: monospace;
+          margin-bottom: 8px;
+        }
+
+        .page-title {
+          font-size: clamp(1.6rem, 3vw, 2.2rem);
+          font-weight: 800;
+          color: #0d1b2a;
+          margin: 0 0 6px;
+          letter-spacing: -0.3px;
+        }
+
+        .page-tagline {
+          font-size: 0.88rem;
+          color: #78909c;
+          margin: 0;
+        }
+
+        .page-header-right {
+          display: flex;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+
+        .header-stat-pill {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          background: #f8fafc;
+          border: 2px solid #e0e0e0;
+          border-radius: 12px;
+          padding: 12px 20px;
+          min-width: 100px;
           text-align: center;
         }
 
-        .hero-dots {
-          position: absolute;
-          inset: 0;
-          background-image:
-            radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px);
-          background-size: 36px 36px;
-          pointer-events: none;
-        }
-
-        .hero-inner {
-          position: relative;
-          max-width: 900px;
-          margin: 0 auto;
-        }
-
-        .hero-eyebrow {
-          color: #64b5f6;
-          font-size: 0.75rem;
-          font-weight: 700;
-          letter-spacing: 2.5px;
-          text-transform: uppercase;
-          font-family: monospace;
-          margin-bottom: 16px;
-        }
-
-        .hero-title {
-          font-size: clamp(2.2rem, 6vw, 3.8rem);
-          font-weight: 800;
-          color: #ffffff;
-          margin: 0 0 16px;
-          letter-spacing: -0.5px;
-          line-height: 1.1;
-        }
-
-        .hero-tagline {
-          font-size: clamp(0.95rem, 2vw, 1.2rem);
-          color: rgba(255,255,255,0.68);
-          margin: 0 0 40px;
-          letter-spacing: 0.2px;
-        }
-
-        .hero-stats {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 12px;
-          justify-content: center;
-          margin-bottom: 36px;
-        }
-
-        .stat-pill {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          background: rgba(255,255,255,0.07);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-          border: 1px solid rgba(255,255,255,0.14);
-          border-radius: 100px;
-          padding: 10px 20px;
-          white-space: nowrap;
-        }
-
-        .stat-dot {
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          flex-shrink: 0;
-        }
-
-        .stat-label {
-          color: rgba(255,255,255,0.55);
-          font-size: 0.8rem;
-          font-weight: 500;
-        }
-
-        .stat-value {
-          font-size: 1rem;
-          font-weight: 800;
-          font-variant-numeric: tabular-nums;
-        }
-
-        .hero-cta-row {
-          display: flex;
-          gap: 12px;
-          justify-content: center;
-          flex-wrap: wrap;
-        }
-
-        .hero-btn-primary {
-          background: #1976d2;
-          color: white;
-          border: none;
-          border-radius: 8px;
-          padding: 13px 28px;
-          font-size: 0.95rem;
-          font-weight: 700;
-          cursor: pointer;
-          transition: background 0.2s, box-shadow 0.2s;
-        }
-
-        .hero-btn-primary:hover {
-          background: #1565c0;
-          box-shadow: 0 4px 18px rgba(25,118,210,0.45);
-        }
-
-        .hero-btn-secondary {
-          background: rgba(255,255,255,0.09);
-          color: white;
-          border: 1px solid rgba(255,255,255,0.22);
-          border-radius: 8px;
-          padding: 13px 28px;
-          font-size: 0.95rem;
+        .header-stat-label {
+          font-size: 0.72rem;
+          color: #78909c;
           font-weight: 600;
-          cursor: pointer;
-          backdrop-filter: blur(8px);
-          transition: background 0.2s;
-        }
-
-        .hero-btn-secondary:hover {
-          background: rgba(255,255,255,0.16);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          margin-top: 4px;
         }
 
         /* SIGNALS STRIP */
