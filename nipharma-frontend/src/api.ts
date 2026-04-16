@@ -33,11 +33,17 @@ export interface Concession {
   source: string;
 }
 
-// Health check
+// Health check — use /ping (lightweight, no model dependency, 5s timeout)
 export const healthCheck = async () => {
-  const res = await fetch(`${API_URL}/`);
-  if (!res.ok) throw new Error("Backend health check failed");
-  return res.json();
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 5000);
+  try {
+    const res = await fetch(`${API_URL}/ping`, { signal: controller.signal });
+    if (!res.ok) throw new Error("Backend health check failed");
+    return res.json();
+  } finally {
+    clearTimeout(timer);
+  }
 };
 
 // News endpoints

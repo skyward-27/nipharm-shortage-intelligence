@@ -153,11 +153,13 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Add CORS middleware for frontend integration
+# CORS — allow_credentials=True + allow_origins=["*"] is INVALID per CORS spec.
+# Browsers reject responses with that combination (treats it as a network error).
+# Fix: set allow_credentials=False so wildcard origin works correctly.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,   # ← was True — caused "Offline" in browser
     allow_methods=["*"],
     allow_headers=["*"],
 )
