@@ -10,6 +10,7 @@ import DrugSearch from "./pages/DrugSearch";
 import Alerts from "./pages/Alerts";
 import WeeklyReport from "./pages/WeeklyReport";
 import Recommendations from "./pages/Recommendations";
+import DataExplorer from "./pages/DataExplorer";
 import ChatWidget from "./components/ChatWidget";
 import { healthCheck } from "./api";
 
@@ -68,6 +69,9 @@ export default function App() {
               <NavLink to="/analytics" className={({ isActive }) => isActive ? "nav-link nav-link-active" : "nav-link"} onClick={() => setNavOpen(false)}>
                 Analytics
               </NavLink>
+              <NavLink to="/explorer" className={({ isActive }) => isActive ? "nav-link nav-link-active" : "nav-link"} onClick={() => setNavOpen(false)}>
+                🔬 Explorer
+              </NavLink>
               <NavLink to="/news" className={({ isActive }) => isActive ? "nav-link nav-link-active" : "nav-link"} onClick={() => setNavOpen(false)}>
                 Market News
               </NavLink>
@@ -107,6 +111,7 @@ export default function App() {
             <Route path="/drugs" element={<DrugSearch />} />
             <Route path="/recommendations" element={<Recommendations />} />
             <Route path="/alerts" element={<Alerts />} />
+            <Route path="/explorer" element={<DataExplorer />} />
             <Route path="/report" element={<WeeklyReport />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

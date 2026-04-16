@@ -37,6 +37,7 @@ def set_cached_prediction(cache_key: str, result):
 # Import our modules
 from chat import chat_with_groq, get_chat_response
 from news import get_pharma_news, get_supply_chain_news, search_news
+from explorer import run_query
 
 # Load environment variables
 load_dotenv()
@@ -767,6 +768,19 @@ async def drug_list_endpoint(q: str = Query("", description="Search term")):
         return {"success": True, "drugs": filtered[:100], "total": len(filtered)}
     except Exception as e:
         return {"success": False, "error": str(e), "drugs": []}
+
+
+@app.post("/query")
+async def query_endpoint(body: dict):
+    """
+    Data Explorer — natural language or SQL query against historical drug data.
+    Body: { "question": "which drugs had most concessions?" }
+       OR { "sql": "SELECT * FROM concessions LIMIT 10" }
+    """
+    question = body.get("question", "").strip()
+    sql      = body.get("sql", "").strip()
+    result   = run_query(question=question, sql=sql)
+    return result
 
 
 @app.get("/early-warnings")
