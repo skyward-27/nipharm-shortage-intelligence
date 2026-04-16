@@ -22,12 +22,64 @@ A real-time pharmaceutical shortage prediction platform for UK community pharmac
 
 ## Architecture
 
+```mermaid
+graph TB
+    subgraph Client["🖥️ Client Browser"]
+        FE["React 18 + TypeScript<br/>Vercel · nipharm-shortage-intelligence.vercel.app"]
+    end
+
+    subgraph Backend["⚙️ Backend — Railway"]
+        API["FastAPI (Python)<br/>npt-stock-intel-production.up.railway.app"]
+        MODEL["ML Models<br/>RF (AUC 0.9986) + XGBoost (AUC 0.9987)<br/>42 features · TimeSeriesSplit CV"]
+        DATA["Data Files<br/>concession_trends.csv · drug_price_history.csv<br/>drug_concessions.csv · mhra_alerts.csv"]
+        LLM["Groq LLM<br/>llama-3.3-70b-versatile<br/>AI Chat + NL→SQL"]
+    end
+
+    subgraph DataSources["📡 Live Data Sources"]
+        CPE["CPE Concessions<br/>cpe.org.uk · monthly"]
+        NHSBSA["NHSBSA Drug Tariff<br/>Cat M prices · monthly"]
+        MHRA["MHRA Shortage Alerts<br/>gov.uk · real-time"]
+        FX["FX Rates<br/>Frankfurter / ECB · live"]
+        NSE["Indian Pharma Stocks<br/>10 NSE tickers via yfinance"]
+        RSS["News RSS Feeds<br/>MHRA · NHS England · BBC Health"]
+    end
+
+    subgraph Scrapers["🔄 Local Scrapers (22 scripts)"]
+        SC["Python scripts<br/>scrapers/0X_*.py<br/>Run monthly in Terminal"]
+    end
+
+    subgraph GitHub["📦 GitHub (Private)"]
+        GH["skyward-27/nipharm-shortage-intelligence<br/>Frontend + Backend + ML models"]
+    end
+
+    FE -->|"REST API calls"| API
+    API --> MODEL
+    API --> DATA
+    API -->|"Chat / NL→SQL"| LLM
+    API -->|"Live FX"| FX
+    API -->|"News RSS"| RSS
+    API -->|"MHRA scrape"| MHRA
+
+    SC -->|"Monthly scrape"| CPE
+    SC -->|"Monthly scrape"| NHSBSA
+    SC -->|"Monthly scrape"| NSE
+    SC -->|"Trains models<br/>copies PKL to backend"| GH
+
+    GH -->|"Auto-deploy on push"| Backend
+    GH -->|"Auto-deploy on push"| FE
+```
+
+### Component Table
+
 | Component | Tech | Hosted |
 |-----------|------|--------|
-| Frontend | React 18 + TypeScript | Vercel |
-| Backend | Python FastAPI + Groq LLM | Railway |
-| ML Model | Random Forest + XGBoost (scikit-learn) | GitHub + Railway |
-| Data Layer | CSV files + CPE/MHRA/Market/NI APIs | Local + Railway |
+| Frontend | React 18 + TypeScript | Vercel (auto-deploy) |
+| Backend | Python FastAPI + Groq LLM | Railway (auto-deploy) |
+| ML Models | RF + XGBoost, scikit-learn, calibrated | GitHub → Railway |
+| Data Explorer | DuckDB in-process SQL (planned) | Railway |
+| AI Chat | Groq llama-3.3-70b + Tavily search | Railway |
+| News | Free RSS feeds (no API key) | Railway |
+| Scrapers | 22 Python scripts, run locally monthly | Local only |
 
 ### Key Endpoints
 
@@ -341,4 +393,4 @@ scrapers/                   Data collection (local only, not on GitHub)
 
 ---
 
-**Last Updated:** April 2026 | **Model:** v5 deployed — RF AUC 0.9986, XGB AUC 0.9987 (hold-out, temporal CV) | **Status:** Production
+**Last Updated:** April 2026 | **Model:** v5 deployed — RF AUC 0.9986, XGB AUC 0.9987 (hold-out, temporal CV) | **Status:** Production | **License:** MIT
