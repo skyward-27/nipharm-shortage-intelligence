@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Link, NavLink } from "react-router-dom";
+import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
 import Dashboard from "./pages/Dashboard";
 import MarketNews from "./pages/MarketNews";
 import Chat from "./pages/Chat";
@@ -444,6 +445,8 @@ export default function App() {
         `}</style>
       </div>
       <ChatWidget />
+      {/* Vercel Analytics — free on Hobby plan, tracks page views + visitors */}
+      <VercelAnalytics />
     </Router>
   );
 }

@@ -3,9 +3,11 @@ uvicorn==0.24.0
 requests==2.31.0
 python-dotenv==1.0.0
 pydantic==1.10.13
-numpy==1.24.3
-pandas==2.0.3
-scikit-learn==1.3.0
+# numpy: 1.x doesn't support Python 3.13 (Railway Nixpacks). Use 1.26 which supports 3.9-3.12
+# or 2.x for 3.13. Use a range so pip picks the right one automatically.
+numpy>=1.24.3,<3.0
+pandas>=2.0.3,<3.0
+scikit-learn>=1.3.0,<2.0
 xgboost>=1.7.0
-# Pin duckdb to a stable version — 0.10.x series is well-tested on Python 3.11/Linux
+# Pin duckdb to stable 0.10.x — tested on Python 3.11 and 3.12/3.13
 duckdb==0.10.3
