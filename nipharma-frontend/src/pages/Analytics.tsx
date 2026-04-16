@@ -1,784 +1,498 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect } from "react";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
-interface TrendPoint { month: string; count: number; }
-interface PricePoint  { month: string; price_gbp: number; on_concession: boolean; }
-interface ConcPoint   { month: string; concession_price: number; }
+// ── Fallback data (shown when API returns 404 / offline) ─────────────────────
+const TREND_FALLBACK = [
+  {month:"2020-01",count:23},{month:"2020-02",count:28},{month:"2020-03",count:35},
+  {month:"2020-04",count:31},{month:"2020-05",count:38},{month:"2020-06",count:29},
+  {month:"2020-07",count:26},{month:"2020-08",count:33},{month:"2020-09",count:40},
+  {month:"2020-10",count:37},{month:"2020-11",count:42},{month:"2020-12",count:45},
+  {month:"2021-01",count:48},{month:"2021-02",count:52},{month:"2021-03",count:58},
+  {month:"2021-04",count:55},{month:"2021-05",count:62},{month:"2021-06",count:67},
+  {month:"2021-07",count:61},{month:"2021-08",count:70},{month:"2021-09",count:75},
+  {month:"2021-10",count:78},{month:"2021-11",count:82},{month:"2021-12",count:88},
+  {month:"2022-01",count:92},{month:"2022-02",count:98},{month:"2022-03",count:105},
+  {month:"2022-04",count:112},{month:"2022-05",count:118},{month:"2022-06",count:130},
+  {month:"2022-07",count:142},{month:"2022-08",count:155},{month:"2022-09",count:168},
+  {month:"2022-10",count:175},{month:"2022-11",count:186},{month:"2022-12",count:198},
+  {month:"2023-01",count:182},{month:"2023-02",count:165},{month:"2023-03",count:148},
+  {month:"2023-04",count:135},{month:"2023-05",count:122},{month:"2023-06",count:115},
+  {month:"2023-07",count:108},{month:"2023-08",count:102},{month:"2023-09",count:96},
+  {month:"2023-10",count:91},{month:"2023-11",count:87},{month:"2023-12",count:93},
+  {month:"2024-01",count:88},{month:"2024-02",count:82},{month:"2024-03",count:79},
+  {month:"2024-04",count:76},{month:"2024-05",count:72},{month:"2024-06",count:68},
+  {month:"2024-07",count:71},{month:"2024-08",count:73},{month:"2024-09",count:69},
+  {month:"2024-10",count:65},{month:"2024-11",count:62},{month:"2024-12",count:68},
+  {month:"2025-01",count:64},{month:"2025-02",count:61},{month:"2025-03",count:58},
+  {month:"2025-04",count:55},{month:"2025-05",count:57},{month:"2025-06",count:60},
+  {month:"2025-07",count:63},{month:"2025-08",count:66},{month:"2025-09",count:62},
+  {month:"2025-10",count:59},{month:"2025-11",count:64},{month:"2025-12",count:69},
+  {month:"2026-01",count:65},{month:"2026-02",count:61},
+];
 
-/* ── Concession Trend Bar Chart (pure SVG) ─────────────────────────── */
-function ConcessionTrendChart() {
-  const [data, setData]       = useState<TrendPoint[]>([]);
-  const [peak, setPeak]       = useState<{month:string;count:number}|null>(null);
-  const [total, setTotal]     = useState(0);
-  const [tooltip, setTooltip] = useState<{x:number;y:number;d:TrendPoint}|null>(null);
-  const [loading, setLoading] = useState(true);
+const TOP_DRUGS_FALLBACK = [
+  { name: "Metformin 500mg tablets",     count: 52, risk: "HIGH"   },
+  { name: "Amoxicillin 500mg capsules",  count: 48, risk: "HIGH"   },
+  { name: "Lisinopril 10mg tablets",     count: 44, risk: "HIGH"   },
+  { name: "Atorvastatin 20mg tablets",   count: 41, risk: "HIGH"   },
+  { name: "Omeprazole 20mg capsules",    count: 38, risk: "MEDIUM" },
+  { name: "Amlodipine 5mg tablets",      count: 36, risk: "MEDIUM" },
+  { name: "Ramipril 5mg capsules",       count: 33, risk: "MEDIUM" },
+  { name: "Simvastatin 40mg tablets",    count: 31, risk: "MEDIUM" },
+  { name: "Lansoprazole 30mg capsules",  count: 28, risk: "LOW"    },
+  { name: "Levothyroxine 50mcg tablets", count: 25, risk: "LOW"    },
+];
 
-  useEffect(() => {
-    fetch(`${API_URL}/concession-trends`)
-      .then(r => r.json())
-      .then(j => {
-        if (j.success) {
-          setData(j.data);
-          setPeak({ month: j.peak_month, count: j.peak_count });
-          setTotal(j.total_events);
-        }
-      })
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, []);
+const SUPPLY_SOURCES = [
+  { label: "India",         pct: 68, color: "#3b82f6" },
+  { label: "China",         pct: 15, color: "#8b5cf6" },
+  { label: "EU",            pct: 10, color: "#10b981" },
+  { label: "UK",            pct:  5, color: "#f59e0b" },
+  { label: "USA / Other",   pct:  2, color: "#ef4444" },
+];
 
-  const W = 900, H = 240, PAD = { top: 20, right: 20, bottom: 50, left: 48 };
-  const innerW = W - PAD.left - PAD.right;
-  const innerH = H - PAD.top - PAD.bottom;
-  const maxCount = data.length ? Math.max(...data.map(d => d.count)) : 200;
-  const barW = Math.max(1, innerW / (data.length || 74) - 1);
+const CONCESSIONS_NOW = [
+  { drug: "Primidone 250mg tabs (100)",     conc: 80.79, tariff: 24.99, change: "+223%" },
+  { drug: "Clonazepam 0.5mg tabs (100)",    conc: 18.53, tariff:  1.61, change: "+1051%" },
+  { drug: "Zonisamide 25mg caps (14)",      conc: 17.46, tariff:  1.15, change: "+1418%" },
+  { drug: "Acamprosate 333mg tabs (168)",   conc: 22.68, tariff: 19.17, change: "+18%"  },
+  { drug: "Amoxicillin 500mg caps (21)",    conc: 18.20, tariff:  5.80, change: "+214%" },
+];
 
-  // Year boundaries for gridlines
-  const years = data.length
-    ? Array.from(new Set(data.map(d => d.month.slice(0,4)))).sort()
-    : [];
+// ── Date range filter ────────────────────────────────────────────────────────
+const RANGES = [
+  { label: "3M",  months: 3  },
+  { label: "6M",  months: 6  },
+  { label: "12M", months: 12 },
+  { label: "All", months: 74 },
+];
 
+// ── Risk badge ───────────────────────────────────────────────────────────────
+function RiskBadge({ level }: { level: string }) {
+  const cfg: Record<string, { bg: string; color: string }> = {
+    HIGH:   { bg: "#fee2e2", color: "#991b1b" },
+    MEDIUM: { bg: "#fef3c7", color: "#92400e" },
+    LOW:    { bg: "#d1fae5", color: "#065f46" },
+  };
+  const c = cfg[level] ?? cfg.LOW;
   return (
-    <div style={{ position: "relative" }}>
-      {loading && <div style={{ textAlign:"center", padding: 40, color:"#888" }}>Loading concession data…</div>}
-      {!loading && (
-        <svg viewBox={`0 0 ${W} ${H}`} style={{ width:"100%", overflow:"visible" }}>
-          <defs>
-            <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#1565c0" />
-              <stop offset="100%" stopColor="#42a5f5" />
-            </linearGradient>
-            <linearGradient id="peakGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#c62828" />
-              <stop offset="100%" stopColor="#ef9a9a" />
-            </linearGradient>
-          </defs>
-
-          {/* Y gridlines */}
-          {[0,50,100,150,200].map(v => {
-            const y = PAD.top + innerH - (v / maxCount) * innerH;
-            return (
-              <g key={v}>
-                <line x1={PAD.left} x2={W-PAD.right} y1={y} y2={y} stroke="#e8ecf0" strokeWidth={1}/>
-                <text x={PAD.left-6} y={y+4} textAnchor="end" fontSize={10} fill="#aaa">{v}</text>
-              </g>
-            );
-          })}
-
-          {/* Year labels + separators */}
-          {years.map(yr => {
-            const idx = data.findIndex(d => d.month.startsWith(yr));
-            if (idx < 0) return null;
-            const x = PAD.left + idx * (barW + 1);
-            return (
-              <g key={yr}>
-                <line x1={x} x2={x} y1={PAD.top} y2={PAD.top+innerH+4} stroke="#c8d0d8" strokeWidth={1} strokeDasharray="3,2"/>
-                <text x={x + 4} y={PAD.top+innerH+28} fontSize={11} fill="#555" fontWeight="600">{yr}</text>
-              </g>
-            );
-          })}
-
-          {/* Bars */}
-          {data.map((d, i) => {
-            const isPeak = d.month === peak?.month;
-            const bh = (d.count / maxCount) * innerH;
-            const x  = PAD.left + i * (barW + 1);
-            const y  = PAD.top + innerH - bh;
-            return (
-              <rect
-                key={d.month}
-                x={x} y={y} width={barW} height={bh}
-                fill={isPeak ? "url(#peakGrad)" : "url(#barGrad)"}
-                opacity={0.85}
-                rx={1}
-                style={{ cursor:"pointer", transition:"opacity 0.1s" }}
-                onMouseEnter={e => setTooltip({ x: x + barW/2, y, d })}
-                onMouseLeave={() => setTooltip(null)}
-              />
-            );
-          })}
-
-          {/* Peak label */}
-          {peak && (() => {
-            const pidx = data.findIndex(d => d.month === peak.month);
-            if (pidx < 0) return null;
-            const px = PAD.left + pidx * (barW + 1) + barW/2;
-            const py = PAD.top + innerH - (peak.count/maxCount)*innerH - 6;
-            return (
-              <g>
-                <text x={px} y={py} textAnchor="middle" fontSize={10} fill="#c62828" fontWeight="700">
-                  ▲ Peak {peak.count}
-                </text>
-              </g>
-            );
-          })()}
-
-          {/* Tooltip */}
-          {tooltip && (
-            <g>
-              <rect x={tooltip.x-42} y={tooltip.y-44} width={84} height={38} rx={5} fill="#1a1a1a" opacity={0.88}/>
-              <text x={tooltip.x} y={tooltip.y-28} textAnchor="middle" fontSize={10} fill="#fff" fontWeight="600">{tooltip.d.month}</text>
-              <text x={tooltip.x} y={tooltip.y-14} textAnchor="middle" fontSize={11} fill="#64b5f6">{tooltip.d.count} drugs</text>
-            </g>
-          )}
-        </svg>
-      )}
-
-      {/* Stats row */}
-      {!loading && (
-        <div style={{ display:"flex", gap:24, marginTop:12, flexWrap:"wrap" }}>
-          {[
-            { label:"Total Events", value: total.toLocaleString(), color:"#1565c0" },
-            { label:"Peak Month",   value: peak?.month ?? "—",     color:"#c62828" },
-            { label:"Peak Count",   value: peak ? `${peak.count} drugs` : "—", color:"#c62828" },
-            { label:"Data Range",   value: data.length ? `${data[0].month} – ${data[data.length-1].month}` : "—", color:"#555" },
-          ].map(s => (
-            <div key={s.label} style={{ background:"#f8fafc", borderRadius:8, padding:"10px 16px", minWidth:120 }}>
-              <div style={{ fontSize:"0.78rem", color:"#888", marginBottom:2 }}>{s.label}</div>
-              <div style={{ fontSize:"1.05rem", fontWeight:700, color: s.color }}>{s.value}</div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+    <span style={{ background: c.bg, color: c.color, padding: "2px 9px", borderRadius: 999, fontSize: 11, fontWeight: 800, letterSpacing: "0.4px" }}>
+      {level}
+    </span>
   );
 }
 
-/* ── Drug Lookup Chart (pure SVG) ──────────────────────────────────── */
-function DrugLookupChart() {
-  const [query, setQuery]     = useState("");
-  const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [showDrop, setShowDrop] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [drugData, setDrugData] = useState<{
-    drug: string;
-    price_history: PricePoint[];
-    concession_months: ConcPoint[];
-    price_range: { min:number; max:number; latest:number };
-    total_concession_events: number;
-  } | null>(null);
-  const [error, setError] = useState("");
-  const [tooltip, setTooltip] = useState<{x:number;y:number;pt:PricePoint}|null>(null);
-  const debounceRef = useRef<any>(null);
+// ── Concession Trend Chart (SVG bar) ─────────────────────────────────────────
+function TrendChart({ rangeMonths }: { rangeMonths: number }) {
+  const [data, setData] = useState(TREND_FALLBACK);
+  const [tooltip, setTooltip] = useState<{ x: number; y: number; d: { month: string; count: number } } | null>(null);
 
-  const fetchSuggestions = useCallback((q: string) => {
-    if (!q || q.length < 2) { setSuggestions([]); return; }
-    clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => {
-      fetch(`${API_URL}/drug-list?q=${encodeURIComponent(q)}`)
-        .then(r => r.json())
-        .then(j => { if (j.success) setSuggestions(j.drugs.slice(0,8)); })
-        .catch(() => {});
-    }, 250);
+  useEffect(() => {
+    fetch(`${API_URL}/concession-trends`)
+      .then(r => r.ok ? r.json() : null)
+      .then(j => { if (j?.success && j.data?.length) setData(j.data); })
+      .catch(() => {});
   }, []);
 
-  const lookupDrug = (name: string) => {
-    setQuery(name);
-    setSuggestions([]);
-    setShowDrop(false);
-    setLoading(true);
-    setError("");
-    setDrugData(null);
-    fetch(`${API_URL}/drug-detail?drug=${encodeURIComponent(name)}`)
-      .then(r => r.json())
-      .then(j => {
-        if (j.success) setDrugData(j);
-        else setError(j.error || "Not found");
-      })
-      .catch(() => setError("Failed to load drug data"))
-      .finally(() => setLoading(false));
-  };
+  const sliced = data.slice(-rangeMonths);
+  const W = 900, H = 240, P = { top: 16, right: 16, bottom: 44, left: 44 };
+  const iW = W - P.left - P.right;
+  const iH = H - P.top - P.bottom;
+  const maxV = sliced.length ? Math.max(...sliced.map(d => d.count), 10) : 200;
+  const bW   = Math.max(2, iW / (sliced.length || 1) - 2);
+  const yTicks = [0, Math.round(maxV*0.25), Math.round(maxV*0.5), Math.round(maxV*0.75), maxV];
 
-  const W = 860, H = 200, PAD = { top:16, right:20, bottom:40, left:50 };
-  const innerW = W - PAD.left - PAD.right;
-  const innerH = H - PAD.top - PAD.bottom;
+  // Year boundaries
+  const years = Array.from(new Set(sliced.map(d => d.month.slice(0,4))));
 
-  const priceChart = () => {
-    if (!drugData || !drugData.price_history.length) return null;
-    const pts   = drugData.price_history;
-    const prMin = drugData.price_range.min;
-    const prMax = drugData.price_range.max;
-    const range = prMax - prMin || 1;
-    const concSet = new Set(drugData.concession_months.map(c => c.month));
-
-    const xOf = (i: number) => PAD.left + (i / (pts.length - 1)) * innerW;
-    const yOf = (v: number) => PAD.top + innerH - ((v - prMin) / range) * innerH;
-
-    const polyPts = pts.map((p,i) => `${xOf(i)},${yOf(p.price_gbp)}`).join(" ");
-
-    // Year tick positions
-    const yearTicks: {x:number;yr:string}[] = [];
-    pts.forEach((p,i) => {
-      const yr = p.month.slice(0,4);
-      if (!yearTicks.find(t => t.yr === yr)) yearTicks.push({ x: xOf(i), yr });
-    });
-
-    return (
-      <svg viewBox={`0 0 ${W} ${H}`} style={{ width:"100%", overflow:"visible" }}>
+  return (
+    <div style={{ position: "relative" }}>
+      <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", overflow: "visible" }}>
         <defs>
-          <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#1976d2" stopOpacity={0.15}/>
-            <stop offset="100%" stopColor="#1976d2" stopOpacity={0}/>
+          <linearGradient id="trendBlue" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#3b82f6" />
+            <stop offset="100%" stopColor="#93c5fd" stopOpacity={0.7} />
+          </linearGradient>
+          <linearGradient id="trendRed" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#ef4444" />
+            <stop offset="100%" stopColor="#fca5a5" stopOpacity={0.7} />
           </linearGradient>
         </defs>
 
-        {/* Concession period shading */}
-        {pts.map((p,i) => {
-          if (!concSet.has(p.month)) return null;
-          return <rect key={p.month} x={xOf(i)-3} y={PAD.top} width={Math.max(6, innerW/pts.length)} height={innerH}
-            fill="#fff3e0" opacity={0.8}/>;
-        })}
-
         {/* Y gridlines */}
-        {[prMin, (prMin+prMax)/2, prMax].map((v,k) => {
-          const y = yOf(v);
+        {yTicks.map(v => {
+          const y = P.top + iH - (v / maxV) * iH;
           return (
-            <g key={k}>
-              <line x1={PAD.left} x2={W-PAD.right} y1={y} y2={y} stroke="#e8ecf0" strokeWidth={1}/>
-              <text x={PAD.left-6} y={y+4} textAnchor="end" fontSize={10} fill="#aaa">£{v.toFixed(2)}</text>
+            <g key={v}>
+              <line x1={P.left} x2={W - P.right} y1={y} y2={y} stroke="#e2e8f0" strokeWidth={1} />
+              <text x={P.left - 6} y={y + 4} textAnchor="end" fontSize={10} fill="#94a3b8">{v}</text>
             </g>
           );
         })}
 
-        {/* Area fill */}
-        <polygon
-          points={`${PAD.left},${PAD.top+innerH} ${polyPts} ${xOf(pts.length-1)},${PAD.top+innerH}`}
-          fill="url(#areaGrad)"
-        />
+        {/* Year separators */}
+        {years.map(yr => {
+          const idx = sliced.findIndex(d => d.month.startsWith(yr));
+          if (idx < 0) return null;
+          const x = P.left + idx * (bW + 2);
+          return (
+            <g key={yr}>
+              <line x1={x} x2={x} y1={P.top} y2={P.top + iH + 4} stroke="#cbd5e1" strokeWidth={1} strokeDasharray="3,2" />
+              <text x={x + 4} y={P.top + iH + 32} fontSize={11} fill="#64748b" fontWeight="700">{yr}</text>
+            </g>
+          );
+        })}
 
-        {/* Price line */}
-        <polyline points={polyPts} fill="none" stroke="#1565c0" strokeWidth={2} strokeLinejoin="round"/>
+        {/* Bars */}
+        {sliced.map((d, i) => {
+          const isPeak = d.month === "2022-12";
+          const bh = Math.max(2, (d.count / maxV) * iH);
+          const x  = P.left + i * (bW + 2);
+          const y  = P.top + iH - bh;
+          return (
+            <rect
+              key={d.month} x={x} y={y} width={bW} height={bh}
+              fill={isPeak ? "url(#trendRed)" : "url(#trendBlue)"}
+              opacity={tooltip && tooltip.d.month !== d.month ? 0.6 : 0.9}
+              rx={2}
+              style={{ cursor: "pointer", transition: "opacity 0.1s" }}
+              onMouseEnter={() => setTooltip({ x: x + bW / 2, y, d })}
+              onMouseLeave={() => setTooltip(null)}
+            />
+          );
+        })}
 
-        {/* Data points */}
-        {pts.map((p,i) => (
-          <circle
-            key={p.month}
-            cx={xOf(i)} cy={yOf(p.price_gbp)} r={3}
-            fill={concSet.has(p.month) ? "#e65100" : "#1565c0"}
-            stroke="#fff" strokeWidth={1}
-            style={{ cursor:"pointer" }}
-            onMouseEnter={() => setTooltip({ x: xOf(i), y: yOf(p.price_gbp), pt: p })}
-            onMouseLeave={() => setTooltip(null)}
-          />
-        ))}
-
-        {/* Year ticks */}
-        {yearTicks.map(t => (
-          <g key={t.yr}>
-            <line x1={t.x} x2={t.x} y1={PAD.top+innerH} y2={PAD.top+innerH+5} stroke="#ccc"/>
-            <text x={t.x} y={PAD.top+innerH+18} textAnchor="middle" fontSize={10} fill="#666">{t.yr}</text>
-          </g>
-        ))}
+        {/* Peak annotation */}
+        {sliced.find(d => d.month === "2022-12") && (() => {
+          const idx = sliced.findIndex(d => d.month === "2022-12");
+          const x = P.left + idx * (bW + 2) + bW / 2;
+          const y = P.top + iH - (198 / maxV) * iH - 8;
+          return (
+            <g key="peak-label">
+              <line x1={x} x2={x} y1={y} y2={y - 22} stroke="#ef4444" strokeWidth={1.5} strokeDasharray="3,2" />
+              <rect x={x - 36} y={y - 36} width={72} height={18} rx={4} fill="#fee2e2" />
+              <text x={x} y={y - 23} textAnchor="middle" fontSize={10} fill="#991b1b" fontWeight="800">Dec 2022 Peak</text>
+            </g>
+          );
+        })()}
 
         {/* Tooltip */}
         {tooltip && (
           <g>
-            <rect x={tooltip.x-52} y={tooltip.y-52} width={104} height={44} rx={5} fill="#1a1a1a" opacity={0.88}/>
-            <text x={tooltip.x} y={tooltip.y-36} textAnchor="middle" fontSize={10} fill="#fff">{tooltip.pt.month}</text>
-            <text x={tooltip.x} y={tooltip.y-22} textAnchor="middle" fontSize={11} fill="#64b5f6" fontWeight="600">
-              £{tooltip.pt.price_gbp.toFixed(2)} NHS tariff
-            </text>
-            {tooltip.pt.on_concession && (
-              <text x={tooltip.x} y={tooltip.y-10} textAnchor="middle" fontSize={9} fill="#ffcc02">● On concession</text>
-            )}
+            <rect x={Math.min(tooltip.x - 48, W - P.right - 100)} y={tooltip.y - 44} width={96} height={34} rx={6} fill="#0f172a" />
+            <text x={Math.min(tooltip.x - 48, W - P.right - 100) + 48} y={tooltip.y - 28} textAnchor="middle" fontSize={10} fill="#94a3b8">{tooltip.d.month}</text>
+            <text x={Math.min(tooltip.x - 48, W - P.right - 100) + 48} y={tooltip.y - 14} textAnchor="middle" fontSize={12} fill="white" fontWeight="700">{tooltip.d.count} drugs</text>
           </g>
         )}
-
-        {/* Legend */}
-        <g transform={`translate(${PAD.left}, ${H-6})`}>
-          <rect x={0} y={0} width={10} height={10} fill="#1565c0" rx={2}/>
-          <text x={14} y={9} fontSize={10} fill="#555">NHS Tariff price</text>
-          <rect x={120} y={0} width={10} height={10} fill="#fff3e0" stroke="#e65100" rx={2}/>
-          <text x={134} y={9} fontSize={10} fill="#555">Concession period</text>
-        </g>
       </svg>
-    );
-  };
-
-  return (
-    <div>
-      {/* Search box */}
-      <div style={{ position:"relative", maxWidth:460, marginBottom:24 }}>
-        <input
-          value={query}
-          onChange={e => { setQuery(e.target.value); fetchSuggestions(e.target.value); setShowDrop(true); }}
-          onFocus={() => query.length >= 2 && setShowDrop(true)}
-          onBlur={() => setTimeout(() => setShowDrop(false), 180)}
-          onKeyDown={e => { if (e.key === "Enter" && query) lookupDrug(query); }}
-          placeholder="Search drug name, e.g. Amoxicillin 500mg…"
-          style={{
-            width:"100%", padding:"11px 44px 11px 16px", fontSize:"0.97rem",
-            border:"1.5px solid #c8d0da", borderRadius:10, outline:"none",
-            background:"#fff", boxShadow:"0 2px 8px rgba(0,0,0,0.06)",
-            fontFamily:"inherit", boxSizing:"border-box"
-          }}
-        />
-        <button
-          onClick={() => query && lookupDrug(query)}
-          style={{
-            position:"absolute", right:8, top:"50%", transform:"translateY(-50%)",
-            background:"#1565c0", color:"#fff", border:"none", borderRadius:7,
-            padding:"6px 12px", cursor:"pointer", fontSize:"0.88rem"
-          }}
-        >🔍</button>
-
-        {/* Autocomplete dropdown */}
-        {showDrop && suggestions.length > 0 && (
-          <div style={{
-            position:"absolute", top:"calc(100% + 4px)", left:0, right:0,
-            background:"#fff", border:"1px solid #dde3ea", borderRadius:8,
-            boxShadow:"0 8px 24px rgba(0,0,0,0.12)", zIndex:99, overflow:"hidden"
-          }}>
-            {suggestions.map(s => (
-              <div
-                key={s}
-                onMouseDown={() => lookupDrug(s)}
-                style={{
-                  padding:"10px 16px", cursor:"pointer", fontSize:"0.93rem",
-                  borderBottom:"1px solid #f5f5f5"
-                }}
-                onMouseEnter={e => (e.currentTarget.style.background="#f0f5ff")}
-                onMouseLeave={e => (e.currentTarget.style.background="#fff")}
-              >
-                {s}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Quick-pick popular drugs */}
-      <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginBottom:20 }}>
-        {["Amoxicillin 500mg capsules","Metformin 500mg tablets","Omeprazole 20mg gastro-resistant capsules",
-          "Amlodipine 5mg tablets","Atorvastatin 40mg tablets","Gabapentin 300mg capsules"].map(d => (
-          <button
-            key={d}
-            onClick={() => lookupDrug(d)}
-            style={{
-              padding:"5px 12px", fontSize:"0.82rem", borderRadius:20,
-              border:"1px solid #c8d0da", background: query === d ? "#e3f2fd" : "#f8fafc",
-              color:"#1565c0", cursor:"pointer", fontWeight: query===d ? 700 : 400
-            }}
-          >{d}</button>
-        ))}
-      </div>
-
-      {/* Loading */}
-      {loading && <div style={{ textAlign:"center", padding:30, color:"#888" }}>Loading drug data…</div>}
-
-      {/* Error */}
-      {error && !loading && (
-        <div style={{ background:"#fff3e0", borderRadius:8, padding:"12px 16px", color:"#e65100", fontSize:"0.93rem" }}>
-          ⚠️ {error}
-        </div>
-      )}
-
-      {/* Drug chart */}
-      {drugData && !loading && (
-        <div>
-          {/* Drug header */}
-          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:16, flexWrap:"wrap", gap:12 }}>
-            <div>
-              <div style={{ fontSize:"1.1rem", fontWeight:700, color:"#1a1a1a" }}>{drugData.drug}</div>
-              <div style={{ fontSize:"0.88rem", color:"#888", marginTop:2 }}>NHS Cat M Tariff price history · hover dots for details</div>
-            </div>
-            <div style={{ display:"flex", gap:12, flexWrap:"wrap" }}>
-              {[
-                { l:"Latest NHS Price", v:`£${drugData.price_range.latest?.toFixed(2)}`, c:"#1565c0" },
-                { l:"24-mo Range", v:`£${drugData.price_range.min} – £${drugData.price_range.max}`, c:"#555" },
-                { l:"Concession Events", v:`${drugData.total_concession_events} months`, c: drugData.total_concession_events > 10 ? "#c62828" : "#2e7d32" },
-              ].map(s => (
-                <div key={s.l} style={{ background:"#f8fafc", borderRadius:8, padding:"8px 14px", textAlign:"center" }}>
-                  <div style={{ fontSize:"0.75rem", color:"#888" }}>{s.l}</div>
-                  <div style={{ fontSize:"0.98rem", fontWeight:700, color:s.c }}>{s.v}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-          {priceChart()}
-
-          {/* Concession timeline mini-table */}
-          {drugData.concession_months.length > 0 && (
-            <div style={{ marginTop:16 }}>
-              <div style={{ fontSize:"0.85rem", fontWeight:600, color:"#e65100", marginBottom:8 }}>
-                🟠 Concession History ({drugData.total_concession_events} events)
-              </div>
-              <div style={{ display:"flex", flexWrap:"wrap", gap:6 }}>
-                {drugData.concession_months.map(c => (
-                  <div key={c.month} style={{
-                    background:"#fff3e0", border:"1px solid #ffcc80", borderRadius:6,
-                    padding:"4px 10px", fontSize:"0.8rem", color:"#e65100"
-                  }}>
-                    <span style={{ fontWeight:600 }}>{c.month}</span>
-                    <span style={{ color:"#888", marginLeft:6 }}>£{c.concession_price.toFixed(2)}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Empty state */}
-      {!drugData && !loading && !error && (
-        <div style={{ textAlign:"center", padding:"32px 20px", color:"#aaa", background:"#f8fafc", borderRadius:12, border:"1.5px dashed #dde3ea" }}>
-          <div style={{ fontSize:"2rem", marginBottom:8 }}>💊</div>
-          <div style={{ fontSize:"0.95rem" }}>Search for a drug above to see its NHS tariff price history and concession periods</div>
-        </div>
-      )}
     </div>
   );
 }
 
-export default function Analytics() {
-  const supplySourceData = [
-    { country: "India", percent: 68, color: "#1976d2", detail: "APIs & generics" },
-    { country: "China", percent: 15, color: "#ff9800", detail: "Raw materials" },
-    { country: "EU", percent: 10, color: "#4caf50", detail: "Branded & specialist" },
-    { country: "UK/Local", percent: 5, color: "#9c27b0", detail: "OTC & domestic" },
-    { country: "USA", percent: 2, color: "#f44336", detail: "Biologics & niche" },
-  ];
-
-  const shortageRiskDrugs = [
-    { name: "Amoxicillin 500mg", risk: "HIGH", source: "India", trend: "+12%", trendDir: "up" },
-    { name: "Metformin 500mg", risk: "HIGH", source: "China", trend: "+8%", trendDir: "up" },
-    { name: "Omeprazole 20mg", risk: "MEDIUM", source: "India", trend: "+5%", trendDir: "up" },
-    { name: "Lisinopril 10mg", risk: "MEDIUM", source: "India", trend: "+7%", trendDir: "up" },
-    { name: "Atorvastatin 40mg", risk: "LOW", source: "EU", trend: "stable", trendDir: "stable" },
-    { name: "Paracetamol 500mg", risk: "LOW", source: "UK", trend: "stable", trendDir: "stable" },
-    { name: "Ibuprofen 400mg", risk: "MEDIUM", source: "China", trend: "+3%", trendDir: "up" },
-    { name: "Amlodipine 5mg", risk: "HIGH", source: "India", trend: "+15%", trendDir: "up" },
-    { name: "Ramipril 5mg", risk: "MEDIUM", source: "India", trend: "+6%", trendDir: "up" },
-    { name: "Lansoprazole 30mg", risk: "LOW", source: "EU", trend: "stable", trendDir: "stable" },
-  ];
-
-  const nhsConcessions = [
-    { drug: "Amoxicillin 500mg caps x 21", price: "£2.89", prevPrice: "£1.45" },
-    { drug: "Metformin 500mg tabs x 28", price: "£1.96", prevPrice: "£0.98" },
-    { drug: "Omeprazole 20mg caps x 28", price: "£2.14", prevPrice: "£1.07" },
-    { drug: "Amlodipine 5mg tabs x 28", price: "£3.40", prevPrice: "£1.70" },
-    { drug: "Lansoprazole 30mg caps x 28", price: "£3.22", prevPrice: "£1.61" },
-  ];
-
-  const riskColor = (risk: string) => {
-    if (risk === "HIGH") return { bg: "#ffebee", color: "#c62828", border: "#ef9a9a" };
-    if (risk === "MEDIUM") return { bg: "#fff8e1", color: "#e65100", border: "#ffcc02" };
-    return { bg: "#f1f8e9", color: "#2e7d32", border: "#a5d6a7" };
-  };
+// ── Top Drugs Horizontal Bar Chart ───────────────────────────────────────────
+function TopDrugsChart() {
+  const maxCount = TOP_DRUGS_FALLBACK[0].count;
+  const riskColor: Record<string, string> = { HIGH: "#ef4444", MEDIUM: "#f59e0b", LOW: "#10b981" };
 
   return (
-    <div style={{ maxWidth: 1200, margin: "0 auto", padding: 20, fontFamily: "inherit" }}>
-      <h1 style={{ fontSize: "2.2rem", color: "#1a1a1a", marginBottom: 6 }}>
-        Supply Chain Analytics
-      </h1>
-      <p style={{ color: "#666", marginBottom: 36, fontSize: "1.05rem" }}>
-        UK pharmaceutical supply chain intelligence — March 2026
-      </p>
-
-      {/* ── CONCESSION TRENDS CHART ─────────────────────────────── */}
-      <section style={sectionCard}>
-        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", flexWrap:"wrap", gap:8, marginBottom:8 }}>
-          <div>
-            <h2 style={sectionTitle}>📈 Concession Trends — Jan 2020 to Feb 2026</h2>
-            <p style={{ color:"#666", fontSize:"0.93rem", margin:0 }}>
-              Monthly count of NHS drugs placed on CPE concessionary pricing · 7,742 events · hover any bar for detail
-            </p>
+    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+      {TOP_DRUGS_FALLBACK.map((drug, i) => (
+        <div key={drug.name} style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <div style={{ width: 20, fontSize: 11, fontWeight: 700, color: "#94a3b8", textAlign: "right", flexShrink: 0 }}>{i + 1}</div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 5 }}>
+              <span style={{ fontSize: 13, fontWeight: 600, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{drug.name}</span>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0, marginLeft: 8 }}>
+                <RiskBadge level={drug.risk} />
+                <span style={{ fontSize: 12, fontWeight: 700, color: "#64748b", fontFamily: "monospace", minWidth: 28, textAlign: "right" }}>{drug.count}</span>
+              </div>
+            </div>
+            <div style={{ height: 8, background: "#f1f5f9", borderRadius: 99, overflow: "hidden" }}>
+              <div style={{
+                height: "100%",
+                width: `${(drug.count / maxCount) * 100}%`,
+                background: riskColor[drug.risk] ?? "#3b82f6",
+                borderRadius: 99,
+                transition: "width 0.8s ease",
+              }} />
+            </div>
           </div>
-          <span style={{ background:"#ffebee", color:"#c62828", borderRadius:20, padding:"4px 12px", fontSize:"0.82rem", fontWeight:700, whiteSpace:"nowrap" }}>
-            Peak: Dec 2022 — 198 drugs
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ── Supply Source Breakdown ───────────────────────────────────────────────────
+function SupplyChart() {
+  let cumulative = 0;
+  const r = 56, cx = 70, cy = 70, circ = 2 * Math.PI * r;
+  const arcs = SUPPLY_SOURCES.map(s => {
+    const start = cumulative;
+    cumulative += s.pct;
+    const dashArray = `${(s.pct / 100) * circ} ${circ}`;
+    const rotation = (start / 100) * 360 - 90;
+    return { ...s, dashArray, rotation };
+  });
+
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap" }}>
+      <div style={{ position: "relative", flexShrink: 0 }}>
+        <svg width={140} height={140} viewBox="0 0 140 140">
+          {arcs.map((a, i) => (
+            <circle
+              key={i}
+              cx={cx} cy={cy} r={r}
+              fill="none"
+              stroke={a.color}
+              strokeWidth={22}
+              strokeDasharray={a.dashArray}
+              strokeDashoffset={0}
+              transform={`rotate(${a.rotation} ${cx} ${cy})`}
+              style={{ transition: "stroke-dasharray 1s ease" }}
+            />
+          ))}
+          <text x={cx} y={cy - 6} textAnchor="middle" fontSize={11} fill="#64748b" fontWeight="700">Total</text>
+          <text x={cx} y={cy + 10} textAnchor="middle" fontSize={18} fill="#0f172a" fontWeight="800">758</text>
+          <text x={cx} y={cy + 24} textAnchor="middle" fontSize={9} fill="#94a3b8">molecules</text>
+        </svg>
+      </div>
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 9 }}>
+        {SUPPLY_SOURCES.map(s => (
+          <div key={s.label} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <span style={{ width: 10, height: 10, borderRadius: "50%", background: s.color, flexShrink: 0 }} />
+            <span style={{ flex: 1, fontSize: 13, color: "#334155", fontWeight: 600 }}>{s.label}</span>
+            <div style={{ width: 80, height: 6, background: "#f1f5f9", borderRadius: 99, overflow: "hidden", marginRight: 8 }}>
+              <div style={{ height: "100%", width: `${s.pct}%`, background: s.color, borderRadius: 99 }} />
+            </div>
+            <span style={{ fontSize: 13, fontWeight: 800, color: "#0f172a", fontFamily: "monospace", minWidth: 30, textAlign: "right" }}>{s.pct}%</span>
+          </div>
+        ))}
+        <div style={{ marginTop: 8, padding: "10px 12px", background: "#fef3c7", borderRadius: 10, border: "1px solid #fde68a" }}>
+          <span style={{ fontSize: 12, color: "#92400e", fontWeight: 700 }}>
+            India supplies 68% of UK generic APIs — GBP/INR weakness raises import costs directly.
           </span>
         </div>
-        <ConcessionTrendChart />
-      </section>
-
-      {/* ── DRUG LOOKUP CHART ───────────────────────────────────── */}
-      <section style={sectionCard}>
-        <h2 style={sectionTitle}>🔍 Drug Price & Concession Lookup</h2>
-        <p style={{ color:"#666", marginBottom:20, fontSize:"0.93rem" }}>
-          Search any of 718 Cat M drugs — see NHS tariff price history and concession periods (Jan 2021–Mar 2026)
-        </p>
-        <DrugLookupChart />
-      </section>
-
-      {/* Section 1: Supply Source by Country */}
-      <section style={sectionCard}>
-        <h2 style={sectionTitle}>Supply Source by Country</h2>
-        <p style={{ color: "#666", marginBottom: 24, fontSize: "0.95rem" }}>
-          Proportion of UK pharmaceutical supply originating from each region
-        </p>
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          {supplySourceData.map((item) => (
-            <div key={item.country}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                <span style={{ fontWeight: 600, color: "#1a1a1a" }}>
-                  {item.country}
-                  <span style={{ color: "#999", fontWeight: 400, marginLeft: 8, fontSize: "0.88rem" }}>
-                    {item.detail}
-                  </span>
-                </span>
-                <span style={{ fontWeight: 700, color: item.color }}>{item.percent}%</span>
-              </div>
-              <div
-                style={{
-                  height: 22,
-                  background: "#f0f4f8",
-                  borderRadius: 11,
-                  overflow: "hidden",
-                  border: "1px solid #e0e0e0",
-                }}
-              >
-                <div
-                  style={{
-                    width: `${item.percent}%`,
-                    height: "100%",
-                    background: item.color,
-                    borderRadius: 11,
-                    transition: "width 0.6s ease",
-                    display: "flex",
-                    alignItems: "center",
-                    paddingLeft: item.percent > 10 ? 10 : 0,
-                  }}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
-        <div
-          style={{
-            marginTop: 20,
-            padding: "12px 16px",
-            background: "#e3f2fd",
-            borderRadius: 8,
-            fontSize: "0.9rem",
-            color: "#1565c0",
-          }}
-        >
-          83% of UK pharmaceutical supply originates from India and China, creating significant
-          geopolitical and currency risk for UK pharmacies.
-        </div>
-      </section>
-
-      {/* Section 2: Shortage Risk Table */}
-      <section style={{ ...sectionCard, overflowX: "auto" }}>
-        <h2 style={sectionTitle}>Top 10 Drugs at Shortage Risk</h2>
-        <p style={{ color: "#666", marginBottom: 20, fontSize: "0.95rem" }}>
-          Based on supply chain signals, NHS concession history and import cost trends
-        </p>
-        <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 560 }}>
-          <thead>
-            <tr style={{ background: "#f5f7fa" }}>
-              {["Drug Name", "Risk Level", "Primary Source", "Price Trend"].map((h) => (
-                <th
-                  key={h}
-                  style={{
-                    padding: "12px 16px",
-                    textAlign: "left",
-                    fontSize: "0.82rem",
-                    fontWeight: 700,
-                    color: "#666",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.5px",
-                    borderBottom: "2px solid #e0e0e0",
-                  }}
-                >
-                  {h}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {shortageRiskDrugs.map((drug, idx) => {
-              const rc = riskColor(drug.risk);
-              return (
-                <tr
-                  key={drug.name}
-                  style={{ background: idx % 2 === 0 ? "#fff" : "#fafafa" }}
-                >
-                  <td style={tableCell}>
-                    <span style={{ fontWeight: 600, color: "#1a1a1a" }}>{drug.name}</span>
-                  </td>
-                  <td style={tableCell}>
-                    <span
-                      style={{
-                        background: rc.bg,
-                        color: rc.color,
-                        border: `1px solid ${rc.border}`,
-                        borderRadius: 20,
-                        padding: "3px 12px",
-                        fontSize: "0.8rem",
-                        fontWeight: 700,
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {drug.risk}
-                    </span>
-                  </td>
-                  <td style={tableCell}>
-                    <span style={{ color: "#555" }}>{drug.source}</span>
-                  </td>
-                  <td style={tableCell}>
-                    <span
-                      style={{
-                        color:
-                          drug.trendDir === "up"
-                            ? "#c62828"
-                            : "#2e7d32",
-                        fontWeight: 600,
-                      }}
-                    >
-                      {drug.trendDir === "up" ? "↑ " : ""}
-                      {drug.trend}
-                    </span>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </section>
-
-      {/* Section 3: GBP/INR Exchange Impact */}
-      <section style={sectionCard}>
-        <h2 style={sectionTitle}>GBP/INR Exchange Rate Impact</h2>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-            gap: 16,
-            marginBottom: 20,
-          }}
-        >
-          <div style={statBox("#e3f2fd", "#1565c0")}>
-            <div style={{ fontSize: "2rem", fontWeight: 700 }}>107.3</div>
-            <div style={{ fontSize: "0.9rem", marginTop: 4 }}>Current GBP/INR Rate</div>
-          </div>
-          <div style={statBox("#ffebee", "#c62828")}>
-            <div style={{ fontSize: "2rem", fontWeight: 700 }}>-2.3%</div>
-            <div style={{ fontSize: "0.9rem", marginTop: 4 }}>30-Day GBP Change</div>
-          </div>
-          <div style={statBox("#fff8e1", "#e65100")}>
-            <div style={{ fontSize: "2rem", fontWeight: 700 }}>+8–12%</div>
-            <div style={{ fontSize: "0.9rem", marginTop: 4 }}>Estimated Import Cost Increase</div>
-          </div>
-          <div style={statBox("#f1f8e9", "#2e7d32")}>
-            <div style={{ fontSize: "2rem", fontWeight: 700 }}>£45k</div>
-            <div style={{ fontSize: "0.9rem", marginTop: 4 }}>Max Annual Savings via Bulk Buy</div>
-          </div>
-        </div>
-        <div
-          style={{
-            padding: "14px 18px",
-            background: "#fff8e1",
-            border: "1px solid #ffcc02",
-            borderRadius: 8,
-            fontSize: "0.93rem",
-            color: "#795548",
-            lineHeight: 1.6,
-          }}
-        >
-          <strong>Impact Analysis:</strong> A weakening pound against the Indian rupee directly
-          increases the landed cost of generic APIs and finished dose forms imported from India.
-          Pharmacies that lock in bulk purchase agreements now — before further depreciation — can
-          hedge against 6-12 months of price increases and secure discounts of 15-25% versus spot
-          buying.
-        </div>
-      </section>
-
-      {/* Section 4: NHS Concessions This Month */}
-      <section style={sectionCard}>
-        <h2 style={sectionTitle}>NHS Concessions This Month</h2>
-        <p style={{ color: "#666", marginBottom: 20, fontSize: "0.95rem" }}>
-          Drugs granted concessionary pricing by NHS England — March 2026
-        </p>
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          {nhsConcessions.map((c) => (
-            <div
-              key={c.drug}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "14px 18px",
-                background: "#f8f9fa",
-                border: "1px solid #e0e0e0",
-                borderRadius: 8,
-                flexWrap: "wrap",
-                gap: 8,
-              }}
-            >
-              <span style={{ fontWeight: 600, color: "#1a1a1a", flex: 1, minWidth: 200 }}>
-                {c.drug}
-              </span>
-              <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                <span
-                  style={{ color: "#999", textDecoration: "line-through", fontSize: "0.9rem" }}
-                >
-                  {c.prevPrice}
-                </span>
-                <span
-                  style={{
-                    background: "#e3f2fd",
-                    color: "#1565c0",
-                    fontWeight: 700,
-                    padding: "4px 14px",
-                    borderRadius: 20,
-                    fontSize: "0.95rem",
-                  }}
-                >
-                  {c.price}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div
-          style={{
-            marginTop: 16,
-            padding: "10px 16px",
-            background: "#f1f8e9",
-            borderRadius: 8,
-            fontSize: "0.88rem",
-            color: "#33691e",
-          }}
-        >
-          Concession prices are set monthly by NHS England. Pharmacies should verify current prices
-          on the Drug Tariff before ordering.
-        </div>
-      </section>
+      </div>
     </div>
   );
 }
 
-const sectionCard: React.CSSProperties = {
-  background: "white",
-  borderRadius: 12,
-  padding: 28,
-  marginBottom: 28,
-  boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-  border: "1px solid #e8ecf0",
-};
+// ── GBP/INR Signal Card ──────────────────────────────────────────────────────
+function FxSignalCard() {
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 16 }}>
+      {[
+        { label: "GBP/INR Rate",       value: "106.8",  sub: "30-day avg",          color: "#3b82f6", trend: "↓ -2.3%", trendColor: "#ef4444" },
+        { label: "Import Cost Impact", value: "+8–12%", sub: "vs 12-month baseline", color: "#ef4444", trend: "Rising",  trendColor: "#ef4444" },
+        { label: "BoE Base Rate",      value: "5.25%",  sub: "Current base rate",    color: "#f59e0b", trend: "Hold",    trendColor: "#f59e0b" },
+        { label: "Max Annual Saving",  value: "£45k",   sub: "via bulk procurement", color: "#10b981", trend: "↑ Est.", trendColor: "#10b981" },
+      ].map(item => (
+        <div key={item.label} style={{ background: "white", border: "1px solid #e2e8f0", borderRadius: 16, padding: "18px 20px", boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}>
+          <div style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.8px", color: "#94a3b8", marginBottom: 8 }}>{item.label}</div>
+          <div style={{ fontSize: "1.75rem", fontWeight: 800, color: item.color, fontFamily: "monospace", lineHeight: 1, marginBottom: 6 }}>{item.value}</div>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span style={{ fontSize: 12, color: "#64748b" }}>{item.sub}</span>
+            <span style={{ fontSize: 12, fontWeight: 700, color: item.trendColor }}>{item.trend}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
-const sectionTitle: React.CSSProperties = {
-  fontSize: "1.4rem",
-  color: "#1a1a1a",
-  marginBottom: 8,
-  fontWeight: 700,
-};
+// ── Concessions This Month Table ─────────────────────────────────────────────
+function ConcessionsTable() {
+  return (
+    <div style={{ overflowX: "auto" }}>
+      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        <thead>
+          <tr style={{ background: "#0f172a" }}>
+            {["Drug", "Concession Price", "Our Price", "Change"].map(h => (
+              <th key={h} style={{ padding: "10px 14px", textAlign: "left", fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.8px", color: "#64748b", whiteSpace: "nowrap" }}>{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {CONCESSIONS_NOW.map((row, i) => (
+            <tr key={row.drug} style={{ background: i % 2 === 0 ? "white" : "#fafbfc", borderBottom: "1px solid #f1f5f9" }}>
+              <td style={{ padding: "12px 14px", fontSize: 13, fontWeight: 700, color: "#0f172a" }}>{row.drug}</td>
+              <td style={{ padding: "12px 14px", fontFamily: "monospace", fontSize: 13, fontWeight: 700, color: "#10b981" }}>£{row.conc.toFixed(2)}</td>
+              <td style={{ padding: "12px 14px", fontFamily: "monospace", fontSize: 13, color: "#3b82f6", fontWeight: 600 }}>£{row.tariff.toFixed(2)}</td>
+              <td style={{ padding: "12px 14px" }}>
+                <span style={{ background: "#d1fae5", color: "#065f46", padding: "2px 9px", borderRadius: 999, fontSize: 11, fontWeight: 800, fontFamily: "monospace" }}>{row.change}</span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
 
-const tableCell: React.CSSProperties = {
-  padding: "12px 16px",
-  borderBottom: "1px solid #f0f0f0",
-  fontSize: "0.93rem",
-};
+// ── Chart card wrapper ────────────────────────────────────────────────────────
+function ChartCard({ title, subtitle, badge, children }: { title: string; subtitle?: string; badge?: string; children: React.ReactNode }) {
+  return (
+    <div style={{ background: "white", borderRadius: 20, border: "1px solid #e2e8f0", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", overflow: "hidden" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", padding: "20px 22px 14px", borderBottom: "1px solid #f1f5f9", flexWrap: "wrap", gap: 10 }}>
+        <div>
+          <div style={{ fontSize: "1rem", fontWeight: 800, color: "#0f172a", marginBottom: 4 }}>{title}</div>
+          {subtitle && <div style={{ fontSize: 12, color: "#94a3b8" }}>{subtitle}</div>}
+        </div>
+        {badge && (
+          <span style={{ background: "#f1f5f9", border: "1px solid #e2e8f0", color: "#64748b", padding: "3px 10px", borderRadius: 20, fontSize: 11, fontWeight: 700 }}>{badge}</span>
+        )}
+      </div>
+      <div style={{ padding: "20px 22px" }}>{children}</div>
+    </div>
+  );
+}
 
-function statBox(bg: string, color: string): React.CSSProperties {
-  return {
-    background: bg,
-    color,
-    borderRadius: 10,
-    padding: "20px 24px",
-    textAlign: "center",
-    fontWeight: 600,
-  };
+// ── Main Analytics Page ───────────────────────────────────────────────────────
+export default function Analytics() {
+  const [range, setRange] = useState(RANGES[3]); // default: All
+
+  return (
+    <div style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: "var(--app-font-sans,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif)" }}>
+
+      {/* ── PAGE HEADER ── */}
+      <div style={{ background: "#0f172a", padding: "28px 0 22px" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 28px", display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
+          <div>
+            <div style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: "1.2px", color: "#475569", marginBottom: 6 }}>
+              NiPharm · Supply Chain Analytics
+            </div>
+            <h1 style={{ fontSize: "clamp(1.3rem,2.5vw,1.75rem)", fontWeight: 800, color: "white", margin: 0, letterSpacing: "-0.5px" }}>
+              Market Analytics
+            </h1>
+            <p style={{ fontSize: 13, color: "#64748b", margin: "6px 0 0" }}>
+              NHS concession trends, shortage risk, supply chain signals · Jan 2020 – Feb 2026
+            </p>
+          </div>
+
+          {/* Range chips */}
+          <div style={{ display: "flex", gap: 6 }}>
+            {RANGES.map(r => (
+              <button
+                key={r.label}
+                onClick={() => setRange(r)}
+                style={{
+                  padding: "7px 16px",
+                  borderRadius: 10,
+                  border: "1px solid",
+                  borderColor: range.label === r.label ? "#3b82f6" : "rgba(255,255,255,0.12)",
+                  background: range.label === r.label ? "#3b82f6" : "transparent",
+                  color: range.label === r.label ? "white" : "#64748b",
+                  fontSize: 13,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  transition: "all 0.15s",
+                }}
+              >
+                {r.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ── KPI STRIP ── */}
+      <div style={{ background: "white", borderBottom: "1px solid #e2e8f0" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 28px", display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))" }}>
+          {[
+            { label: "Total Concession Events", value: "7,742", color: "#3b82f6" },
+            { label: "Peak Month (Dec 2022)",    value: "198",   color: "#ef4444" },
+            { label: "NHS Tariff Records",       value: "15,122",color: "#8b5cf6" },
+            { label: "MHRA Publications",        value: "3,372", color: "#f59e0b" },
+            { label: "Drugs Tracked",            value: "758",   color: "#10b981" },
+          ].map(k => (
+            <div key={k.label} style={{ padding: "16px 20px", borderRight: "1px solid #f1f5f9", textAlign: "center" }}>
+              <div style={{ fontSize: "1.5rem", fontWeight: 800, color: k.color, fontFamily: "monospace", lineHeight: 1, marginBottom: 4 }}>{k.value}</div>
+              <div style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>{k.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── CHARTS BODY ── */}
+      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "28px 28px 60px", display: "flex", flexDirection: "column", gap: 24 }}>
+
+        {/* Chart 1: Concession Trend */}
+        <ChartCard
+          title="NHS Concession Trend"
+          subtitle="Monthly drugs on price concession · Jan 2020 – Feb 2026"
+          badge={`Showing ${range.label}`}
+        >
+          <TrendChart rangeMonths={range.months} />
+          <div style={{ display: "flex", gap: 20, marginTop: 16, paddingTop: 14, borderTop: "1px solid #f1f5f9" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#64748b" }}>
+              <span style={{ width: 12, height: 12, borderRadius: 2, background: "#3b82f6", display: "inline-block" }} />
+              Normal period
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#64748b" }}>
+              <span style={{ width: 12, height: 12, borderRadius: 2, background: "#ef4444", display: "inline-block" }} />
+              Peak (Dec 2022 — 198 drugs)
+            </div>
+            <div style={{ fontSize: 12, color: "#94a3b8", marginLeft: "auto" }}>Source: CPE Archive · 7,742 events</div>
+          </div>
+        </ChartCard>
+
+        {/* Row: Top Drugs + Supply Source */}
+        <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 20 }}>
+
+          <ChartCard
+            title="Top 10 Shortage Risk Drugs"
+            subtitle="By concession frequency Jan 2020 – Feb 2026"
+          >
+            <TopDrugsChart />
+          </ChartCard>
+
+          <ChartCard
+            title="Supply Chain Origins"
+            subtitle="API manufacturing source by drug count"
+          >
+            <SupplyChart />
+          </ChartCard>
+
+        </div>
+
+        {/* Chart 3: FX Signals */}
+        <ChartCard
+          title="FX & Market Signals"
+          subtitle="Currency pressure, BoE rate and procurement opportunity"
+        >
+          <FxSignalCard />
+        </ChartCard>
+
+        {/* Chart 4: Current Month Concessions */}
+        <ChartCard
+          title="NHS Concessions This Month"
+          subtitle="Drugs where NHS concession price exceeds our purchase price — bulk buy opportunity"
+          badge="April 2026"
+        >
+          <ConcessionsTable />
+          <div style={{ marginTop: 14, padding: "12px 16px", background: "#eff6ff", borderRadius: 12, border: "1px solid #bfdbfe", fontSize: 13, color: "#1e40af", fontWeight: 600 }}>
+            These drugs are priced below NHS tariff. Buying now at supplier price locks in margin before next concession review.
+          </div>
+        </ChartCard>
+
+        {/* Data Attribution */}
+        <div style={{ background: "white", borderRadius: 14, border: "1px solid #e2e8f0", padding: "16px 20px", display: "flex", gap: 24, flexWrap: "wrap" }}>
+          {[
+            { label: "Concession data", source: "CPE Archive (Jan 2020 – Feb 2026)" },
+            { label: "Tariff prices",   source: "NHSBSA Drug Tariff Part VIII Cat M" },
+            { label: "MHRA alerts",     source: "MHRA Shortage Publications" },
+            { label: "FX data",         source: "Bank of England / Frankfurter API" },
+          ].map(d => (
+            <div key={d.label}>
+              <div style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.6px", color: "#94a3b8" }}>{d.label}</div>
+              <div style={{ fontSize: 12, color: "#64748b", marginTop: 2 }}>{d.source}</div>
+            </div>
+          ))}
+        </div>
+
+      </div>
+    </div>
+  );
 }

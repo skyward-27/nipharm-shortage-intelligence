@@ -34,19 +34,14 @@ const NavMenuIcon = ({ open }: { open: boolean }) =>
     <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round"><line x1={3} y1={6} x2={21} y2={6}/><line x1={3} y1={12} x2={21} y2={12}/><line x1={3} y1={18} x2={21} y2={18}/></svg>
   );
 
-// ── Nav item definition ──────────────────────────────────────────────────────
-const NAV_ITEMS = [
-  { to: "/",               label: "Dashboard",       icon: <NavHome   />, end: true  },
-  { to: "/drugs",          label: "Risk Finder",     icon: <NavPulse  />             },
-  { to: "/recommendations",label: "Buying Recs",     icon: <NavBag    />             },
-  { to: "/alerts",         label: "Alerts",          icon: <NavBell   />, alert: true },
-  { to: "/analytics",      label: "Analytics",       icon: <NavChart  />             },
-  { to: "/explorer",       label: "Concession Lens", icon: <NavSearch />             },
-  { to: "/news",           label: "Market News",     icon: <NavNews   />             },
-  { to: "/report",         label: "Report",          icon: <NavReport />, cta: true  },
-  { to: "/calculator",     label: "Calculator",      icon: <NavCalc   />             },
-  { to: "/chat",           label: "Chat",            icon: <NavChat   />             },
-  { to: "/contact",        label: "Contact",         icon: <NavMail   />             },
+// ── Nav item definition (only the important pages) ──────────────────────────
+const NAV_ITEMS: { to: string; label: string; icon: JSX.Element; end?: boolean; cta?: boolean }[] = [
+  { to: "/",         label: "Dashboard",       icon: <NavHome    />, end: true },
+  { to: "/drugs",    label: "Drug Search",     icon: <NavSearch  />            },
+  { to: "/explorer", label: "Concession Lens", icon: <NavPulse   />            },
+  { to: "/analytics",label: "Analytics",       icon: <NavChart   />            },
+  { to: "/calculator",label: "Calculator",     icon: <NavCalc    />            },
+  { to: "/chat",     label: "AI Chat",         icon: <NavChat    />            },
 ];
 
 export default function App() {
@@ -101,7 +96,7 @@ export default function App() {
                   to={item.to}
                   end={item.end}
                   className={({ isActive }) =>
-                    `nb-link${isActive ? " nb-link-active" : ""}${item.alert ? " nb-link-alert" : ""}${item.cta ? " nb-link-cta" : ""}`
+                    `nb-link${isActive ? " nb-link-active" : ""}${item.cta ? " nb-link-cta" : ""}`
                   }
                   onClick={closeNav}
                 >
@@ -150,7 +145,7 @@ export default function App() {
                 to={item.to}
                 end={item.end}
                 className={({ isActive }) =>
-                  `nb-drawer-link${isActive ? " nb-drawer-link-active" : ""}${item.alert ? " nb-drawer-link-alert" : ""}`
+                  `nb-drawer-link${isActive ? " nb-drawer-link-active" : ""}`
                 }
                 onClick={closeNav}
               >

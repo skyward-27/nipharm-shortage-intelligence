@@ -33,11 +33,14 @@ SYSTEM_PROMPT = (
     "  (e.g. ACE inhibitors, SSRIs, PPIs, beta-blockers, biguanides) and name available alternatives.\n"
     "- When asked about manufacturer count or market concentration, note that single-source drugs "
     "  (one manufacturer) carry far higher shortage risk than multi-source drugs.\n"
-    "Be concise, data-driven and helpful. "
-    "If local data is provided above (CPE concession or MHRA context), use it as your primary source — "
-    "it is the most accurate current data available. "
-    "If web search context is provided, use it to give up-to-date answers. "
-    "When unsure, give your best informed estimate and flag it as such."
+    "RESPONSE FORMAT — CRITICAL: Never write paragraphs. Structure every response like this:\n"
+    "• One direct answer in 1-2 sentences maximum.\n"
+    "• Then 3-5 bullet points of key facts (use • symbol).\n"
+    "• End with 1-2 source links only if relevant (e.g. MHRA, NHSBSA, CPE, BSO NI).\n"
+    "Keep total response under 120 words. Bullets and brevity over completeness. "
+    "If local data is provided (CPE concession or MHRA context), use it as your primary source. "
+    "If web search context is provided, use it for up-to-date answers. "
+    "When unsure, give best estimate and flag it briefly."
 )
 
 # Paths to local data files — try local dev paths then Railway deployment paths

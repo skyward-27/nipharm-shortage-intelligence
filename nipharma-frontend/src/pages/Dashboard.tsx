@@ -288,11 +288,11 @@ export default function Dashboard() {
       {/* ── QUICK ACTIONS BAR ────────────────────────────────────────────── */}
       <div className="dash-actions-bar">
         <div className="dash-actions-inner">
-          <button className="qa-pill" onClick={() => navigate("/search")}>
+          <button className="qa-pill" onClick={() => navigate("/drugs")}>
             <IconSearch />
             Search a Drug
           </button>
-          <button className="qa-pill" onClick={() => navigate("/search")}>
+          <button className="qa-pill" onClick={() => navigate("/drugs")}>
             <IconZap />
             Run Prediction
           </button>
@@ -331,7 +331,7 @@ export default function Dashboard() {
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
               <span className="count-badge">{topDrugs.length} drugs</span>
-              <Link to="/search" className="view-all-btn">View all →</Link>
+              <Link to="/drugs" className="view-all-btn">View all →</Link>
             </div>
           </div>
 
@@ -476,6 +476,21 @@ export default function Dashboard() {
         </section>
 
       </div>{/* end dash-body */}
+
+      {/* ── FOOTER BAR ─────────────────────────────────────────────────── */}
+      <div className="dash-footer-bar">
+        <Link to="/report" className="dash-footer-link">
+          <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1={16} y1={13} x2={8} y2={13}/><line x1={16} y1={17} x2={8} y2={17}/></svg>
+          Weekly Intelligence Report
+        </Link>
+        <span className="dash-footer-sep" />
+        <Link to="/contact" className="dash-footer-link">
+          <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Contact &amp; Support
+        </Link>
+        <span className="dash-footer-sep" />
+        <span className="dash-footer-copy">© 2026 NiPharm Tech · NPT Stock Intelligence</span>
+      </div>
 
       <style>{CSS}</style>
     </div>
@@ -1100,6 +1115,39 @@ const CSS = `
 @keyframes skel-shimmer {
   0%   { background-position: -200% 0; }
   100% { background-position:  200% 0; }
+}
+
+/* ── FOOTER BAR ── */
+.dash-footer-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 28px;
+  border-top: 1px solid #e2e8f0;
+  background: #f8fafc;
+  flex-wrap: wrap;
+}
+.dash-footer-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #64748b;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.dash-footer-link:hover { color: #3b82f6; }
+.dash-footer-sep {
+  display: inline-block;
+  width: 1px;
+  height: 14px;
+  background: #cbd5e1;
+}
+.dash-footer-copy {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-left: auto;
 }
 
 /* ── RESPONSIVE ── */
