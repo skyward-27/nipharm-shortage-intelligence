@@ -70,7 +70,7 @@ export default function App() {
                 Analytics
               </NavLink>
               <NavLink to="/explorer" className={({ isActive }) => isActive ? "nav-link nav-link-active" : "nav-link"} onClick={() => setNavOpen(false)}>
-                🔬 Explorer
+                🔍 Concession Lens
               </NavLink>
               <NavLink to="/news" className={({ isActive }) => isActive ? "nav-link nav-link-active" : "nav-link"} onClick={() => setNavOpen(false)}>
                 Market News

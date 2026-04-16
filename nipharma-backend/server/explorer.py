@@ -14,7 +14,14 @@ from typing import Optional
 _conn = None
 
 def _find(filename: str) -> Optional[str]:
-    for p in [f"./model/{filename}", f"/app/model/{filename}", f"../scrapers/data/model/{filename}"]:
+    candidates = [
+        f"./model/{filename}",           # Railway: cwd = /app
+        f"../model/{filename}",          # Local dev: cwd = server/
+        f"/app/model/{filename}",        # Railway absolute
+        f"../../nipharma-backend/model/{filename}",  # local from server/
+        f"../scrapers/data/model/{filename}",
+    ]
+    for p in candidates:
         if os.path.exists(p):
             return p
     return None
@@ -38,14 +45,23 @@ def get_conn():
         for table, fname in table_map.items():
             path = _find(fname)
             if path:
-                _conn.execute(f"CREATE TABLE {table} AS SELECT * FROM read_csv_auto('{path}')")
-                count = _conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
-                tables_loaded.append(f"{table} ({count:,} rows)")
+                try:
+                    _conn.execute(f"CREATE TABLE {table} AS SELECT * FROM read_csv_auto('{path}', ignore_errors=true)")
+                    count = _conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
+                    tables_loaded.append(f"{table} ({count:,} rows)")
+                except Exception as te:
+                    print(f"[Explorer] Failed to load {table} from {path}: {te}")
+            else:
+                print(f"[Explorer] File not found: {fname} (searched {candidates if False else 'multiple paths'})")
 
-        print(f"[Explorer] DuckDB ready. Tables: {', '.join(tables_loaded)}")
+        if not tables_loaded:
+            print("[Explorer] WARNING: No tables loaded — check CSV paths")
+        else:
+            print(f"[Explorer] DuckDB ready. Tables: {', '.join(tables_loaded)}")
         return _conn
     except Exception as e:
         print(f"[Explorer] DuckDB init failed: {e}")
+        _conn = None
         return None
 
 
