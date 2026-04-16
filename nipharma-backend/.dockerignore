@@ -1,11 +1,11 @@
+venv/
 __pycache__/
 *.pyc
 *.pyo
-*.pyd
-.Python
 .env
+*.log
+.git
+node_modules/
+*.md
 venv/
-.venv/
-*.egg-info/
-.git/
-.gitignore
+server/__pycache__/
