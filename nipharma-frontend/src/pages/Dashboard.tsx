@@ -53,11 +53,21 @@ function AnimatedCounter({ target, duration = 1200, prefix = "", suffix = "", de
 }
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
+function getUKHour(): number {
+  // Always uses Europe/London time regardless of client locale
+  const londonHour = parseInt(
+    new Date().toLocaleString("en-GB", { hour: "numeric", hour12: false, timeZone: "Europe/London" }),
+    10
+  );
+  return londonHour;
+}
+
 function getGreeting(): string {
-  const h = new Date().getHours();
-  if (h < 12) return "Good morning";
-  if (h < 17) return "Good afternoon";
-  return "Good evening";
+  const h = getUKHour();
+  if (h >= 5 && h < 12) return "Good morning";
+  if (h >= 12 && h < 17) return "Good afternoon";
+  if (h >= 17 && h < 21) return "Good evening";
+  return "Working late"; // 21:00–05:00 UK time
 }
 
 function getSignalConfig(recommendation: string, marginPct: number | null) {
@@ -220,8 +230,8 @@ export default function Dashboard() {
 
   useEffect(() => { loadData(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const today = new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
-  const timeStr = new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" });
+  const today = new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "Europe/London" });
+  const timeStr = new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/London" });
 
   const highRiskCount = signals?.drugs_at_risk ?? topDrugs.filter(d => (d.margin_pct ?? 0) > 50).length + 9;
   const onWatchCount = topDrugs.filter(d => { const p = d.margin_pct ?? 0; return p >= 20 && p < 50; }).length + 31;

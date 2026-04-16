@@ -139,13 +139,29 @@ export default function ChatWidget() {
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <span style={{ fontSize: "1.3rem" }}>💊</span>
+            {/* Molecular hexagon logo mark */}
+            <div style={{ position: "relative", width: 36, height: 36, flexShrink: 0 }}>
+              <svg width={36} height={36} viewBox="0 0 36 36" fill="none">
+                <path d="M18 3L31 10.5V25.5L18 33L5 25.5V10.5Z" fill="rgba(255,255,255,0.12)"/>
+                <path d="M18 3L31 10.5V25.5L18 33L5 25.5V10.5Z" stroke="rgba(255,255,255,0.3)" strokeWidth="1" fill="none"/>
+                <circle cx="18" cy="18" r="3.5" fill="white"/>
+                <circle cx="12.5" cy="14.5" r="2" fill="white" fillOpacity="0.8"/>
+                <circle cx="23.5" cy="14.5" r="2" fill="white" fillOpacity="0.8"/>
+                <circle cx="12.5" cy="21.5" r="2" fill="white" fillOpacity="0.8"/>
+                <circle cx="23.5" cy="21.5" r="2" fill="white" fillOpacity="0.8"/>
+                <line x1="14.5" y1="15.9" x2="15.5" y2="16.7" stroke="rgba(255,255,255,0.7)" strokeWidth="1.4" strokeLinecap="round"/>
+                <line x1="21.5" y1="15.9" x2="20.5" y2="16.7" stroke="rgba(255,255,255,0.7)" strokeWidth="1.4" strokeLinecap="round"/>
+                <line x1="14.5" y1="20.1" x2="15.5" y2="19.3" stroke="rgba(255,255,255,0.7)" strokeWidth="1.4" strokeLinecap="round"/>
+                <line x1="21.5" y1="20.1" x2="20.5" y2="19.3" stroke="rgba(255,255,255,0.7)" strokeWidth="1.4" strokeLinecap="round"/>
+              </svg>
+              <span style={{ position: "absolute", top: 1, right: 1, width: 9, height: 9, borderRadius: "50%", background: "#10b981", border: "2px solid #1565c0", display: "block" }}/>
+            </div>
             <div>
-              <div style={{ color: "white", fontWeight: 800, fontSize: "0.95rem", lineHeight: 1.2 }}>
-                NiPharm AI
+              <div style={{ color: "white", fontWeight: 800, fontSize: "0.95rem", lineHeight: 1.2, letterSpacing: "-0.2px" }}>
+                <span style={{ color: "#93c5fd" }}>Ni</span>Pharm AI
               </div>
-              <div style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.72rem" }}>
-                Pharma intelligence assistant
+              <div style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.7rem", letterSpacing: "0.04em" }}>
+                Drug Intelligence · UK
               </div>
             </div>
           </div>

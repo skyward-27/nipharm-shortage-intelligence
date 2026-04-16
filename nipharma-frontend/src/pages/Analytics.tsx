@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
@@ -86,7 +86,8 @@ function RiskBadge({ level }: { level: string }) {
 // ── Concession Trend Chart (SVG bar) ─────────────────────────────────────────
 function TrendChart({ rangeMonths }: { rangeMonths: number }) {
   const [data, setData] = useState(TREND_FALLBACK);
-  const [tooltip, setTooltip] = useState<{ x: number; y: number; d: { month: string; count: number } } | null>(null);
+  const [hovIdx, setHovIdx] = useState<number | null>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
     fetch(`${API_URL}/concession-trends`)
@@ -96,37 +97,91 @@ function TrendChart({ rangeMonths }: { rangeMonths: number }) {
   }, []);
 
   const sliced = data.slice(-rangeMonths);
-  const W = 900, H = 240, P = { top: 16, right: 16, bottom: 44, left: 44 };
+  const W = 900, H = 260, P = { top: 24, right: 20, bottom: 48, left: 48 };
   const iW = W - P.left - P.right;
   const iH = H - P.top - P.bottom;
-  const maxV = sliced.length ? Math.max(...sliced.map(d => d.count), 10) : 200;
-  const bW   = Math.max(2, iW / (sliced.length || 1) - 2);
-  const yTicks = [0, Math.round(maxV*0.25), Math.round(maxV*0.5), Math.round(maxV*0.75), maxV];
-
-  // Year boundaries
+  const maxV = sliced.length ? Math.max(...sliced.map(d => d.count), 10) * 1.1 : 220;
+  const yTicks = [0, Math.round(maxV*0.25), Math.round(maxV*0.5), Math.round(maxV*0.75), Math.round(maxV)];
   const years = Array.from(new Set(sliced.map(d => d.month.slice(0,4))));
+
+  // Map data to SVG coordinates
+  const pts = sliced.map((d, i) => ({
+    x: P.left + (sliced.length > 1 ? (i / (sliced.length - 1)) * iW : iW / 2),
+    y: P.top + iH - Math.max(0, (d.count / maxV) * iH),
+  }));
+
+  // Smooth cubic bezier path builder
+  function buildLinePath(points: { x: number; y: number }[]) {
+    if (points.length < 2) return "";
+    let d = `M ${points[0].x},${points[0].y}`;
+    for (let i = 1; i < points.length; i++) {
+      const cpX = (points[i - 1].x + points[i].x) / 2;
+      d += ` C ${cpX},${points[i - 1].y} ${cpX},${points[i].y} ${points[i].x},${points[i].y}`;
+    }
+    return d;
+  }
+
+  const linePath = buildLinePath(pts);
+  const areaPath = pts.length > 1
+    ? linePath + ` L ${pts[pts.length-1].x},${P.top+iH} L ${pts[0].x},${P.top+iH} Z`
+    : "";
+  const peakIdx = sliced.findIndex(d => d.month === "2022-12");
+
+  // Mouse tracking for hover crosshair
+  const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
+    if (!svgRef.current || pts.length === 0) return;
+    const rect = svgRef.current.getBoundingClientRect();
+    const mouseX = ((e.clientX - rect.left) / rect.width) * W;
+    let closest = 0;
+    let minDist = Infinity;
+    pts.forEach((p, i) => {
+      const dist = Math.abs(p.x - mouseX);
+      if (dist < minDist) { minDist = dist; closest = i; }
+    });
+    setHovIdx(closest);
+  };
+
+  const hovPt  = hovIdx !== null ? pts[hovIdx] : null;
+  const hovDat = hovIdx !== null ? sliced[hovIdx] : null;
 
   return (
     <div style={{ position: "relative" }}>
-      <svg viewBox={`0 0 ${W} ${H}`} style={{ width: "100%", overflow: "visible" }}>
+      <svg
+        ref={svgRef}
+        viewBox={`0 0 ${W} ${H}`}
+        style={{ width: "100%", overflow: "visible", cursor: "crosshair" }}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={() => setHovIdx(null)}
+      >
         <defs>
-          <linearGradient id="trendBlue" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#3b82f6" />
-            <stop offset="100%" stopColor="#93c5fd" stopOpacity={0.7} />
+          <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stopColor="#3b82f6" stopOpacity={0.3} />
+            <stop offset="60%"  stopColor="#3b82f6" stopOpacity={0.07} />
+            <stop offset="100%" stopColor="#3b82f6" stopOpacity={0} />
           </linearGradient>
-          <linearGradient id="trendRed" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#ef4444" />
-            <stop offset="100%" stopColor="#fca5a5" stopOpacity={0.7} />
+          <linearGradient id="peakAreaGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stopColor="#ef4444" stopOpacity={0.18} />
+            <stop offset="100%" stopColor="#ef4444" stopOpacity={0} />
           </linearGradient>
+          <linearGradient id="lineGradH" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%"   stopColor="#1d4ed8" />
+            <stop offset="50%"  stopColor="#3b82f6" />
+            <stop offset="100%" stopColor="#60a5fa" />
+          </linearGradient>
+          <filter id="glowLine">
+            <feGaussianBlur stdDeviation="2.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
         </defs>
 
         {/* Y gridlines */}
-        {yTicks.map(v => {
+        {yTicks.map((v, k) => {
           const y = P.top + iH - (v / maxV) * iH;
           return (
             <g key={v}>
-              <line x1={P.left} x2={W - P.right} y1={y} y2={y} stroke="#e2e8f0" strokeWidth={1} />
-              <text x={P.left - 6} y={y + 4} textAnchor="end" fontSize={10} fill="#94a3b8">{v}</text>
+              <line x1={P.left} x2={W - P.right} y1={y} y2={y}
+                stroke={k === 0 ? "#94a3b8" : "#e2e8f0"} strokeWidth={k === 0 ? 1 : 0.75} />
+              <text x={P.left - 8} y={y + 4} textAnchor="end" fontSize={10} fill="#94a3b8">{v}</text>
             </g>
           );
         })}
@@ -134,55 +189,58 @@ function TrendChart({ rangeMonths }: { rangeMonths: number }) {
         {/* Year separators */}
         {years.map(yr => {
           const idx = sliced.findIndex(d => d.month.startsWith(yr));
-          if (idx < 0) return null;
-          const x = P.left + idx * (bW + 2);
+          if (idx < 0 || !pts[idx]) return null;
+          const x = pts[idx].x;
           return (
             <g key={yr}>
-              <line x1={x} x2={x} y1={P.top} y2={P.top + iH + 4} stroke="#cbd5e1" strokeWidth={1} strokeDasharray="3,2" />
-              <text x={x + 4} y={P.top + iH + 32} fontSize={11} fill="#64748b" fontWeight="700">{yr}</text>
+              <line x1={x} x2={x} y1={P.top} y2={P.top + iH + 6}
+                stroke="#cbd5e1" strokeWidth={1} strokeDasharray="4,3" />
+              <text x={x + 4} y={P.top + iH + 36} fontSize={11} fill="#64748b" fontWeight="700">{yr}</text>
             </g>
           );
         })}
 
-        {/* Bars */}
-        {sliced.map((d, i) => {
-          const isPeak = d.month === "2022-12";
-          const bh = Math.max(2, (d.count / maxV) * iH);
-          const x  = P.left + i * (bW + 2);
-          const y  = P.top + iH - bh;
-          return (
-            <rect
-              key={d.month} x={x} y={y} width={bW} height={bh}
-              fill={isPeak ? "url(#trendRed)" : "url(#trendBlue)"}
-              opacity={tooltip && tooltip.d.month !== d.month ? 0.6 : 0.9}
-              rx={2}
-              style={{ cursor: "pointer", transition: "opacity 0.1s" }}
-              onMouseEnter={() => setTooltip({ x: x + bW / 2, y, d })}
-              onMouseLeave={() => setTooltip(null)}
-            />
-          );
-        })}
+        {/* Area fill */}
+        {areaPath && <path d={areaPath} fill="url(#areaGrad)" />}
 
-        {/* Peak annotation */}
-        {sliced.find(d => d.month === "2022-12") && (() => {
-          const idx = sliced.findIndex(d => d.month === "2022-12");
-          const x = P.left + idx * (bW + 2) + bW / 2;
-          const y = P.top + iH - (198 / maxV) * iH - 8;
+        {/* Glow duplicate line (thicker, blurred) */}
+        {linePath && <path d={linePath} fill="none" stroke="#3b82f6" strokeWidth={6} strokeLinejoin="round" strokeLinecap="round" opacity={0.15} />}
+
+        {/* Main smooth line */}
+        {linePath && <path d={linePath} fill="none" stroke="url(#lineGradH)" strokeWidth={2.5} strokeLinejoin="round" strokeLinecap="round" />}
+
+        {/* Peak annotation (Dec 2022) */}
+        {peakIdx >= 0 && pts[peakIdx] && (() => {
+          const px = pts[peakIdx].x;
+          const py = pts[peakIdx].y;
           return (
-            <g key="peak-label">
-              <line x1={x} x2={x} y1={y} y2={y - 22} stroke="#ef4444" strokeWidth={1.5} strokeDasharray="3,2" />
-              <rect x={x - 36} y={y - 36} width={72} height={18} rx={4} fill="#fee2e2" />
-              <text x={x} y={y - 23} textAnchor="middle" fontSize={10} fill="#991b1b" fontWeight="800">Dec 2022 Peak</text>
+            <g key="peak">
+              <line x1={px} x2={px} y1={py - 6} y2={py - 30} stroke="#ef4444" strokeWidth={1.5} strokeDasharray="3,2" />
+              <rect x={px - 42} y={py - 48} width={84} height={20} rx={5} fill="#fee2e2" />
+              <text x={px} y={py - 34} textAnchor="middle" fontSize={10} fill="#991b1b" fontWeight="800">Dec 2022 · Peak</text>
+              <circle cx={px} cy={py} r={5} fill="#ef4444" stroke="white" strokeWidth={2} />
             </g>
           );
         })()}
 
-        {/* Tooltip */}
-        {tooltip && (
+        {/* Hover crosshair + dot */}
+        {hovPt && hovDat && (
           <g>
-            <rect x={Math.min(tooltip.x - 48, W - P.right - 100)} y={tooltip.y - 44} width={96} height={34} rx={6} fill="#0f172a" />
-            <text x={Math.min(tooltip.x - 48, W - P.right - 100) + 48} y={tooltip.y - 28} textAnchor="middle" fontSize={10} fill="#94a3b8">{tooltip.d.month}</text>
-            <text x={Math.min(tooltip.x - 48, W - P.right - 100) + 48} y={tooltip.y - 14} textAnchor="middle" fontSize={12} fill="white" fontWeight="700">{tooltip.d.count} drugs</text>
+            <line x1={hovPt.x} x2={hovPt.x} y1={P.top} y2={P.top + iH}
+              stroke="#3b82f6" strokeWidth={1} strokeDasharray="4,3" opacity={0.6} />
+            <circle cx={hovPt.x} cy={hovPt.y} r={6} fill="#3b82f6" stroke="white" strokeWidth={2.5} />
+            {/* Tooltip box */}
+            {(() => {
+              const tx = Math.min(Math.max(hovPt.x - 52, P.left), W - P.right - 106);
+              const ty = Math.max(hovPt.y - 54, P.top + 2);
+              return (
+                <g>
+                  <rect x={tx} y={ty} width={104} height={40} rx={7} fill="#0f172a" />
+                  <text x={tx + 52} y={ty + 14} textAnchor="middle" fontSize={10} fill="#94a3b8">{hovDat.month}</text>
+                  <text x={tx + 52} y={ty + 31} textAnchor="middle" fontSize={13} fill="white" fontWeight="800">{hovDat.count} drugs</text>
+                </g>
+              );
+            })()}
           </g>
         )}
       </svg>

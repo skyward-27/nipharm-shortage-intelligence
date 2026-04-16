@@ -42,6 +42,7 @@ const NAV_ITEMS: { to: string; label: string; icon: JSX.Element; end?: boolean; 
   { to: "/analytics",label: "Analytics",       icon: <NavChart   />            },
   { to: "/calculator",label: "Calculator",     icon: <NavCalc    />            },
   { to: "/chat",     label: "AI Chat",         icon: <NavChat    />            },
+  { to: "/contact",  label: "Support",         icon: <NavMail    />            },
 ];
 
 export default function App() {
