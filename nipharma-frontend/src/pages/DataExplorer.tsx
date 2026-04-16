@@ -2,6 +2,28 @@ import { useState, useRef, useCallback, useEffect } from "react";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8000";
 
+// ─── Sample data shown when backend is offline ─────────────────────────────────
+const SAMPLE_RESULT = {
+  success: true,
+  sql: "SELECT drug, COUNT(*) AS events FROM concessions WHERE month LIKE '2022%' GROUP BY drug ORDER BY events DESC LIMIT 10",
+  columns: ["drug", "events"],
+  rows: [
+    { drug: "Mometasone 0.1% cream", events: 23 },
+    { drug: "Mometasone 0.1% ointment", events: 21 },
+    { drug: "Paracetamol 500mg soluble tablets", events: 16 },
+    { drug: "Metformin 500mg tablets", events: 14 },
+    { drug: "Amoxicillin 500mg capsules", events: 13 },
+    { drug: "Omeprazole 20mg gastro-resistant capsules", events: 12 },
+    { drug: "Furosemide 40mg tablets", events: 11 },
+    { drug: "Amlodipine 5mg tablets", events: 10 },
+    { drug: "Lansoprazole 30mg capsules", events: 9 },
+    { drug: "Salbutamol 100mcg inhaler", events: 8 },
+  ],
+  row_count: 10,
+  chart_hint: "bar" as const,
+  explanation: "⚠️ Backend rebuilding — showing sample 2022 data. Live queries will work once Railway finishes deployment (~2 min).",
+};
+
 // ─── Colour palette ───────────────────────────────────────────────────────────
 const COLORS = {
   navy:    "#0f172a",
@@ -410,17 +432,33 @@ function StatCard({ icon, value, label, color }: { icon: string; value: string; 
 
 // ─── Main component ───────────────────────────────────────────────────────────
 export default function ConcessionLens() {
-  const [question, setQuestion]       = useState("");
-  const [sql, setSql]                 = useState("");
-  const [result, setResult]           = useState<QueryResult | null>(null);
-  const [loading, setLoading]         = useState(false);
-  const [mode, setMode]               = useState<"nl" | "sql">("nl");
-  const [activeQ, setActiveQ]         = useState("");
-  const [activeYear, setActiveYear]   = useState<string | null>(null);
-  const [activeCategory, setActiveCat]= useState<CategoryId>("2022 Peak");
-  const [sqlCopied, setSqlCopied]     = useState(false);
+  const [question, setQuestion]         = useState("");
+  const [sql, setSql]                   = useState("");
+  const [result, setResult]             = useState<QueryResult | null>(null);
+  const [loading, setLoading]           = useState(false);
+  const [mode, setMode]                 = useState<"nl" | "sql">("nl");
+  const [activeQ, setActiveQ]           = useState("");
+  const [activeYear, setActiveYear]     = useState<string | null>(null);
+  const [activeCategory, setActiveCat]  = useState<CategoryId>("2022 Peak");
+  const [sqlCopied, setSqlCopied]       = useState(false);
+  const [backendStatus, setBackendStatus] = useState<"unknown" | "online" | "offline">("unknown");
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const cat = CATEGORIES.find(c => c.id === activeCategory)!;
+
+  // ── Check backend health on mount ──
+  useEffect(() => {
+    const check = async () => {
+      try {
+        const r = await fetch(`${API_URL}/ping`, { signal: AbortSignal.timeout(5000) });
+        setBackendStatus(r.ok ? "online" : "offline");
+      } catch {
+        setBackendStatus("offline");
+      }
+    };
+    check();
+    const t = setInterval(check, 30000);
+    return () => clearInterval(t);
+  }, []);
 
   const runQuery = useCallback(async (opts: { question?: string; sql?: string }) => {
     setLoading(true);
@@ -430,13 +468,18 @@ export default function ConcessionLens() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(opts),
+        signal: AbortSignal.timeout(20000),
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data: QueryResult = await res.json();
+      setBackendStatus("online");
       setResult(data);
       if (data.sql) setSql(data.sql);
     } catch {
-      setResult({ success: false, error: "Failed to connect to backend — the AI query engine may be loading. Try again in a moment." });
+      setBackendStatus("offline");
+      // Show sample data so the page isn't a blank error
+      setResult({ ...SAMPLE_RESULT, explanation: "⚠️ Backend rebuilding on Railway — showing sample 2022 data. Live AI queries will work once it's back online (~2 min after deploy)." });
+      setSql(SAMPLE_RESULT.sql);
     } finally {
       setLoading(false);
     }
@@ -522,6 +565,42 @@ export default function ConcessionLens() {
           </div>
         </div>
       </div>
+
+      {/* ── Backend status banner ── */}
+      {backendStatus === "offline" && (
+        <div style={{
+          background: "#fef3c7", borderBottom: "1px solid #fde68a",
+          padding: "10px 24px", display: "flex", alignItems: "center", gap: 10,
+          fontSize: "0.84rem", color: "#92400e"
+        }}>
+          <span>⚠️</span>
+          <span>
+            <strong>Backend rebuilding on Railway</strong> — AI queries will return sample data until it's back online.
+            Usually takes 2–3 min after a deploy. <a href={`${API_URL}/ping`} target="_blank" rel="noreferrer"
+              style={{ color: "#d97706", fontWeight: 700 }}>Check status ↗</a>
+          </span>
+          <button onClick={async () => {
+            try {
+              const r = await fetch(`${API_URL}/ping`, { signal: AbortSignal.timeout(4000) });
+              setBackendStatus(r.ok ? "online" : "offline");
+            } catch { setBackendStatus("offline"); }
+          }} style={{
+            marginLeft: "auto", padding: "4px 12px", borderRadius: 8,
+            border: "1px solid #d97706", background: "#fff", color: "#d97706",
+            fontSize: "0.78rem", cursor: "pointer", fontWeight: 600,
+          }}>↺ Retry</button>
+        </div>
+      )}
+      {backendStatus === "online" && (
+        <div style={{
+          background: "#d1fae5", borderBottom: "1px solid #a7f3d0",
+          padding: "6px 24px", display: "flex", alignItems: "center", gap: 8,
+          fontSize: "0.8rem", color: "#065f46"
+        }}>
+          <span>🟢</span>
+          <span><strong>Backend online</strong> — AI query engine ready. Ask anything.</span>
+        </div>
+      )}
 
       {/* ── Insight ticker ── */}
       <InsightTicker />
@@ -731,7 +810,7 @@ export default function ConcessionLens() {
           </div>
         )}
 
-        {/* ── Error ── */}
+        {/* ── Error (only shown for real backend errors, not offline fallback) ── */}
         {result && !result.success && !loading && (
           <div style={{
             background: "#fff", border: `1.5px solid ${COLORS.rose}55`, borderRadius: 16,

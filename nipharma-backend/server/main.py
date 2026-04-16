@@ -34,90 +34,117 @@ def get_cached_prediction(cache_key: str):
 def set_cached_prediction(cache_key: str, result):
     _predict_cache[cache_key] = (result, time.time())
 
-# Import our modules
-from chat import chat_with_groq, get_chat_response
-from news import get_pharma_news, get_supply_chain_news, search_news
-from explorer import run_query
+# Import our modules — wrapped in try/except so a single module failure
+# doesn't crash the whole app (critical for Railway startup resilience).
+import sys as _sys
+import os as _os
+
+# Ensure server/ directory is on sys.path regardless of CWD
+# Works whether Railway runs via Dockerfile (WORKDIR /app/server) or Procfile (CWD /app)
+_server_dir = _os.path.dirname(_os.path.abspath(__file__))
+if _server_dir not in _sys.path:
+    _sys.path.insert(0, _server_dir)
+
+try:
+    from chat import chat_with_groq, get_chat_response
+    print("[startup] chat module loaded OK")
+except Exception as _e:
+    print(f"[startup] WARNING: chat module failed: {_e}")
+    def get_chat_response(msg, hist): return {"response": "Chat unavailable", "role": "assistant"}
+
+try:
+    from news import get_pharma_news, get_supply_chain_news, search_news
+    print("[startup] news module loaded OK")
+except Exception as _e:
+    print(f"[startup] WARNING: news module failed: {_e}")
+    def get_pharma_news(limit=10): return {"articles": [], "count": 0}
+    def get_supply_chain_news(limit=10): return {"articles": [], "count": 0}
+    def search_news(q, limit=10): return {"articles": [], "count": 0}
+
+_run_query_available = False
+try:
+    from explorer import run_query
+    _run_query_available = True
+    print("[startup] explorer/DuckDB module loaded OK")
+except Exception as _e:
+    print(f"[startup] WARNING: explorer module failed (DuckDB may not be installed): {_e}")
+    def run_query(question="", sql=""):
+        return {"success": False, "error": "DuckDB query engine not available on this deployment", "sql": "", "rows": [], "columns": []}
 
 # Load environment variables
 load_dotenv()
 
-# Load ML models at startup (try multiple paths)
+# ── ML model loading — lazy strategy to conserve Railway RAM ──────────────────
+# XGBoost (1.4 MB) loads first. The 26 MB RF model is ONLY loaded as fallback
+# because loading both simultaneously pushes Railway's free tier over 512 MB.
 ml_model_rf = None
 ml_model_xgb = None
-ml_model = None  # Active model pointer (XGBoost preferred, RF fallback)
+ml_model = None
 active_model_name = None
 
-# ── Load feature column order from JSON (saved by training script) ────────────
-# This prevents silent feature mismatch when model is retrained with new features.
-FEATURE_COLS: list = []  # populated at startup; falls back to hardcoded if not found
+MODEL_PATHS = {
+    "xgb": [
+        "./model/panel_model_xgb.pkl",
+        "/app/model/panel_model_xgb.pkl",
+        "../model/panel_model_xgb.pkl",
+        "../scrapers/data/model/panel_model_xgb.pkl",
+    ],
+    "rf": [
+        "./model/panel_model.pkl",
+        "/app/model/panel_model.pkl",
+        "../model/panel_model.pkl",
+        "../scrapers/data/model/panel_model.pkl",
+    ],
+}
+
+def _load_pkl(paths: list):
+    for path in paths:
+        try:
+            with open(path, "rb") as f:
+                m = pickle.load(f)
+            print(f"[model] Loaded from {path}")
+            return m
+        except FileNotFoundError:
+            continue
+        except Exception as e:
+            print(f"[model] Error loading {path}: {e}")
+            continue
+    return None
+
+# Try XGBoost first (small file, low RAM)
+ml_model_xgb = _load_pkl(MODEL_PATHS["xgb"])
+if ml_model_xgb is not None:
+    ml_model = ml_model_xgb
+    active_model_name = "xgboost_v6"
+    print(f"[model] Active: XGBoost (skipping 26 MB RF load to save RAM)")
+else:
+    # Only load RF if XGBoost unavailable
+    ml_model_rf = _load_pkl(MODEL_PATHS["rf"])
+    if ml_model_rf is not None:
+        ml_model = ml_model_rf
+        active_model_name = "random_forest_v5"
+        print(f"[model] Active: Random Forest (fallback)")
+    else:
+        print("[model] WARNING: No model found — /predict will return 503")
+
+# ── Feature column order ───────────────────────────────────────────────────────
+FEATURE_COLS: list = []
 FEATURE_COLS_PATHS = [
     "./model/panel_feature_cols.json",
     "/app/model/panel_feature_cols.json",
+    "../model/panel_feature_cols.json",
     "../scrapers/data/model/panel_feature_cols.json",
 ]
 for _fc_path in FEATURE_COLS_PATHS:
     try:
         with open(_fc_path) as _f:
             FEATURE_COLS = json.load(_f)
-        print(f"Feature cols loaded from {_fc_path}: {len(FEATURE_COLS)} features")
+        print(f"[model] Feature cols loaded ({len(FEATURE_COLS)} features) from {_fc_path}")
         break
     except Exception:
         continue
 if not FEATURE_COLS:
-    print("Warning: panel_feature_cols.json not found — /predict will use hardcoded order")
-
-# RF model paths
-RF_MODEL_PATHS = [
-    "../scrapers/data/model/panel_model.pkl",  # Local dev
-    "./model/panel_model.pkl",                  # Railway deployment
-    "/app/model/panel_model.pkl",               # Railway alternate
-]
-
-# XGBoost model paths
-XGB_MODEL_PATHS = [
-    "../scrapers/data/model/panel_model_xgb.pkl",  # Local dev
-    "./model/panel_model_xgb.pkl",                  # Railway deployment
-    "/app/model/panel_model_xgb.pkl",               # Railway alternate
-]
-
-# Load RF model
-for path in RF_MODEL_PATHS:
-    try:
-        with open(path, 'rb') as f:
-            ml_model_rf = pickle.load(f)
-        print(f"RF model loaded from {path}")
-        break
-    except FileNotFoundError:
-        continue
-    except Exception as e:
-        print(f"Error loading RF from {path}: {e}")
-        continue
-
-# Load XGBoost model
-for path in XGB_MODEL_PATHS:
-    try:
-        with open(path, 'rb') as f:
-            ml_model_xgb = pickle.load(f)
-        print(f"XGBoost model loaded from {path}")
-        break
-    except FileNotFoundError:
-        continue
-    except Exception as e:
-        print(f"Error loading XGBoost from {path}: {e}")
-        continue
-
-# Select active model: prefer XGBoost, fall back to RF
-if ml_model_xgb is not None:
-    ml_model = ml_model_xgb
-    active_model_name = "xgboost_v6"
-    print(f"Active model: XGBoost (xgboost_v6)")
-elif ml_model_rf is not None:
-    ml_model = ml_model_rf
-    active_model_name = "random_forest_v5"
-    print(f"Active model: Random Forest (random_forest_v5)")
-else:
-    print("Warning: No ML model found. /predict endpoint will return error until model is deployed.")
+    print("[model] Warning: panel_feature_cols.json not found — /predict uses hardcoded order")
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -233,6 +260,11 @@ class PredictionResponse(BaseModel):
     model_used: str = "random_forest_v5"
 
 
+# Lightweight ping — Railway uses this for startup health check
+@app.get("/ping")
+async def ping():
+    return {"ok": True}
+
 # Health check endpoint
 @app.get("/", response_model=HealthResponse)
 async def health_check():
@@ -245,6 +277,26 @@ async def health_check():
         "groq_configured": bool(os.getenv("GROQ_API_KEY")),
         "news_api_configured": bool(os.getenv("NEWS_API_KEY")),
         "tavily_configured": bool(os.getenv("TAVILY_API_KEY"))
+    }
+
+# Debug endpoint — shows cwd, sys.path, and which model files are visible
+@app.get("/debug")
+async def debug_endpoint():
+    import sys
+    return {
+        "cwd": os.getcwd(),
+        "sys_path": sys.path[:6],
+        "active_model": active_model_name,
+        "explorer_available": _run_query_available,
+        "model_files": {k: os.path.exists(v) for k, v in {
+            "xgb ./model": "./model/panel_model_xgb.pkl",
+            "xgb /app/model": "/app/model/panel_model_xgb.pkl",
+            "xgb ../model": "../model/panel_model_xgb.pkl",
+            "trends ./model": "./model/concession_trends.csv",
+            "trends /app/model": "/app/model/concession_trends.csv",
+            "trends ../model": "../model/concession_trends.csv",
+        }.items()},
+        "groq_key": bool(os.getenv("GROQ_API_KEY")),
     }
 
 
@@ -680,16 +732,18 @@ async def signals_endpoint():
 
 
 def _find_model_file(filename: str) -> str:
-    """Resolve path to a model/data file — works locally and on Railway."""
+    """Resolve path to a model/data file — works on Railway (Dockerfile + Procfile) and locally."""
     candidates = [
-        f"./model/{filename}",
-        f"/app/model/{filename}",
+        f"./model/{filename}",          # Dockerfile: WORKDIR /app/server → /app/server/model/  (but model is in /app/model/)
+        f"../model/{filename}",          # Dockerfile: WORKDIR /app/server → /app/model/ ✓  |  Procfile: /app/../model/ = wrong
+        f"/app/model/{filename}",        # Railway absolute path ✓ always works on Railway
+        f"../../nipharma-backend/model/{filename}",  # Local dev from server/
         f"../scrapers/data/model/{filename}",
     ]
     for p in candidates:
         if os.path.exists(p):
             return p
-    return f"./model/{filename}"  # will raise FileNotFoundError at read time
+    return f"/app/model/{filename}"  # Railway absolute fallback (will raise FileNotFoundError if not found)
 
 
 @app.get("/concession-trends")

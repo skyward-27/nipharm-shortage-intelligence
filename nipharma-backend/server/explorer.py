@@ -14,14 +14,17 @@ from typing import Optional
 _conn = None
 
 def _find(filename: str) -> Optional[str]:
+    # Resolve relative to this file's directory for robustness across CWDs
+    _here = os.path.dirname(os.path.abspath(__file__))  # nipharma-backend/server/
     candidates = [
-        f"./model/{filename}",           # Railway: cwd = /app
-        f"../model/{filename}",          # Local dev: cwd = server/
-        f"/app/model/{filename}",        # Railway absolute
-        f"../../nipharma-backend/model/{filename}",  # local from server/
-        f"../scrapers/data/model/{filename}",
+        f"/app/model/{filename}",                              # Railway absolute (always correct on Railway)
+        os.path.join(_here, "..", "model", filename),          # nipharma-backend/model/ (any CWD)
+        f"./model/{filename}",                                 # CWD-relative fallback
+        f"../model/{filename}",
+        os.path.join(_here, "..", "..", "scrapers", "data", "model", filename),  # local dev
     ]
     for p in candidates:
+        p = os.path.normpath(p)
         if os.path.exists(p):
             return p
     return None
