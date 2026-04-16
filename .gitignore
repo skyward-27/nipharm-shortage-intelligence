@@ -35,6 +35,9 @@ Thumbs.db
 !nipharma-backend/model/buying_recommendations.csv
 !nipharma-backend/model/mhra_alerts.csv
 !nipharma-backend/model/panel_feature_cols.json
+!nipharma-backend/model/concession_trends.csv
+!nipharma-backend/model/drug_price_history.csv
+!nipharma-backend/model/drug_concessions.csv
 !scrapers/data/model/panel_predictions.csv
 !scrapers/data/model/panel_feature_importance.csv
 !scrapers/data/model/panel_cv_metrics.txt

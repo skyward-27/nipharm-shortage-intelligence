@@ -678,6 +678,97 @@ async def signals_endpoint():
         }
 
 
+def _find_model_file(filename: str) -> str:
+    """Resolve path to a model/data file — works locally and on Railway."""
+    candidates = [
+        f"./model/{filename}",
+        f"/app/model/{filename}",
+        f"../scrapers/data/model/{filename}",
+    ]
+    for p in candidates:
+        if os.path.exists(p):
+            return p
+    return f"./model/{filename}"  # will raise FileNotFoundError at read time
+
+
+@app.get("/concession-trends")
+async def concession_trends_endpoint():
+    """Monthly concession counts from CPE archive (Jan 2020–Feb 2026). 74 data points."""
+    try:
+        df = pd.read_csv(_find_model_file("concession_trends.csv"))
+        records = [{"month": r["month"], "count": int(r["count"])} for _, r in df.iterrows()]
+        return {
+            "success": True,
+            "total_events": int(df["count"].sum()),
+            "peak_month": df.loc[df["count"].idxmax(), "month"],
+            "peak_count": int(df["count"].max()),
+            "data": records
+        }
+    except Exception as e:
+        return {"success": False, "error": str(e), "data": []}
+
+
+@app.get("/drug-detail")
+async def drug_detail_endpoint(drug: str = Query(..., description="Drug name (partial match)")):
+    """Per-drug NHS Tariff price history + concession events for interactive chart."""
+    try:
+        prices = pd.read_csv(_find_model_file("drug_price_history.csv"))
+        concs  = pd.read_csv(_find_model_file("drug_concessions.csv"))
+
+        q = drug.strip().lower()
+        price_match = prices[prices["drug"].str.lower().str.contains(q, na=False)]
+        conc_match  = concs[concs["drug"].str.lower().str.contains(q, na=False)]
+
+        if price_match.empty:
+            all_drugs = sorted(prices["drug"].unique().tolist())
+            return {"success": False, "error": f"No drug matching '{drug}'", "suggestions": all_drugs[:30]}
+
+        best_drug = price_match.groupby("drug").size().idxmax()
+        ph = price_match[price_match["drug"] == best_drug].sort_values("month")
+        ch = conc_match[conc_match["drug"].str.lower() == best_drug.lower()].sort_values("month")
+
+        concession_month_set = set(ch["month"].tolist())
+        price_history = [
+            {
+                "month": r["month"],
+                "price_gbp": round(float(r["price_gbp"]), 2),
+                "on_concession": r["month"] in concession_month_set
+            }
+            for _, r in ph.iterrows()
+        ]
+        concession_months = [
+            {"month": r["month"], "concession_price": round(float(r["concession_price"]), 2)}
+            for _, r in ch.iterrows()
+        ]
+
+        return {
+            "success": True,
+            "drug": best_drug,
+            "price_history": price_history,
+            "concession_months": concession_months,
+            "total_concession_events": len(concession_months),
+            "price_range": {
+                "min": round(float(ph["price_gbp"].min()), 2),
+                "max": round(float(ph["price_gbp"].max()), 2),
+                "latest": round(float(ph["price_gbp"].iloc[-1]), 2) if not ph.empty else None
+            }
+        }
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
+@app.get("/drug-list")
+async def drug_list_endpoint(q: str = Query("", description="Search term")):
+    """Autocomplete drug names from tariff price history."""
+    try:
+        prices = pd.read_csv(_find_model_file("drug_price_history.csv"))
+        all_drugs = sorted(prices["drug"].unique().tolist())
+        filtered = [d for d in all_drugs if q.lower() in d.lower()] if q else all_drugs
+        return {"success": True, "drugs": filtered[:100], "total": len(filtered)}
+    except Exception as e:
+        return {"success": False, "error": str(e), "drugs": []}
+
+
 @app.get("/early-warnings")
 async def early_warnings_endpoint():
     """
