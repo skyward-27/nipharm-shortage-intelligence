@@ -350,7 +350,7 @@ function DrugLookupChart() {
 
       {/* Quick-pick popular drugs */}
       <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginBottom:20 }}>
-        {["Amoxicillin 500mg capsules","Metformin 500mg tablets","Omeprazole 20mg capsules",
+        {["Amoxicillin 500mg capsules","Metformin 500mg tablets","Omeprazole 20mg gastro-resistant capsules",
           "Amlodipine 5mg tablets","Atorvastatin 40mg tablets","Gabapentin 300mg capsules"].map(d => (
           <button
             key={d}

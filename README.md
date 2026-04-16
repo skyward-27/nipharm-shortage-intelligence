@@ -23,50 +23,113 @@ A real-time pharmaceutical shortage prediction platform for UK community pharmac
 ## Architecture
 
 ```mermaid
-graph TB
-    subgraph Client["🖥️ Client Browser"]
-        FE["React 18 + TypeScript<br/>Vercel · nipharm-shortage-intelligence.vercel.app"]
+flowchart TB
+    %% ── USER LAYER ──────────────────────────────────────────────────
+    subgraph USER["👤  Users"]
+        PH["💊 Pharmacist / Buyer\nasks plain-English questions\nor browses dashboards"]
+        AD["🏢 NPT Admin\nreviews buying recommendations\n& weekly reports"]
     end
 
-    subgraph Backend["⚙️ Backend — Railway"]
-        API["FastAPI (Python)<br/>npt-stock-intel-production.up.railway.app"]
-        MODEL["ML Models<br/>RF (AUC 0.9986) + XGBoost (AUC 0.9987)<br/>42 features · TimeSeriesSplit CV"]
-        DATA["Data Files<br/>concession_trends.csv · drug_price_history.csv<br/>drug_concessions.csv · mhra_alerts.csv"]
-        LLM["Groq LLM<br/>llama-3.3-70b-versatile<br/>AI Chat + NL→SQL"]
+    %% ── FRONTEND ─────────────────────────────────────────────────────
+    subgraph FE_BOX["🖥️  Frontend  ·  Vercel  ·  React 18 + TypeScript"]
+        DASH["📊 Dashboard\nBloomberg-style bulk-buy\nopportunity cards"]
+        RISK["🔍 Risk Finder\nML risk scores\nfor 758 drugs"]
+        RECS["🎯 Buying Recs\nTop-5 premium ranked\ncards with savings"]
+        EXPL["🔬 Data Explorer\nNL → SQL query\nover historical data"]
+        ANA["📈 Analytics\nConcession trend chart\nDrug price lookup"]
+        CHAT["💬 AI Chat\nFloating popup\nGroq + Tavily"]
+        NEWS["📰 Market News\nLive RSS feeds"]
+        CALC["🧮 Calculator\nNHS savings estimator"]
     end
 
-    subgraph DataSources["📡 Live Data Sources"]
-        CPE["CPE Concessions<br/>cpe.org.uk · monthly"]
-        NHSBSA["NHSBSA Drug Tariff<br/>Cat M prices · monthly"]
-        MHRA["MHRA Shortage Alerts<br/>gov.uk · real-time"]
-        FX["FX Rates<br/>Frankfurter / ECB · live"]
-        NSE["Indian Pharma Stocks<br/>10 NSE tickers via yfinance"]
-        RSS["News RSS Feeds<br/>MHRA · NHS England · BBC Health"]
+    %% ── BACKEND ──────────────────────────────────────────────────────
+    subgraph BE_BOX["⚙️  Backend  ·  Railway  ·  FastAPI + Python"]
+        direction TB
+        subgraph ML["🤖 ML Engine"]
+            RF["Random Forest\nCalibratedClassifierCV\nAUC 0.9986"]
+            XGB["XGBoost\nCalibrated\nAUC 0.9987"]
+            FEAT["42 Features\nTimeSeriesSplit CV\n1-month gap"]
+        end
+        subgraph QUERY["🔬 Data Explorer Engine"]
+            DUCK["DuckDB in-memory\n4 tables · 26k+ rows"]
+            NL2SQL["NL → SQL\nGroq llama-3.3-70b\nfew-shot prompt"]
+        end
+        subgraph APIS["🔌 API Endpoints"]
+            EP1["POST /predict\n70% ML + 30% signals\n6hr TTL cache"]
+            EP2["GET /recommendations\nBulk-buy opportunities\nfrom invoice data"]
+            EP3["POST /query\nNL or SQL\nread-only · 200 row cap"]
+            EP4["GET /concession-trends\nGET /drug-detail\nGET /drug-list"]
+            EP5["GET /news  GET /signals\nGET /mhra-alerts\nGET /weekly-report"]
+        end
+        subgraph DATA_FILES["📁 Data Files (model/)"]
+            CSV1["drug_concessions.csv\n7,742 CPE events"]
+            CSV2["drug_price_history.csv\n15,122 tariff records"]
+            CSV3["mhra_alerts.csv\n3,372 publications"]
+            CSV4["concession_trends.csv\n74 monthly totals"]
+            PKL["panel_model.pkl\n27MB RF model"]
+        end
     end
 
-    subgraph Scrapers["🔄 Local Scrapers (22 scripts)"]
-        SC["Python scripts<br/>scrapers/0X_*.py<br/>Run monthly in Terminal"]
+    %% ── LLM / SEARCH ─────────────────────────────────────────────────
+    subgraph AI["🧠  AI Services"]
+        GROQ["Groq API\nllama-3.3-70b-versatile\nChat + NL→SQL translation"]
+        TAV["Tavily Search\nReal-time web search\nfor AI chat context"]
     end
 
-    subgraph GitHub["📦 GitHub (Private)"]
-        GH["skyward-27/nipharm-shortage-intelligence<br/>Frontend + Backend + ML models"]
+    %% ── LIVE DATA SOURCES ────────────────────────────────────────────
+    subgraph LIVE["📡  Live Data Sources"]
+        CPE_S["CPE\ncpe.org.uk\nmonthly concessions"]
+        FRANK["Frankfurter / ECB\nGBP/INR · GBP/CNY\nGBP/USD live rates"]
+        RSS_S["RSS Feeds\nMHRA · NHS England\nBBC Health · PharmaTimes"]
     end
 
-    FE -->|"REST API calls"| API
-    API --> MODEL
-    API --> DATA
-    API -->|"Chat / NL→SQL"| LLM
-    API -->|"Live FX"| FX
-    API -->|"News RSS"| RSS
-    API -->|"MHRA scrape"| MHRA
+    %% ── SCRAPER PIPELINE ─────────────────────────────────────────────
+    subgraph SCRAPE["🔄  Monthly Scraper Pipeline  ·  Local Only"]
+        SC1["01 NHSBSA Drug Tariff\n02 CPE Concessions\n08 CPE Archive"]
+        SC2["13 OpenPrescribing PCA\n16 NSE Pharma Stocks\n17 BSO NI Concessions"]
+        SC3["11 Feature Store Builder\n12 ML Training\nRF + XGBoost + SHAP"]
+    end
 
-    SC -->|"Monthly scrape"| CPE
-    SC -->|"Monthly scrape"| NHSBSA
-    SC -->|"Monthly scrape"| NSE
-    SC -->|"Trains models<br/>copies PKL to backend"| GH
+    %% ── CI/CD ────────────────────────────────────────────────────────
+    subgraph GH["📦  GitHub  ·  Private Repo"]
+        GH1["nipharma-frontend/\nnipharma-backend/\nmodel/*.pkl"]
+    end
 
-    GH -->|"Auto-deploy on push"| Backend
-    GH -->|"Auto-deploy on push"| FE
+    %% ── CONNECTIONS ──────────────────────────────────────────────────
+    PH & AD -->|"HTTPS"| FE_BOX
+    DASH & RISK & RECS & EXPL & ANA & CHAT & NEWS & CALC -->|"REST"| BE_BOX
+
+    EP1 --> RF & XGB
+    EP3 --> DUCK & NL2SQL
+    NL2SQL --> GROQ
+    CHAT --> GROQ
+    GROQ --> TAV
+
+    BE_BOX -->|"FX rates"| FRANK
+    BE_BOX -->|"News"| RSS_S
+    BE_BOX -->|"Live concessions"| CPE_S
+
+    SC1 & SC2 -->|"monthly CSVs"| SC3
+    SC3 -->|"git push panel_model.pkl"| GH1
+    GH1 -->|"Vercel auto-deploy"| FE_BOX
+    GH1 -->|"Railway auto-deploy"| BE_BOX
+
+    %% ── STYLES ───────────────────────────────────────────────────────
+    classDef frontend fill:#e3f2fd,stroke:#1565c0,color:#0d47a1
+    classDef backend  fill:#f3e5f5,stroke:#6a1b9a,color:#4a148c
+    classDef ai       fill:#fff8e1,stroke:#f9a825,color:#e65100
+    classDef live     fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20
+    classDef scraper  fill:#fce4ec,stroke:#c62828,color:#b71c1c
+    classDef user     fill:#fff3e0,stroke:#e65100,color:#bf360c
+    classDef gh       fill:#f5f5f5,stroke:#424242,color:#212121
+
+    class DASH,RISK,RECS,EXPL,ANA,CHAT,NEWS,CALC frontend
+    class RF,XGB,FEAT,DUCK,NL2SQL,EP1,EP2,EP3,EP4,EP5,CSV1,CSV2,CSV3,CSV4,PKL backend
+    class GROQ,TAV ai
+    class CPE_S,FRANK,RSS_S live
+    class SC1,SC2,SC3 scraper
+    class PH,AD user
+    class GH1 gh
 ```
 
 ### Component Table

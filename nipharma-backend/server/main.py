@@ -717,8 +717,16 @@ async def drug_detail_endpoint(drug: str = Query(..., description="Drug name (pa
         concs  = pd.read_csv(_find_model_file("drug_concessions.csv"))
 
         q = drug.strip().lower()
-        price_match = prices[prices["drug"].str.lower().str.contains(q, na=False)]
-        conc_match  = concs[concs["drug"].str.lower().str.contains(q, na=False)]
+        # Word-by-word fuzzy match — every word in the query must appear in drug name
+        # e.g. "omeprazole 20mg capsules" matches "Omeprazole 20mg gastro-resistant capsules"
+        words = [w for w in q.split() if len(w) > 1]
+        def word_match(series):
+            mask = pd.Series([True] * len(series), index=series.index)
+            for w in words:
+                mask = mask & series.str.lower().str.contains(w, na=False)
+            return mask
+        price_match = prices[word_match(prices["drug"])]
+        conc_match  = concs[word_match(concs["drug"])]
 
         if price_match.empty:
             all_drugs = sorted(prices["drug"].unique().tolist())

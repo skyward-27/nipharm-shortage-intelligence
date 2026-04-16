@@ -14,14 +14,14 @@ interface QueryResult {
 }
 
 const QUICK_QUESTIONS = [
-  { label: "🏆 Top conceded drugs", q: "which drugs had the most concession events ever?" },
-  { label: "📅 2022 concession surge", q: "how many drugs went on concession each month in 2022?" },
+  { label: "🏆 Top conceded drugs ever", q: "which drugs had the most concession events ever?" },
+  { label: "📅 Monthly trend 2022", q: "how many drugs went on concession each month in 2022?" },
   { label: "💰 Most expensive concessions", q: "top 20 highest concession prices ever" },
-  { label: "❄️ Winter patterns", q: "compare total concessions in winter months vs summer months" },
-  { label: "📈 Year-on-year trend", q: "how many drugs went on concession each year?" },
-  { label: "🔍 MHRA amoxicillin", q: "MHRA alerts mentioning amoxicillin" },
-  { label: "💊 Metformin history", q: "show metformin 500mg price history by month" },
-  { label: "⚠️ Price spikes", q: "drugs where concession price is more than 3 times the tariff price" },
+  { label: "📈 Year-on-year total", q: "how many drugs went on concession each year?" },
+  { label: "❄️ Winter vs summer", q: "total concessions in months 11,12,1,2 versus months 5,6,7,8" },
+  { label: "💊 Metformin 500mg price", q: "metformin 500mg tablets price history by month" },
+  { label: "🔍 MHRA shortage alerts", q: "MHRA alerts about drug shortage supply" },
+  { label: "⚠️ Recent concessions 2026", q: "all drugs on concession in 2026 ordered by price" },
 ];
 
 /* ── Mini bar chart (pure SVG) ────────────────────────────────────── */
@@ -246,13 +246,36 @@ export default function DataExplorer() {
     <div style={{ maxWidth: 980, margin: "0 auto", padding: "24px 20px", fontFamily: "inherit" }}>
 
       {/* Header */}
-      <div style={{ marginBottom: 28 }}>
+      <div style={{ marginBottom: 20 }}>
         <h1 style={{ fontSize: "1.9rem", fontWeight: 800, color: "#1a1a1a", marginBottom: 6 }}>
           🔬 Data Explorer
         </h1>
         <p style={{ color: "#666", fontSize: "0.97rem", margin: 0 }}>
-          Ask questions in plain English or write SQL — query 7,742 concession events, 15k price records and 3,372 MHRA alerts.
+          Ask anything in plain English — or write SQL directly. Powered by AI + live NHS drug data.
         </p>
+      </div>
+
+      {/* Pharmacist onboarding banner */}
+      <div style={{
+        background: "linear-gradient(135deg, #e3f2fd 0%, #f0f8ff 100%)",
+        border: "1px solid #bbdefb", borderRadius: 12, padding: "16px 20px",
+        marginBottom: 24, display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16
+      }}>
+        {[
+          { icon: "💬", title: "Just type naturally", desc: "\"which drugs spiked in Jan 2023?\" — AI translates to a database query for you" },
+          { icon: "📊", title: "Instant charts", desc: "Results auto-display as bar charts, line charts, or tables — export to CSV anytime" },
+          { icon: "🛢️", title: "Power users: write SQL", desc: "Switch to SQL mode for precise queries. Edit the AI-generated SQL and re-run" },
+          { icon: "📋", title: "What's in here?", desc: "7,742 concession events · 15k NHS tariff prices · 3,372 MHRA alerts — Jan 2020–Feb 2026" },
+        ].map(({ icon, title, desc }) => (
+          <div key={title} style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+            <span style={{ fontSize: "1.4rem", lineHeight: 1, flexShrink: 0 }}>{icon}</span>
+            <div>
+              <div style={{ fontWeight: 700, fontSize: "0.88rem", color: "#1565c0", marginBottom: 2 }}>{title}</div>
+              <div style={{ fontSize: "0.82rem", color: "#555", lineHeight: 1.4 }}>{desc}</div>
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* Query box */}
