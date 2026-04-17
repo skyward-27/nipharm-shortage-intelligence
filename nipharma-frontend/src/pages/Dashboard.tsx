@@ -266,11 +266,23 @@ export default function Dashboard() {
       <div className="dash-hero">
         <div className="dash-hero-inner">
           <div className="dash-hero-left">
-            <h1 className="dash-greeting">{getGreeting()}, NPT Team</h1>
-            <p className="dash-hero-sub">Your drug shortage intelligence for {today}</p>
-            <div className="dash-live-pill">
-              <span className="live-dot" />
-              LIVE · {timeStr}
+            <div className="dash-hero-eyebrow">
+              <svg width={7} height={7} viewBox="0 0 10 10" style={{ flexShrink: 0 }}><circle cx={5} cy={5} r={5} fill="#3b82f6"/></svg>
+              NHS Drug Intelligence Platform
+            </div>
+            <h1 className="dash-tagline">Buy before prices rise.</h1>
+            <p className="dash-hero-sub">Concession predictions 4–6 weeks ahead of the NHS tariff</p>
+            <div className="dash-hero-meta">
+              <div className="dash-live-pill">
+                <span className="live-dot" />
+                LIVE · {timeStr}
+              </div>
+              <span className="dash-meta-sep">·</span>
+              <span className="dash-meta-stat">758 drugs tracked</span>
+              <span className="dash-meta-sep">·</span>
+              <span className="dash-meta-stat">ML-powered</span>
+              <span className="dash-meta-sep">·</span>
+              <span className="dash-meta-stat">{today}</span>
             </div>
           </div>
           <div className="dash-hero-stats">
@@ -545,7 +557,17 @@ const CSS = `
 /* ── HERO ── */
 .dash-hero {
   background: var(--primary);
-  padding: 36px 0 30px;
+  padding: 44px 0 36px;
+  position: relative;
+  overflow: hidden;
+}
+
+.dash-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 80% at 10% 50%, rgba(59,130,246,0.08) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .dash-hero-inner {
@@ -557,21 +579,55 @@ const CSS = `
   justify-content: space-between;
   gap: 28px;
   flex-wrap: wrap;
+  position: relative;
 }
 
-.dash-greeting {
-  font-size: clamp(1.4rem, 2.5vw, 1.85rem);
+.dash-hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: #3b82f6;
+  margin: 0 0 14px;
+}
+
+.dash-tagline {
+  font-size: clamp(1.75rem, 3.2vw, 2.6rem);
   font-weight: 800;
   color: #ffffff;
-  margin: 0 0 8px;
-  letter-spacing: -0.5px;
+  margin: 0 0 10px;
+  letter-spacing: -0.8px;
+  line-height: 1.15;
 }
 
 .dash-hero-sub {
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   color: #94a3b8;
-  margin: 0 0 14px;
-  line-height: 1.5;
+  margin: 0 0 18px;
+  line-height: 1.6;
+}
+
+.dash-hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.dash-meta-sep {
+  color: #334155;
+  font-size: 0.75rem;
+}
+
+.dash-meta-stat {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #64748b;
+  font-family: var(--font-mono);
+  letter-spacing: 0.3px;
 }
 
 .dash-live-pill {
