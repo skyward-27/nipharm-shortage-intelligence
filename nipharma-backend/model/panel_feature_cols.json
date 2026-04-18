@@ -40,5 +40,10 @@
   "pca_nic_gbp",
   "bso_ni_shortage_flag",
   "fda_warning_flag",
-  "manufacturer_count"
+  "manufacturer_count",
+  "edinpharm_available",
+  "edinpharm_min_gbp",
+  "price_vs_edinpharm_pct",
+  "edinpharm_price_spread",
+  "edinpharm_winner_PHD"
 ]
