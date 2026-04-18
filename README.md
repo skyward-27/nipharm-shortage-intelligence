@@ -1,22 +1,21 @@
-# NiPharma — Stock Intelligence Platform
+# NiPharm — Drug Shortage Intelligence Platform
 
-A real-time pharmaceutical shortage prediction platform for UK community pharmacies. Uses ensemble ML (Random Forest + XGBoost, AUC 0.9986) combined with live market signals to predict NHS drug concessions before they happen — enabling pharmacists to stock at tariff price before prices surge.
+> Predict NHS drug price concessions **4–6 weeks before they happen.**
+> Real-time ML + live wholesaler bid pricing for UK community pharmacies.
 
-**Live Site:** https://nipharm-shortage-intelligence.vercel.app
+**Live Site:** https://nipharm-shortage-intelligence.vercel.app &nbsp;|&nbsp; **Backend:** https://npt-stock-intel-production.up.railway.app/ping
+
+![Status](https://img.shields.io/badge/status-production-brightgreen) ![Model](https://img.shields.io/badge/model-v6%20XGBoost-8b5cf6) ![AUC](https://img.shields.io/badge/AUC-0.9988-blue) ![Features](https://img.shields.io/badge/features-47-orange)
 
 ---
 
-## Key Features
+## What It Does
 
-- **Dashboard** — Bloomberg-style two-column layout: top 6 bulk-buy opportunities (ranked by margin vs NHS Tariff) + live KPIs, pharma news, and quick actions
-- **Risk Finder** — ML-powered shortage risk predictions for 758 drugs (renamed from "Drug Search")
-- **Buying Recs** — Top 5 premium ranked cards with colour-coded savings badges + hold warnings
-- **AI Chat** — Floating popup (💬 bottom-right), available on every page — Groq llama-3.3-70b + Tavily + local CPE/MHRA lookup
-- **Shortage Intelligence** — ML predictions updated monthly + real-time signal boosting (70% ML + 30% live signals)
-- **Market News** — Live RSS feeds from MHRA, NHS England, BBC Health, PharmaTimes (no API key)
-- **Alerts** — MHRA shortage publications with real-time scraping
-- **Weekly Report** — Newspaper-style intelligence brief (printable)
-- **Tariff Calculator** — NHS price lookup + bulk discount estimator
+NiPharm monitors **758 generic and branded drugs** across the UK supply chain and predicts which ones will hit an NHS NCSO price concession next month — before CPE publishes the tariff. Pharmacies that buy at tariff price before the concession announcement lock in the margin.
+
+- **v6 model AUC: 0.9988** (hold-out test, Jul–Dec 2025, temporal CV — zero leakage)
+- **New in v6:** Live wholesale bid prices from Edinpharm buying group — 2,001 drugs, 5 wholesalers
+- **Prediction lead time:** 4–6 weeks ahead of NHS tariff announcement
 
 ---
 
@@ -24,436 +23,466 @@ A real-time pharmaceutical shortage prediction platform for UK community pharmac
 
 ```mermaid
 flowchart TB
-    %% ── USER LAYER ──────────────────────────────────────────────────
-    subgraph USER["👤  Users"]
-        PH["💊 Pharmacist / Buyer\nasks plain-English questions\nor browses dashboards"]
-        AD["🏢 NPT Admin\nreviews buying recommendations\n& weekly reports"]
+
+    %% ═══════════════════════════════════════════════
+    %%  USER LAYER
+    %% ═══════════════════════════════════════════════
+    subgraph USERS["👥  Who Uses NiPharm"]
+        direction LR
+        PH["💊 Pharmacy Buyer\nSearches shortage risk\n& bulk-buy signals"]
+        AD["🏢 NPT Procurement\nWeekly intelligence\nreports + recommendations"]
+        EXT["🏙️ External Clients\nUK & Ireland pharmacies\n(expansion pipeline)"]
     end
 
-    %% ── FRONTEND ─────────────────────────────────────────────────────
-    subgraph FE_BOX["🖥️  Frontend  ·  Vercel  ·  React 18 + TypeScript"]
-        DASH["📊 Dashboard\nBloomberg-style bulk-buy\nopportunity cards"]
-        RISK["🔍 Risk Finder\nML risk scores\nfor 758 drugs"]
-        RECS["🎯 Buying Recs\nTop-5 premium ranked\ncards with savings"]
-        EXPL["🔬 Data Explorer\nNL → SQL query\nover historical data"]
-        ANA["📈 Analytics\nConcession trend chart\nDrug price lookup"]
-        CHAT["💬 AI Chat\nFloating popup\nGroq + Tavily"]
-        NEWS["📰 Market News\nLive RSS feeds"]
-        CALC["🧮 Calculator\nNHS savings estimator"]
+    %% ═══════════════════════════════════════════════
+    %%  FRONTEND — Vercel
+    %% ═══════════════════════════════════════════════
+    subgraph FE["🖥️  Frontend  ·  Vercel  ·  React 18 + TypeScript"]
+        direction LR
+        DASH["📊 Dashboard\nBuy before prices rise\nLive KPIs + signals"]
+        RISK["🔍 Drug Search\nML risk scores\n758 drugs"]
+        LENS["🔬 Concession Lens\nNL → SQL queries\nover CPE history"]
+        ANA["📈 Analytics\nTrend charts · Supply\norigin · FX cards"]
+        CALC["🧮 Calculator\nNHS tariff savings\nBulk discount tiers"]
+        CHAT["💬 AI Chat\nGroq llama-3.3-70b\n+ Tavily search"]
+        REP["📋 Weekly Report\nIntelligence brief\nPrint-optimised"]
     end
 
-    %% ── BACKEND ──────────────────────────────────────────────────────
-    subgraph BE_BOX["⚙️  Backend  ·  Railway  ·  FastAPI + Python"]
+    %% ═══════════════════════════════════════════════
+    %%  BACKEND — Railway
+    %% ═══════════════════════════════════════════════
+    subgraph BE["⚙️  Backend  ·  Railway  ·  FastAPI + Python 3.11"]
         direction TB
-        subgraph ML["🤖 ML Engine"]
-            RF["Random Forest\nCalibratedClassifierCV\nAUC 0.9986"]
-            XGB["XGBoost\nCalibrated\nAUC 0.9987"]
-            FEAT["42 Features\nTimeSeriesSplit CV\n1-month gap"]
+
+        subgraph ML_ENG["🤖  ML Engine  (v6)"]
+            XGB["⚡ XGBoost\nCalibrated · AUC 0.9988\nDeployed primary"]
+            RF["🌲 Random Forest\nCalibrated · AUC 0.9985\nFallback"]
+            FEAT["📐 47 Features\nTemporal walk-forward CV\n1-month gap · zero leakage"]
         end
-        subgraph QUERY["🔬 Data Explorer Engine"]
-            DUCK["DuckDB in-memory\n4 tables · 26k+ rows"]
-            NL2SQL["NL → SQL\nGroq llama-3.3-70b\nfew-shot prompt"]
+
+        subgraph ENDPTS["🔌  API Endpoints"]
+            E1["POST /predict\n70% ML + 30% live signals\n6hr TTL cache"]
+            E2["POST /query\nNL → SQL · DuckDB\n200-row cap · read-only"]
+            E3["POST /chat\nGroq LLM + Tavily\n< 120 words · bullet format"]
+            E4["GET /news · /mhra-alerts\n/weekly-report · /signals\n/ping · /debug"]
         end
-        subgraph APIS["🔌 API Endpoints"]
-            EP1["POST /predict\n70% ML + 30% signals\n6hr TTL cache"]
-            EP2["GET /recommendations\nBulk-buy opportunities\nfrom invoice data"]
-            EP3["POST /query\nNL or SQL\nread-only · 200 row cap"]
-            EP4["GET /concession-trends\nGET /drug-detail\nGET /drug-list"]
-            EP5["GET /news  GET /signals\nGET /mhra-alerts\nGET /weekly-report"]
-        end
-        subgraph DATA_FILES["📁 Data Files (model/)"]
-            CSV1["drug_concessions.csv\n7,742 CPE events"]
-            CSV2["drug_price_history.csv\n15,122 tariff records"]
-            CSV3["mhra_alerts.csv\n3,372 publications"]
-            CSV4["concession_trends.csv\n74 monthly totals"]
-            PKL["panel_model.pkl\n27MB RF model"]
+
+        subgraph STORE["📁  Model Artifacts"]
+            PKL["panel_model_xgb.pkl\n1.4 MB · XGBoost · v6"]
+            RFPKL["panel_model.pkl\n5.0 MB · RF · fallback"]
+            FCOLS["panel_feature_cols.json\n47 features · auto-loaded"]
         end
     end
 
-    %% ── LLM / SEARCH ─────────────────────────────────────────────────
+    %% ═══════════════════════════════════════════════
+    %%  AI SERVICES
+    %% ═══════════════════════════════════════════════
     subgraph AI["🧠  AI Services"]
-        GROQ["Groq API\nllama-3.3-70b-versatile\nChat + NL→SQL translation"]
-        TAV["Tavily Search\nReal-time web search\nfor AI chat context"]
+        GROQ["Groq\nllama-3.3-70b-versatile\nChat + NL→SQL"]
+        TAV["Tavily Search\nReal-time web context\nfor AI responses"]
     end
 
-    %% ── LIVE DATA SOURCES ────────────────────────────────────────────
-    subgraph LIVE["📡  Live Data Sources"]
-        CPE_S["CPE\ncpe.org.uk\nmonthly concessions"]
-        FRANK["Frankfurter / ECB\nGBP/INR · GBP/CNY\nGBP/USD live rates"]
-        RSS_S["RSS Feeds\nMHRA · NHS England\nBBC Health · PharmaTimes"]
+    %% ═══════════════════════════════════════════════
+    %%  LIVE PUBLIC DATA
+    %% ═══════════════════════════════════════════════
+    subgraph PUBLIC["📡  Live Public Data"]
+        CPE["CPE / NHSBSA\nMonthly concessions\n+ Drug Tariff"]
+        ECB["Frankfurter / ECB\nGBP/INR · GBP/CNY\nGBP/USD live FX"]
+        MHRA["MHRA Gov.uk\nShortage publications\n3,372 alerts scraped"]
+        RSS["RSS Feeds\nNHS England · BBC Health\nPharmaTimes · MHRA"]
     end
 
-    %% ── SCRAPER PIPELINE ─────────────────────────────────────────────
-    subgraph SCRAPE["🔄  Monthly Scraper Pipeline  ·  Local Only"]
-        SC1["01 NHSBSA Drug Tariff\n02 CPE Concessions\n08 CPE Archive"]
-        SC2["13 OpenPrescribing PCA\n16 NSE Pharma Stocks\n17 BSO NI Concessions"]
-        SC3["11 Feature Store Builder\n12 ML Training\nRF + XGBoost + SHAP"]
+    %% ═══════════════════════════════════════════════
+    %%  WHOLESALER DATA  ← NEW in v6
+    %% ═══════════════════════════════════════════════
+    subgraph WHOLESALE["🏭  Wholesaler Buy-Side Data  ·  Local Only"]
+        EP["🛒 Edinpharm Dashboard\nedinpharm.com\n2,001 drugs · 5 wholesalers\nTRI · AAH · BW · ETH · PHD"]
+        AAH["📦 AAH Hub\nSalesforce Aura API\nLive price + stock"]
+        ALL["📄 Alliance Healthcare\nLiferay REST API\nMonthly invoices (PDF)"]
     end
 
-    %% ── CI/CD ────────────────────────────────────────────────────────
-    subgraph GH["📦  GitHub  ·  Private Repo"]
-        GH1["nipharma-frontend/\nnipharma-backend/\nmodel/*.pkl"]
+    %% ═══════════════════════════════════════════════
+    %%  SCRAPER PIPELINE — Local
+    %% ═══════════════════════════════════════════════
+    subgraph PIPE["🔄  Monthly Scraper Pipeline  ·  Local Only  ·  Never on GitHub"]
+        direction TB
+        S1["📥 Public Data Scrapers\n01 NHSBSA Tariff · 02 CPE · 08 CPE Archive\n04 MHRA · 13 OpenPrescribing · 16 yfinance\n17 BSO NI · 19 MHRA Mfr Count · 22 FDA"]
+        S2["🏭 Wholesaler Scrapers\n45 Edinpharm Prices ← NEW\n25 AAH Hub · 26 Alliance Docs\n28 Chrome Cookie Extractor"]
+        S3["⚙️ Feature Engineering\n46 Wire Edinpharm Features ← NEW\n11 Feature Store Builder\n23 Invoice Price Pipeline"]
+        S4["🧪 Model Training\n12 RF + XGBoost + Calibration\n→ panel_model_xgb.pkl (1.4MB)\n→ panel_model.pkl (5.0MB)"]
     end
 
-    %% ── CONNECTIONS ──────────────────────────────────────────────────
-    PH & AD -->|"HTTPS"| FE_BOX
-    DASH & RISK & RECS & EXPL & ANA & CHAT & NEWS & CALC -->|"REST"| BE_BOX
+    %% ═══════════════════════════════════════════════
+    %%  CI/CD
+    %% ═══════════════════════════════════════════════
+    subgraph CICD["📦  GitHub (Private)  →  Auto Deploy"]
+        direction LR
+        GH["skyward-27/\nnipharm-shortage-intelligence"]
+        VC["Vercel\n~2 min deploy\nCI=false build"]
+        RW["Railway\n~3–5 min deploy\nDockerfile"]
+    end
 
-    EP1 --> RF & XGB
-    EP3 --> DUCK & NL2SQL
-    NL2SQL --> GROQ
-    CHAT --> GROQ
+    %% ═══════════════════════════════════════════════
+    %%  CONNECTIONS
+    %% ═══════════════════════════════════════════════
+    USERS -->|"HTTPS"| FE
+    FE -->|"REST API"| BE
+
+    E1 --> XGB & RF
+    E2 --> GROQ
+    E3 --> GROQ
     GROQ --> TAV
 
-    BE_BOX -->|"FX rates"| FRANK
-    BE_BOX -->|"News"| RSS_S
-    BE_BOX -->|"Live concessions"| CPE_S
+    BE -->|"FX rates"| ECB
+    BE -->|"News RSS"| RSS
+    BE -->|"Live concessions"| CPE
 
-    SC1 & SC2 -->|"monthly CSVs"| SC3
-    SC3 -->|"git push panel_model.pkl"| GH1
-    GH1 -->|"Vercel auto-deploy"| FE_BOX
-    GH1 -->|"Railway auto-deploy"| BE_BOX
+    EP -->|"cookie auth\nmonthly"| S2
+    AAH & ALL -->|"session cookies"| S2
 
-    %% ── STYLES ───────────────────────────────────────────────────────
-    classDef frontend fill:#e3f2fd,stroke:#1565c0,color:#0d47a1
-    classDef backend  fill:#f3e5f5,stroke:#6a1b9a,color:#4a148c
-    classDef ai       fill:#fff8e1,stroke:#f9a825,color:#e65100
-    classDef live     fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20
-    classDef scraper  fill:#fce4ec,stroke:#c62828,color:#b71c1c
-    classDef user     fill:#fff3e0,stroke:#e65100,color:#bf360c
-    classDef gh       fill:#f5f5f5,stroke:#424242,color:#212121
+    S1 -->|"CSVs"| S3
+    S2 -->|"wholesaler CSVs"| S3
+    S3 -->|"47-feature panel\n44,074 rows"| S4
+    S4 -->|"git push .pkl"| GH
 
-    class DASH,RISK,RECS,EXPL,ANA,CHAT,NEWS,CALC frontend
-    class RF,XGB,FEAT,DUCK,NL2SQL,EP1,EP2,EP3,EP4,EP5,CSV1,CSV2,CSV3,CSV4,PKL backend
-    class GROQ,TAV ai
-    class CPE_S,FRANK,RSS_S live
-    class SC1,SC2,SC3 scraper
-    class PH,AD user
-    class GH1 gh
+    PUBLIC --> S1
+    MHRA --> S1
+
+    GH --> VC --> FE
+    GH --> RW --> BE
+
+    XGB & RF --> STORE
+
+    %% ═══════════════════════════════════════════════
+    %%  STYLES
+    %% ═══════════════════════════════════════════════
+    classDef userStyle    fill:#fff3e0,stroke:#f57c00,color:#bf360c,font-weight:bold
+    classDef feStyle      fill:#e3f2fd,stroke:#1565c0,color:#0d47a1,font-weight:bold
+    classDef beStyle      fill:#f3e5f5,stroke:#6a1b9a,color:#4a148c,font-weight:bold
+    classDef mlStyle      fill:#ede7f6,stroke:#4527a0,color:#311b92,font-weight:bold
+    classDef aiStyle      fill:#fff8e1,stroke:#f9a825,color:#e65100,font-weight:bold
+    classDef pubStyle     fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20,font-weight:bold
+    classDef wsStyle      fill:#fce4ec,stroke:#ad1457,color:#880e4f,font-weight:bold
+    classDef pipeStyle    fill:#e0f2f1,stroke:#00695c,color:#004d40,font-weight:bold
+    classDef cicdStyle    fill:#f5f5f5,stroke:#424242,color:#212121,font-weight:bold
+
+    class PH,AD,EXT userStyle
+    class DASH,RISK,LENS,ANA,CALC,CHAT,REP feStyle
+    class E1,E2,E3,E4,PKL,RFPKL,FCOLS beStyle
+    class XGB,RF,FEAT mlStyle
+    class GROQ,TAV aiStyle
+    class CPE,ECB,MHRA,RSS pubStyle
+    class EP,AAH,ALL wsStyle
+    class S1,S2,S3,S4 pipeStyle
+    class GH,VC,RW cicdStyle
 ```
 
-### Component Table
+### Component Summary
 
-| Component | Tech | Hosted |
-|-----------|------|--------|
-| Frontend | React 18 + TypeScript | Vercel (auto-deploy) |
-| Backend | Python FastAPI + Groq LLM | Railway (auto-deploy) |
-| ML Models | RF + XGBoost, scikit-learn, calibrated | GitHub → Railway |
-| Data Explorer | DuckDB in-process SQL (planned) | Railway |
+| Layer | Tech | Hosted |
+|-------|------|--------|
+| Frontend | React 18 + TypeScript, CSS-in-JSX, hand-coded SVG charts | Vercel (auto-deploy) |
+| Backend | Python 3.11 FastAPI + Groq LLM | Railway (Dockerfile, auto-deploy) |
+| ML — Primary | XGBoost calibrated, AUC **0.9988** | GitHub → Railway |
+| ML — Fallback | Random Forest calibrated, AUC **0.9985** | GitHub → Railway |
+| Data Explorer | DuckDB in-process NL→SQL | Railway |
 | AI Chat | Groq llama-3.3-70b + Tavily search | Railway |
-| News | Free RSS feeds (no API key) | Railway |
-| Scrapers | 22 Python scripts, run locally monthly | Local only |
-
-### Key Endpoints
-
-```
-POST   /predict              # ML shortage prediction (43 features, 6hr TTL cache)
-GET    /health               # Backend status
-GET    /news                 # Pharmaceutical news feed
-GET    /mhra-alerts          # MHRA shortage publications
-GET    /signals              # Real-time GBP/INR, GBP/CNY, GBP/USD from ECB
-GET    /concessions          # Current CPE concession data
-POST   /chat                 # Groq LLM + Tavily search + local CPE/MHRA lookup
-GET    /weekly-report        # Intelligence summary
-POST   /contact              # Contact form
-```
+| Wholesaler Data | Edinpharm · AAH Hub · Alliance Healthcare (local only) | Local scraper |
+| Scrapers | 28 Python scripts, monthly manual run | Local only |
 
 ---
 
-## ML Model
+## ML Model — v6 (Deployed April 2026)
 
-### v5 — DEPLOYED ✅ (April 2026)
+### What's New in v6
 
-**Calibrated Random Forest + XGBoost Ensemble**
-- Training data: 44,074 rows (758 drugs × 60 months, Jan 2021 – Dec 2025)
-- Features: **42** (removed 2 constant columns from 44)
-- Positive label rate: 14.7% (drug goes on concession next month)
+**Edinpharm wholesale bid prices wired as 5 new features:**
 
-**Validation (temporal walk-forward, no leakage):**
-| Metric | Score |
-|--------|-------|
-| Walk-forward CV AUC (5 folds, 1-month gap) | **0.9972 ± 0.0008** |
-| Hold-out test AUC — RF calibrated (Jul–Dec 2025) | **0.9986** |
-| Hold-out test AUC — XGBoost (Jul–Dec 2025) | **0.9987** |
-| XGBoost CV mean AUC | 0.9977 ± 0.0008 |
+| Feature | Description | Signal |
+|---------|-------------|--------|
+| `edinpharm_available` | Drug listed in Edinpharm buying group | Coverage flag |
+| `edinpharm_min_gbp` | Lowest bid price across all 5 wholesalers | Buy-side floor |
+| `price_vs_edinpharm_pct` | NHS tariff vs wholesaler bid gap (%) | **Key shortage signal** — positive = tariff above bid |
+| `edinpharm_price_spread` | (max−min)/min across wholesalers | Competition proxy — high spread = unstable supply |
+| `edinpharm_winner_PHD` | Phoenix Drug holds cheapest bid | Supplier concentration flag |
 
-**Top Features (permutation importance on hold-out test):**
-1. `concession_streak` — consecutive months on concession (0.0184 AUC drop)
-2. `cpe_avail_6mo` — CPE concession availability last 6 months (0.0129)
-3. `conc_last_6mo` — concession events last 6 months (0.0109)
-4. `floor_proximity` — price distance from tariff floor (0.0002)
-5. `pca_items_mom_pct` — prescribing demand MoM change (0.0001)
+**98.2% drug match rate** — Exact name+pack (39,685 rows), exact name (2,066), fuzzy (1,548), unmatched (775).
 
-**Top Features (Gini, Random Forest):**
-1. `cpe_avail_6mo` — 23.2%
-2. `conc_last_6mo` — 20.8%
-3. `cpe_conc_available` — 10.3%
-4. `concession_streak` — 9.5%
-5. `on_concession` — 9.3%
+---
 
-**Key upgrades over v4:**
+### Performance — v5 vs v6
 
-| Improvement | v4 | v5 (deployed) |
-|-------------|----|----|
-| Cross-validation | StratifiedKFold (temporal leakage ⚠️) | **TimeSeriesSplit + 1-month gap** (clean) |
-| Algorithms | Random Forest only | **RF (deployed) + XGBoost (benchmark)** |
-| Calibration | Raw probabilities | **CalibratedClassifierCV (isotonic)** |
-| Test set | None | **Hold-out: last 6 months, never in CV** |
-| Features | 28 | **42** |
-| New signals | — | Cascade, seasonal, SSP, drug age, India pharma stress |
+| Metric | v5 | v6 |
+|--------|----|----|
+| Features | 42 | **47** |
+| New signals | Seasonal, SSP, drug age, cascade | **+ Edinpharm bid prices** |
+| Walk-forward CV AUC (RF) | 0.9972 ± 0.0008 | 0.9971 ± 0.0008 |
+| Walk-forward CV AUC (XGB) | 0.9977 ± 0.0008 | 0.9975 ± 0.0011 |
+| Hold-out AUC — RF calibrated | 0.9986 | 0.9985 |
+| Hold-out AUC — XGB | 0.9987 | **0.9988** |
 
-**Hybrid Prediction Scoring (unchanged)**
-- 70% ML probability + 30% real-time signal boost
-- Real-time signals: MHRA alerts, CPE availability, demand spikes, price stress
+> **Why Edinpharm features are rank 15 and not top 3 yet:**
+> v6 has one month of Edinpharm data (April 2026 snapshot). The dominant features (`conc_last_6mo`, `cpe_avail_6mo`, `concession_streak`) are powerful because they capture **momentum over months**. Once the Edinpharm scraper runs monthly and we have 3–4 months of bid price history, we can compute `edinpharm_price_trend_3mo` and `edinpharm_vs_tariff_drift` — that's the v7 alpha, and it's fully automated.
+
+---
+
+### Top Features — v6 (Gini Importance)
+
+| Rank | Feature | Importance | What It Captures |
+|------|---------|-----------|-----------------|
+| 1 | `conc_last_6mo` | 22.8% | Concession events in last 6 months |
+| 2 | `cpe_avail_6mo` | 19.6% | CPE concession availability last 6 months |
+| 3 | `concession_streak` | 14.4% | Consecutive months on concession |
+| 4 | `on_concession` | 9.9% | Is drug on concession this month |
+| 5 | `cpe_price_gbp` | 9.8% | CPE concession price (£) |
+| 6 | `price_vs_cpe_pct` | 3.7% | Tariff vs CPE price gap |
+| 7 | `cpe_conc_available` | 3.6% | CPE availability flag |
+| 8 | `price_mom_pct` | 2.1% | Month-on-month tariff price change |
+| 9 | `bsn_same_section_conc_count` | 1.8% | Cascade — other drugs in same BNF class on concession |
+| 10 | `floor_proximity` | 1.5% | Distance from 24-month price floor |
+| 15 | `edinpharm_min_gbp` | **0.4%** | **← NEW: Edinpharm buy-side bid price** |
+
+---
 
 ### Model Version History
 
-| Version | CV AUC | Hold-out AUC | Rows | Key Change |
-|---------|--------|--------------|------|------------|
-| v1 (flat) | 0.891 | — | 758 | One row per drug |
-| v2 (panel) | 0.971 | — | 14,764 | Added streak + time series |
-| v3 | 0.982 | — | 14,764 | Added Brent crude + Sun Pharma |
-| v4 | 0.9983* | — | 44,074 | CPE price features + hybrid /predict |
-| **v5 ✅ LIVE** | **0.9972** | **0.9986** | **44,074** | **TimeSeriesSplit + calibration + 42 features** |
+| Version | CV AUC | Hold-out AUC | Features | Key Change |
+|---------|--------|--------------|----------|------------|
+| v1 (flat) | 0.891 | — | 15 | One row per drug, no time dimension |
+| v2 (panel) | 0.971 | — | 18 | Time-series, streak, recency |
+| v3 | 0.982 | — | 20 | Brent crude + Sun Pharma |
+| v4 | 0.9983* | — | 28 | CPE price features + hybrid `/predict` endpoint |
+| v5 | 0.9972 | 0.9987 | 42 | TimeSeriesSplit CV + calibration + seasonal + SSP |
+| **v6 ✅ LIVE** | **0.9975** | **0.9988** | **47** | **Edinpharm wholesaler bid prices (5 new features)** |
 
-*v4 AUC inflated by temporal leakage in StratifiedKFold. v5 CV is clean.
+*v4 AUC inflated — StratifiedKFold with temporal leakage. v5/v6 use clean walk-forward CV with 1-month gap.
+
+---
+
+### Validation Method
+
+```
+60 months of data (Jan 2021 – Dec 2025)
+│
+├── Train + Validation: months 1–54 (Jan 2021 – Jun 2025)
+│     └── 5-fold temporal walk-forward CV
+│           Fold 1: train 9mo → gap 1mo → test 9mo
+│           Fold 2: train 18mo → gap 1mo → test 9mo
+│           ...
+│           No future data leaks into any fold
+│
+└── Hold-out Test: months 55–60 (Jul–Dec 2025)  ← NEVER seen in CV
+      XGB AUC: 0.9988  |  RF AUC: 0.9985
+```
 
 ---
 
 ## Data Sources
 
-| Source | Type | Frequency | Status |
+### Public (Scraped Monthly)
+
+| Source | Data | Frequency | Status |
 |--------|------|-----------|--------|
-| NHSBSA Drug Tariff | Cat M pricing (24 months) | Monthly | ✅ Live |
-| CPE Concessions | Concession events (archive + current) | Monthly | ✅ Live |
-| BSO NI Concessions | Northern Ireland concessions | Monthly | ✅ Live |
-| MHRA Publications | Shortage alerts | Ad-hoc | ✅ Live |
-| MHRA Marketing Authorisations | Licensed manufacturer counts per drug | On-demand | ✅ Live |
-| Indian Pharma NSE Stocks | 10 tickers: SUNPHARMA, DRREDDY, CIPLA, AUROPHARMA, LUPIN, DIVISLAB, BIOCON, TORNTPHARM, GLENMARK, ALKEM | Monthly | ✅ Live |
-| Shipping Stress (ZIM, SBLK) | Freight rate proxy for API supply chain | Monthly | ✅ Live |
-| Brent Crude (yfinance) | Commodity stress | Daily | ✅ Live |
-| FX Rates (Frankfurter/ECB) | GBP/INR, GBP/CNY, GBP/USD | Daily | ✅ Live |
-| BoE Bank Rate | Interest rates + PPI | Quarterly | ✅ Live |
-| NHSBSA SSP Register | Serious Shortage Protocols | On-demand | ✅ Live |
-| OpenPrescribing (PCA) | England GP prescribing demand | Monthly | ✅ Live |
-| OpenDataNI | NI GP prescribing data | Manual | ✅ Live |
-| BSO NI Shortage Notices | NI-specific shortage signals | Ad-hoc | ✅ Live |
-| FDA Warning Letters | Regulatory actions on Indian/Chinese API manufacturers | On-demand | ✅ Live |
-| dm+d Molecule Master | Drug dictionary (24,465 molecules) | On-demand | ✅ Live |
-| Wholesale Invoices | Real pharmacy purchase prices | Manual monthly | ✅ Configured |
+| NHSBSA Drug Tariff | Cat M prices (24 months) | Monthly | ✅ |
+| CPE Concessions | Current + archive (Jan 2020–) | Monthly | ✅ |
+| BSO NI Concessions | Northern Ireland concessions | Monthly | ✅ |
+| MHRA Publications | Shortage alerts (3,372) | Ad-hoc | ✅ |
+| MHRA Mfr Authorisations | Licensed manufacturer count per drug | Monthly | ✅ |
+| NHSBSA SSP Register | Serious Shortage Protocols | Monthly | ✅ |
+| OpenPrescribing PCA | England GP prescribing demand | Monthly | ✅ |
+| NSE Pharma Stocks | 10 Indian tickers (SUNPHARMA, DRREDDY, CIPLA...) | Monthly | ✅ |
+| Shipping Stress | ZIM, SBLK (freight rate proxy) | Monthly | ✅ |
+| Brent Crude | Commodity supply chain stress | Daily | ✅ |
+| FX Rates | GBP/INR · GBP/CNY · GBP/USD (ECB) | Daily | ✅ |
+| BoE Bank Rate | Interest rates | Quarterly | ✅ |
+| FDA Warning Letters | Regulatory actions on India/China manufacturers | Monthly | ✅ |
+| dm+d Molecule Master | Drug dictionary (24,465 molecules) | On-demand | ✅ |
+
+### Wholesaler Buy-Side (Local Only — Commercially Sensitive)
+
+| Source | Data | Coverage | Status |
+|--------|------|----------|--------|
+| **Edinpharm Dashboard** | Live bid prices: TRI · AAH · BW · ETH · PHD | **2,001 drugs** | ✅ NEW v6 |
+| AAH Hub (Salesforce) | Live wholesale price + stock | Watchlist drugs | ✅ |
+| Alliance Healthcare | Monthly invoice PDFs | All invoices | ✅ |
 
 ---
 
-## Data Scrapers
+## Scraper Pipeline
 
-All scraper scripts live in `scrapers/` and output to `scrapers/data/` (not committed to GitHub).
+All scripts in `scrapers/` — run locally monthly. Output to `scrapers/data/` (not on GitHub).
+
+### Monthly Workflow
+
+```bash
+# 1. Extract Chrome cookies (run after logging into portals)
+python3 28_extract_chrome_cookies.py
+
+# 2. Scrape wholesaler prices
+python3 45_edinpharm_prices.py          # ← NEW: Edinpharm bid prices (2,001 drugs)
+python3 25_download_aah_orders.py       # AAH Hub live prices
+python3 26_download_alliance_documents.py  # Alliance invoices (run within 30 min of login)
+
+# 3. Wire new features into panel
+python3 46_wire_edinpharm_features.py   # ← NEW: joins Edinpharm to panel (98.2% match)
+python3 11_feature_store_builder.py     # v5/v6 features
+
+# 4. Retrain model (Terminal only — uses ~46GB RAM)
+python3 12_ml_model_panel.py
+
+# 5. Deploy
+cp data/model/panel_model_xgb.pkl ../nipharma-backend/model/
+git add nipharma-backend/model/ && git push
+```
+
+### All Scripts
 
 | Script | Purpose | Status |
 |--------|---------|--------|
-| `01_nhsbsa_drug_tariff.py` | Cat M prices (24 months) | ✅ Working |
-| `02_ncso_price_concessions.py` | CPE current month concessions | ✅ Working |
-| `04_mhra_alerts.py` | MHRA shortage publications | ✅ Working |
-| `05_market_signals.py` | FX/BoE/OpenFDA signals | ✅ Working |
-| `06_molecule_master.py` | dm+d molecule dictionary | ✅ Working |
-| `08_cpe_historical_concessions.py` | CPE archive crawl (Jan 2020 onwards) | ✅ Working |
-| `09_feature_store_builder.py` | Flat 758-molecule feature store | ✅ Working |
-| `11_feature_store_builder.py` | v5 panel feature store (43 features) | ✅ New |
-| `12_ml_model_panel.py` | RF + XGBoost + SHAP training (v5) | ✅ Upgraded |
-| `13_openprescribing.py` | NHSBSA PCA demand data | ✅ Working |
-| `14_nhsbsa_ssp.py` | Serious Shortage Protocol register | ✅ Working |
-| `16_yfinance_signals.py` | 10 Indian pharma NSE tickers + 2 shipping proxies | ✅ Upgraded |
-| `17_cpni_concessions.py` | BSO NI concessions | ✅ Working |
-| `19_mhra_manufacturer_count.py` | Licensed manufacturer count per drug | ✅ New |
-| `20_opendatani_prescribing.py` | NI GP prescribing (OpenDataNI CKAN) | ✅ New |
-| `21_bso_ni_shortages.py` | BSO NI shortage notices | ✅ New |
-| `22_fda_warning_letters.py` | FDA warning letters (India/China manufacturers) | ✅ New |
-| `23_invoice_price_pipeline.py` | Wholesale price intelligence pipeline | ✅ New |
+| `01_nhsbsa_drug_tariff.py` | Cat M prices 24 months | ✅ |
+| `02_ncso_price_concessions.py` | CPE current month | ✅ |
+| `04_mhra_alerts.py` | MHRA shortage publications | ✅ |
+| `05_market_signals.py` | FX / BoE / OpenFDA | ✅ |
+| `06_molecule_master.py` | dm+d drug dictionary | ✅ |
+| `08_cpe_historical_concessions.py` | CPE archive Jan 2020– | ✅ |
+| `11_feature_store_builder.py` | v6 panel feature store (47 features) | ✅ |
+| `12_ml_model_panel.py` | RF + XGBoost + calibration + SHAP | ✅ |
+| `13_openprescribing.py` | NHSBSA PCA demand | ✅ |
+| `14_nhsbsa_ssp.py` | Serious Shortage Protocol register | ✅ |
+| `16_yfinance_signals.py` | 10 NSE pharma + 2 shipping tickers | ✅ |
+| `17_cpni_concessions.py` | BSO NI concessions | ✅ |
+| `19_mhra_manufacturer_count.py` | Licensed manufacturer counts | ✅ |
+| `20_opendatani_prescribing.py` | NI GP prescribing data | ✅ |
+| `21_bso_ni_shortages.py` | BSO NI shortage notices | ✅ |
+| `22_fda_warning_letters.py` | FDA warning letters (India/China) | ✅ |
+| `23_invoice_price_pipeline.py` | Invoice price intelligence pipeline | ✅ |
+| `25_download_aah_orders.py` | AAH Hub live prices (Salesforce API) | ✅ |
+| `26_download_alliance_documents.py` | Alliance Healthcare invoice PDFs | ✅ |
+| `28_extract_chrome_cookies.py` | Chrome cookie extractor (AAH + Alliance + Edinpharm) | ✅ |
+| `40_gphc_register.py` | GPhC pharmacy register (~12,350 UK pharmacies) | ✅ |
+| `41_psi_register.py` | PSI Ireland register (~1,989 pharmacies) | ✅ |
+| `42_companies_house_enrich.py` | Director names + email enrichment | ✅ |
+| `43_email_outreach.py` | 3-email cold sequence (Resend, SQLite tracking) | ✅ |
+| `44_seo_post_generator.py` | Monthly NHS concession SEO blog (Groq) | ✅ |
+| `45_edinpharm_prices.py` | **Edinpharm bid prices — 2,001 drugs × 5 wholesalers** | ✅ **NEW** |
+| `46_wire_edinpharm_features.py` | **Joins Edinpharm to panel (98.2% match, 5 features)** | ✅ **NEW** |
 
 ---
 
-## Chatbot Improvements
+## Platform Pages
 
-The AI chatbot (Groq + Tavily) received significant upgrades:
-
-- **Smarter model:** Upgraded from llama-3.1-8b-instant to **llama-3.3-70b-versatile**
-- **Local CPE lookup:** Concession price questions answered instantly from local data before calling LLM
-- **MHRA cross-reference:** Automatically alerts pharmacists about relevant MHRA shortage notices
-- **Northern Ireland context:** Includes BSO NI and HSCNI data in responses
-- **Dynamic date awareness:** No more hardcoded dates — always uses current month
-- **Longer responses:** Max tokens doubled from 512 to 1024 for more detailed answers
-
----
-
-## Backend Improvements
-
-- **`/signals` endpoint** — Returns real-time GBP/INR, GBP/CNY, GBP/USD exchange rates from ECB via Frankfurter API
-- **`/concessions` endpoint** — Returns current CPE concession data from the local CSV
-- **6-hour TTL cache on `/predict`** — Faster responses, reduced Railway compute usage
-- **Version bump to v5** in API docstrings and metadata
+| Page | Route | Status |
+|------|-------|--------|
+| Dashboard | `/` | ✅ — "Buy before prices rise." hero, animated stat cards |
+| Drug Search | `/drugs` | ✅ — ML predictions via `/predict` |
+| Concession Lens | `/explorer` | ✅ — ChatGPT-style NL→SQL, DuckDB |
+| Analytics | `/analytics` | ✅ — Trend chart, supply origin, FX cards |
+| Calculator | `/calculator` | ✅ — Bulk discount tiers |
+| AI Chat | `/chat` | ✅ — Groq 70b + Tavily |
+| Contact | `/contact` | ✅ — World map SVG hero |
+| Weekly Report | `/report` | 🔄 Redesign pending |
+| Market News | `/news` | 🔄 Redesign pending |
+| Alerts | `/alerts` | 🔄 Redesign pending (removed from nav) |
 
 ---
 
 ## Quick Start
 
-### Frontend (Vercel)
+### Frontend
 ```bash
 cd nipharma-frontend
 npm install
-npm start                    # Local dev at :3000
-REACT_APP_API_URL=http://localhost:8000 npm start   # Use local backend
+npm start                                                   # Local dev :3000
+REACT_APP_API_URL=http://localhost:8000 npm start           # With local backend
 ```
 
-### Backend (Railway)
+### Backend
 ```bash
 cd nipharma-backend
 pip install -r requirements.txt
 uvicorn server.main:app --reload --port 8000
 ```
 
-### Retrain ML Model (run in Terminal, not via Claude Code)
+### Retrain Model (Terminal only — ~46GB RAM)
 ```bash
 cd scrapers
-python 16_yfinance_signals.py       # Refresh market data
-python 11_feature_store_builder.py  # Build v5 feature store (43 features)
-python 12_ml_model_panel.py         # Train RF + XGBoost + SHAP
-# Then copy model to backend:
-cp data/model/panel_model.pkl ../nipharma-backend/model/
+python3 28_extract_chrome_cookies.py    # extract Chrome cookies
+python3 45_edinpharm_prices.py          # scrape Edinpharm
+python3 46_wire_edinpharm_features.py   # wire to panel
+python3 11_feature_store_builder.py     # build feature store
+python3 12_ml_model_panel.py            # train — ~15 min
+cp data/model/panel_model_xgb.pkl ../nipharma-backend/model/
+git add nipharma-backend/model/ && git push
 ```
 
-**Environment Variables** (`.env`)
+### Environment Variables
 ```
+# Vercel (frontend)
 REACT_APP_API_URL=https://npt-stock-intel-production.up.railway.app
+CI=false
+
+# Railway (backend)
 GROQ_API_KEY=xxx
-TAVILY_API_KEY=xxx
+PORT=auto
 ```
-
----
-
-## Deployment Status
-
-- **Frontend** — Live on Vercel (auto-deploys on push)
-- **Backend** — Live on Railway
-- **ML Model** — Committed to repo (5.0 MB `panel_model.pkl`)
-- **CI/CD** — Vercel auto-deploys on GitHub push
-
-### Environment
-
-- **Node.js:** 20.x (Vercel)
-- **Python:** 3.10+
-- **Build:** Vercel buildCommand: `CI=false npm run build` (ESLint warnings ignored)
-
----
-
-## Project Structure
-
-```
-nipharma-frontend/          React 18 app (TypeScript, Vercel)
-  src/pages/
-    Dashboard.tsx           Bloomberg two-column: bulk buy cards + KPIs/news sidebar
-    DrugSearch.tsx          Risk Finder — 758 drugs + ML shortage predictions
-    Recommendations.tsx     Top 5 premium buying recs cards
-    Analytics.tsx           Supply chain charts + top 10 shortage risks
-    Chat.tsx                Groq LLM + Tavily + local CPE/MHRA lookup
-    Alerts.tsx              MHRA shortage publications
-    MarketNews.tsx          Live RSS pharma news (MHRA, NHS, BBC, PharmaTimes)
-    WeeklyReport.tsx        Intelligence brief (printable)
-    Calculator.tsx          NHS tariff + bulk discount estimator
-    Contact.tsx             Contact / demo booking form
-  src/components/
-    ChatWidget.tsx          Floating AI chat popup (FAB, site-wide)
-  vercel.json               SPA rewrite catch-all
-
-nipharma-backend/           FastAPI backend (Railway)
-  server/main.py            9 endpoints (health, predict, top-drugs, recommendations,
-                            signals, concessions, chat, news, alerts, report, contact)
-  server/news.py            Free RSS aggregator (no API key — MHRA, NHS, BBC, PharmaTimes)
-  requirements.txt          FastAPI, scikit-learn, xgboost, pandas, numpy, cachetools
-  model/panel_model.pkl     v5 RF calibrated (27 MB, AUC 0.9986)
-  model/panel_model_xgb.pkl v5 XGBoost calibrated (1.4 MB, AUC 0.9987)
-  model/panel_feature_cols.json  42-feature schema (auto-loaded by /predict)
-
-scrapers/                   Data collection (local only, not on GitHub)
-  11_feature_store_builder.py  v5 feature store builder (42 features)
-  12_ml_model_panel.py         RF + XGBoost + calibration training (v5)
-  data/                        All CSVs — feature store, model artifacts (not pushed)
-```
-
----
-
-## Key Technologies
-
-- **ML:** scikit-learn (Random Forest), XGBoost, SHAP, isotonic calibration, pandas, numpy
-- **Backend:** FastAPI, uvicorn, Pydantic, cachetools (6hr TTL)
-- **Frontend:** React 18, TypeScript, React Router
-- **LLM:** Groq (llama-3.3-70b-versatile), Tavily (web search)
-- **Data:** CSV-based feature store (44,074+ rows, 43 features)
-- **Market Data:** yfinance (10 NSE pharma tickers + 2 shipping proxies)
 
 ---
 
 ## Roadmap
 
-### v4 (Superseded)
-- ML model with 28 features (added CPE prices)
-- Hybrid /predict endpoint (70% ML + 30% signals)
-- Full frontend + backend integration
+### ✅ v6 — Deployed April 2026
+- Edinpharm buying group scraper (`45_edinpharm_prices.py`) — 2,001 drugs, 5 wholesalers
+- Edinpharm feature wiring (`46_wire_edinpharm_features.py`) — 5 new features, 98.2% match
+- Panel feature store: 47 features (up from 42)
+- XGBoost hold-out AUC: **0.9988** (up from 0.9987)
+- Chrome cookie extractor extended to Edinpharm
+- Scraper output cleaned: separate `generics`, `brands`, `all` CSVs
 
-### v5 ✅ DEPLOYED — April 2026
-- **TimeSeriesSplit CV** with 1-month gap (fixes temporal data leakage from v4)
-- **XGBoost benchmark** trained alongside Random Forest — XGB wins by 0.0001 AUC
-- **Isotonic probability calibration** via CalibratedClassifierCV
-- **Hold-out test set** (last 6 months, Jul–Dec 2025) — never seen in CV
-- **42 features** (up from 28): added cascade, seasonal sin/cos, SSP flag, drug age, India pharma composite
-- CV AUC 0.9972 ± 0.0008 | Hold-out AUC 0.9986 (RF) / 0.9987 (XGB)
-- Models deployed: `panel_model.pkl` (RF calibrated) + `panel_model_xgb.pkl` (XGBoost)
-- Feature schema: `panel_feature_cols.json` (42 features, backend auto-loads)
+### ✅ v5 — Deployed April 2026
+- TimeSeriesSplit walk-forward CV with 1-month gap (fixed temporal leakage from v4)
+- XGBoost trained alongside RF — XGB wins by 0.0001 AUC
+- Isotonic probability calibration (CalibratedClassifierCV)
+- Hold-out test set: last 6 months (Jul–Dec 2025), never seen in CV
+- 42 features: seasonal sin/cos, is_winter, cascade count, SSP flag, drug age, India pharma stress
+- Both models deployed: `panel_model_xgb.pkl` (1.4MB) + `panel_model.pkl` (5.0MB)
 
-### Frontend — April 2026
-- Bloomberg-style two-column dashboard (bulk buy left, KPIs + news right)
-- "Drug Search" renamed to **Risk Finder**, moved to 2nd position in nav
-- Active nav link highlighting (blue underline)
-- Top 5 premium ranked Buying Recs cards with savings badges
-- AI Chat as floating popup (💬 FAB), available site-wide
-- News: switched from NewsAPI (expired 401) to free RSS feeds — MHRA, NHS, BBC, PharmaTimes
-- Fixed `/recommendations` HTTP 500 (JSON serialisation of pd.NA / np.nan)
-- Fixed blank NHS Tariff + Our Price columns in Recs and Dashboard cards
-
-### v6 (Planned)
-- Swap deployed model from RF to XGBoost (0.0001 AUC gain)
-- Fix vmpp-to-BNF mapping (improve PCA demand signal — currently 1.4% importance)
-- Real-time AAH Hub wholesale price integration
-- Automated monthly retraining pipeline
-- SHAP per-drug explainability (blocked by numba 0.53 / llvmlite incompatibility)
-
----
-
-## Documentation
-
-- **[Backend README](./nipharma-backend/README.md)** — API endpoints, model specs, retraining schedule
-- **[Detailed Model Report](./NIPHARMA_MODEL_DEPLOYMENT_DETAILED_REPORT.docx)** — 9-page technical report (all 8 problems + solutions, 5 alternatives analyzed)
+### v7 — Planned (Q3 2026)
+- `edinpharm_price_trend_3mo` — requires 3+ months of Edinpharm history (monthly scraper already set up)
+- `edinpharm_vs_tariff_drift` — wholesale bid rising above tariff = early shortage signal
+- Fix SHAP explainability (blocked by numba/llvmlite incompatibility with calibrated wrapper)
+- Region selector: England / Scotland / NI / Ireland tariff switching
+- Pricing page: Starter £49 / Professional £99 / Enterprise £299
 
 ---
 
 ## GitHub Policy
 
-**Tracked:**
-- `nipharma-frontend/` — React source code
-- `nipharma-backend/` — FastAPI + ML model (`panel_model.pkl`)
-- `scrapers/*.py` — Data collection scripts
-
-**Never Committed:**
-- `scrapers/data/` — CSV data files
-- `.env` files — API keys and secrets
-- Session cookies and browser data
-
----
-
-## Support and Contact
-
-- **Issues:** GitHub Issues (private repo)
-- **Live Site:** https://nipharm-shortage-intelligence.vercel.app
-- **Backend Status:** https://npt-stock-intel-production.up.railway.app/health
+| Location | On GitHub | Reason |
+|----------|-----------|--------|
+| `nipharma-frontend/` | ✅ Yes | React app |
+| `nipharma-backend/` | ✅ Yes | FastAPI + model .pkl files |
+| `scrapers/*.py` | ✅ Yes | Scraper source code |
+| `scrapers/data/` | ❌ No | CSV data files — large, local only |
+| `NPT_Invoice_Data/` | ❌ NEVER | Invoices, supplier prices — commercially sensitive |
+| `sessions/*.json` | ❌ NEVER | Login cookies for AAH, Alliance, Edinpharm |
+| `.env` / `.env.local` | ❌ No | API keys |
 
 ---
 
-**Last Updated:** April 2026 | **Model:** v5 deployed — RF AUC 0.9986, XGB AUC 0.9987 (hold-out, temporal CV) | **Status:** Production | **License:** MIT
+## Key API Endpoints
+
+```
+POST /predict           ML shortage prediction — 47 features, 70% ML + 30% live signals, 6hr cache
+GET  /ping              Backend health check
+GET  /news              Pharmaceutical news feed (RSS)
+GET  /mhra-alerts       MHRA shortage publications
+GET  /signals           Live GBP/INR, GBP/CNY, GBP/USD (Frankfurter/ECB)
+POST /chat              Groq llama-3.3-70b + Tavily + CPE/MHRA local lookup
+POST /query             NL or SQL → DuckDB (read-only, 200-row cap)
+GET  /weekly-report     Intelligence summary
+GET  /debug             Model info, file paths, API key status
+```
+
+---
+
+**Last updated:** April 2026 &nbsp;|&nbsp; **Model:** v6 XGBoost AUC 0.9988 · RF AUC 0.9985 (hold-out, temporal CV) &nbsp;|&nbsp; **Status:** Production &nbsp;|&nbsp; **License:** Proprietary
